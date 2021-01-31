@@ -1,2 +1,3 @@
 User-agent: *
 Disallow: /alpha-lubycon-home
+Disallow: /lubycon-ui-kit-storybook
