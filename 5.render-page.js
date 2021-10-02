@@ -1,10 +1,10 @@
-exports.ids = [3];
+exports.ids = [5];
 exports.modules = {
 
-/***/ "./node_modules/@lubycon/logger/node_modules/amplitude-js/amplitude.umd.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@lubycon/logger/node_modules/amplitude-js/amplitude.umd.js ***!
-  \*********************************************************************************/
+/***/ "./node_modules/@lubycon/react/node_modules/amplitude-js/amplitude.umd.js":
+/*!********************************************************************************!*\
+  !*** ./node_modules/@lubycon/react/node_modules/amplitude-js/amplitude.umd.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -6152,4 +6152,4 @@ exports.modules = {
 /***/ })
 
 };;
-//# sourceMappingURL=3.render-page.js.map
+//# sourceMappingURL=5.render-page.js.map

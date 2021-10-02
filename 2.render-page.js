@@ -1,6152 +1,3212 @@
 exports.ids = [2];
 exports.modules = {
 
-/***/ "./node_modules/@lubycon/logger/node_modules/amplitude-js/amplitude.umd.js":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/@lubycon/logger/node_modules/amplitude-js/amplitude.umd.js ***!
-  \*********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-(function (global, factory) {
-   true ? module.exports = factory() :
-  undefined;
-}(this, function () { 'use strict';
-
-  function _typeof(obj) {
-    if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") {
-      _typeof = function (obj) {
-        return typeof obj;
-      };
-    } else {
-      _typeof = function (obj) {
-        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
-      };
-    }
-
-    return _typeof(obj);
-  }
-
-  function _classCallCheck(instance, Constructor) {
-    if (!(instance instanceof Constructor)) {
-      throw new TypeError("Cannot call a class as a function");
-    }
-  }
-
-  function _defineProperties(target, props) {
-    for (var i = 0; i < props.length; i++) {
-      var descriptor = props[i];
-      descriptor.enumerable = descriptor.enumerable || false;
-      descriptor.configurable = true;
-      if ("value" in descriptor) descriptor.writable = true;
-      Object.defineProperty(target, descriptor.key, descriptor);
-    }
-  }
-
-  function _createClass(Constructor, protoProps, staticProps) {
-    if (protoProps) _defineProperties(Constructor.prototype, protoProps);
-    if (staticProps) _defineProperties(Constructor, staticProps);
-    return Constructor;
-  }
-
-  function _defineProperty(obj, key, value) {
-    if (key in obj) {
-      Object.defineProperty(obj, key, {
-        value: value,
-        enumerable: true,
-        configurable: true,
-        writable: true
-      });
-    } else {
-      obj[key] = value;
-    }
-
-    return obj;
-  }
-
-  function _objectSpread(target) {
-    for (var i = 1; i < arguments.length; i++) {
-      var source = arguments[i] != null ? arguments[i] : {};
-      var ownKeys = Object.keys(source);
-
-      if (typeof Object.getOwnPropertySymbols === 'function') {
-        ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function (sym) {
-          return Object.getOwnPropertyDescriptor(source, sym).enumerable;
-        }));
-      }
-
-      ownKeys.forEach(function (key) {
-        _defineProperty(target, key, source[key]);
-      });
-    }
-
-    return target;
-  }
-
-  function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
-  }
-
-  function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    }
-  }
-
-  function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
-  }
-
-  function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
-  }
-
-  /**
-   * Strings that have special meaning when used as an event's type
-   * and have different specifications.
-   */
-  var SpecialEventType;
-  (function (SpecialEventType) {
-      SpecialEventType["IDENTIFY"] = "$identify";
-  })(SpecialEventType || (SpecialEventType = {}));
-
-  var IdentifyOperation;
-  (function (IdentifyOperation) {
-      // Base Operations to set values
-      IdentifyOperation["SET"] = "$set";
-      IdentifyOperation["SET_ONCE"] = "$setOnce";
-      // Operations around modifying existing values
-      IdentifyOperation["ADD"] = "$add";
-      IdentifyOperation["APPEND"] = "$append";
-      IdentifyOperation["PREPEND"] = "$prepend";
-      IdentifyOperation["REMOVE"] = "$remove";
-      // Operations around appending values *if* they aren't present
-      IdentifyOperation["PREINSERT"] = "$preinsert";
-      IdentifyOperation["POSTINSERT"] = "$postinsert";
-      // Operations around removing properties/values
-      IdentifyOperation["UNSET"] = "$unset";
-      IdentifyOperation["CLEAR_ALL"] = "$clearAll";
-  })(IdentifyOperation || (IdentifyOperation = {}));
-
-  /** The default identity instance. Needs to match the default instance for the JS SDK */
-
-  /** Console logging verbosity for the SDK. */
-  var LogLevel;
-  (function (LogLevel) {
-      /** No logs will be generated. */
-      LogLevel[LogLevel["None"] = 0] = "None";
-      /** Only SDK internal errors will be logged. */
-      LogLevel[LogLevel["Error"] = 1] = "Error";
-      /** Information useful for debugging the SDK will be logged. */
-      LogLevel[LogLevel["Warn"] = 2] = "Warn";
-      /** All SDK actions will be logged. */
-      LogLevel[LogLevel["Verbose"] = 3] = "Verbose";
-  })(LogLevel || (LogLevel = {}));
-
-  /** The status of an event. */
-  var Status;
-  (function (Status) {
-      /** The status could not be determined. */
-      Status["Unknown"] = "unknown";
-      /** The event was skipped due to configuration or callbacks. */
-      Status["Skipped"] = "skipped";
-      /** The event was sent successfully. */
-      Status["Success"] = "success";
-      /** A user or device in the payload is currently rate limited and should try again later. */
-      Status["RateLimit"] = "rate_limit";
-      /** The sent payload was too large to be processed. */
-      Status["PayloadTooLarge"] = "payload_too_large";
-      /** The event could not be processed. */
-      Status["Invalid"] = "invalid";
-      /** A server-side error ocurred during submission. */
-      Status["Failed"] = "failed";
-  })(Status || (Status = {}));
-  // tslint:disable:completed-docs
-  // tslint:disable:no-unnecessary-qualifier no-namespace
-  (function (Status) {
-      /**
-       * Converts a HTTP status code into a {@link Status}.
-       *
-       * @param code The HTTP response status code.
-       * @returns The send status or {@link Status.Unknown}.
-       */
-      function fromHttpCode(code) {
-          if (code >= 200 && code < 300) {
-              return Status.Success;
-          }
-          if (code === 429) {
-              return Status.RateLimit;
-          }
-          if (code === 413) {
-              return Status.PayloadTooLarge;
-          }
-          if (code >= 400 && code < 500) {
-              return Status.Invalid;
-          }
-          if (code >= 500) {
-              return Status.Failed;
-          }
-          return Status.Unknown;
-      }
-      Status.fromHttpCode = fromHttpCode;
-  })(Status || (Status = {}));
-
-  /** The Response to expect if a request might have been sent but it was skipped
-   *  e.g. no events to flush, user has opted out and nothing should be sent.
-   */
-  var SKIPPED_RESPONSE = {
-      status: Status.Skipped,
-      statusCode: 0,
-  };
-
-  /**
-   * Checks whether we're in a Node.js environment
-   *
-   * @returns Answer to given question
-   */
-  function isNodeEnv() {
-      var _a;
-      return typeof process === 'object' && ((_a = process === null || process === void 0 ? void 0 : process.versions) === null || _a === void 0 ? void 0 : _a.node) !== undefined;
-  }
-  /**
-   * Checks whether we're in a browser environment
-   *
-   * @returns Answer to given question
-   */
-  function isBrowserEnv() {
-      return typeof window === 'object' && (window === null || window === void 0 ? void 0 : window.document) !== undefined;
-  }
-  var fallbackGlobalObject = {};
-  /**
-   * Safely get global scope object
-   *
-   * @returns Global scope object
-   */
-  var getGlobalObject = function () {
-      return isNodeEnv()
-          ? global
-          : typeof window !== 'undefined'
-              ? window
-              : typeof self !== 'undefined'
-                  ? self
-                  : fallbackGlobalObject;
-  };
-  var getGlobalAmplitudeNamespace = function () {
-      var global = getGlobalObject();
-      global.__AMPLITUDE__ = global.__AMPLITUDE__ || {};
-      return global.__AMPLITUDE__;
-  };
-  /**
-   * Fixes browser edge case where Prototype.js injects Array.prototype.toJSON and breaks the built-in JSON.stringify()
-   *
-   * @returns true if Array.prototype.toJSON was deleted, false if not
-   */
-  var prototypeJsFix = function () {
-      var _a;
-      if (isBrowserEnv()) {
-          var augmentedWindow = window;
-          var augmentedArray = Array;
-          if (augmentedWindow.Prototype !== undefined && ((_a = augmentedArray.prototype) === null || _a === void 0 ? void 0 : _a.toJSON) !== undefined) {
-              delete augmentedArray.prototype.toJSON;
-              return true;
-          }
-      }
-      return false;
-  };
-
-  // TODO: Type the global constant
-  var globalNamespace = getGlobalAmplitudeNamespace();
-  /** Prefix for logging strings */
-  var PREFIX = 'Amplitude Logger ';
-  /** JSDoc */
-  var Logger = /** @class */ (function () {
-      /** JSDoc */
-      function Logger() {
-          this._logLevel = 0;
-      }
-      /** JSDoc */
-      Logger.prototype.disable = function () {
-          this._logLevel = 0;
-      };
-      /** JSDoc */
-      Logger.prototype.enable = function (logLevel) {
-          if (logLevel === void 0) { logLevel = LogLevel.Warn; }
-          this._logLevel = logLevel;
-      };
-      /** JSDoc */
-      Logger.prototype.log = function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-              args[_i] = arguments[_i];
-          }
-          if (this._logLevel < LogLevel.Verbose) {
-              return;
-          }
-          global.console.log(PREFIX + "[Log]: " + args.join(' ')); // tslint:disable-line:no-console
-      };
-      /** JSDoc */
-      Logger.prototype.warn = function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-              args[_i] = arguments[_i];
-          }
-          if (this._logLevel < LogLevel.Warn) {
-              return;
-          }
-          global.console.warn(PREFIX + "[Warn]: " + args.join(' ')); // tslint:disable-line:no-console
-      };
-      /** JSDoc */
-      Logger.prototype.error = function () {
-          var args = [];
-          for (var _i = 0; _i < arguments.length; _i++) {
-              args[_i] = arguments[_i];
-          }
-          if (this._logLevel < LogLevel.Error) {
-              return;
-          }
-          global.console.error(PREFIX + "[Error]: " + args.join(' ')); // tslint:disable-line:no-console
-      };
-      return Logger;
-  }());
-  // Ensure we only have a single logger instance, even if multiple versions of @amplitude/utils are being used
-  var logger = globalNamespace.logger || (globalNamespace.logger = new Logger());
-
-  var Constants = {
-    DEFAULT_INSTANCE: '$default_instance',
-    API_VERSION: 2,
-    MAX_STRING_LENGTH: 4096,
-    MAX_PROPERTY_KEYS: 1000,
-    IDENTIFY_EVENT: '$identify',
-    GROUP_IDENTIFY_EVENT: '$groupidentify',
-    // localStorageKeys
-    LAST_EVENT_ID: 'amplitude_lastEventId',
-    LAST_EVENT_TIME: 'amplitude_lastEventTime',
-    LAST_IDENTIFY_ID: 'amplitude_lastIdentifyId',
-    LAST_SEQUENCE_NUMBER: 'amplitude_lastSequenceNumber',
-    SESSION_ID: 'amplitude_sessionId',
-    // Used in cookie as well
-    DEVICE_ID: 'amplitude_deviceId',
-    OPT_OUT: 'amplitude_optOut',
-    USER_ID: 'amplitude_userId',
-    // indexes of properties in cookie v2 storage format
-    DEVICE_ID_INDEX: 0,
-    USER_ID_INDEX: 1,
-    OPT_OUT_INDEX: 2,
-    SESSION_ID_INDEX: 3,
-    LAST_EVENT_TIME_INDEX: 4,
-    EVENT_ID_INDEX: 5,
-    IDENTIFY_ID_INDEX: 6,
-    SEQUENCE_NUMBER_INDEX: 7,
-    COOKIE_TEST_PREFIX: 'amp_cookie_test',
-    COOKIE_PREFIX: 'amp',
-    // Storage options
-    STORAGE_DEFAULT: '',
-    STORAGE_COOKIES: 'cookies',
-    STORAGE_NONE: 'none',
-    STORAGE_LOCAL: 'localStorage',
-    STORAGE_SESSION: 'sessionStorage',
-    // revenue keys
-    REVENUE_EVENT: 'revenue_amount',
-    REVENUE_PRODUCT_ID: '$productId',
-    REVENUE_QUANTITY: '$quantity',
-    REVENUE_PRICE: '$price',
-    REVENUE_REVENUE_TYPE: '$revenueType',
-    AMP_DEVICE_ID_PARAM: 'amp_device_id',
-    // url param
-    REFERRER: 'referrer',
-    // UTM Params
-    UTM_SOURCE: 'utm_source',
-    UTM_MEDIUM: 'utm_medium',
-    UTM_CAMPAIGN: 'utm_campaign',
-    UTM_TERM: 'utm_term',
-    UTM_CONTENT: 'utm_content',
-    ATTRIBUTION_EVENT: '[Amplitude] Attribution Captured',
-    TRANSPORT_HTTP: 'http',
-    TRANSPORT_BEACON: 'beacon'
-  };
-
-  /*
-   * UTF-8 encoder/decoder
-   * http://www.webtoolkit.info/
-   */
-  var UTF8 = {
-    encode: function encode(s) {
-      var utftext = '';
-
-      for (var n = 0; n < s.length; n++) {
-        var c = s.charCodeAt(n);
-
-        if (c < 128) {
-          utftext += String.fromCharCode(c);
-        } else if (c > 127 && c < 2048) {
-          utftext += String.fromCharCode(c >> 6 | 192);
-          utftext += String.fromCharCode(c & 63 | 128);
-        } else {
-          utftext += String.fromCharCode(c >> 12 | 224);
-          utftext += String.fromCharCode(c >> 6 & 63 | 128);
-          utftext += String.fromCharCode(c & 63 | 128);
-        }
-      }
-
-      return utftext;
-    },
-    decode: function decode(utftext) {
-      var s = '';
-      var i = 0;
-      var c = 0,
-          c1 = 0,
-          c2 = 0;
-
-      while (i < utftext.length) {
-        c = utftext.charCodeAt(i);
-
-        if (c < 128) {
-          s += String.fromCharCode(c);
-          i++;
-        } else if (c > 191 && c < 224) {
-          c1 = utftext.charCodeAt(i + 1);
-          s += String.fromCharCode((c & 31) << 6 | c1 & 63);
-          i += 2;
-        } else {
-          c1 = utftext.charCodeAt(i + 1);
-          c2 = utftext.charCodeAt(i + 2);
-          s += String.fromCharCode((c & 15) << 12 | (c1 & 63) << 6 | c2 & 63);
-          i += 3;
-        }
-      }
-
-      return s;
-    }
-  };
-
-  /*
-   * Base64 encoder/decoder
-   * http://www.webtoolkit.info/
-   */
-
-  var Base64 = {
-    _keyStr: 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=',
-    encode: function encode(input) {
-      try {
-        if (window.btoa && window.atob) {
-          return window.btoa(unescape(encodeURIComponent(input)));
-        }
-      } catch (e) {//log(e);
-      }
-
-      return Base64._encode(input);
-    },
-    _encode: function _encode(input) {
-      var output = '';
-      var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
-      var i = 0;
-      input = UTF8.encode(input);
-
-      while (i < input.length) {
-        chr1 = input.charCodeAt(i++);
-        chr2 = input.charCodeAt(i++);
-        chr3 = input.charCodeAt(i++);
-        enc1 = chr1 >> 2;
-        enc2 = (chr1 & 3) << 4 | chr2 >> 4;
-        enc3 = (chr2 & 15) << 2 | chr3 >> 6;
-        enc4 = chr3 & 63;
-
-        if (isNaN(chr2)) {
-          enc3 = enc4 = 64;
-        } else if (isNaN(chr3)) {
-          enc4 = 64;
-        }
-
-        output = output + Base64._keyStr.charAt(enc1) + Base64._keyStr.charAt(enc2) + Base64._keyStr.charAt(enc3) + Base64._keyStr.charAt(enc4);
-      }
-
-      return output;
-    },
-    decode: function decode(input) {
-      try {
-        if (window.btoa && window.atob) {
-          return decodeURIComponent(escape(window.atob(input)));
-        }
-      } catch (e) {//log(e);
-      }
-
-      return Base64._decode(input);
-    },
-    _decode: function _decode(input) {
-      var output = '';
-      var chr1, chr2, chr3;
-      var enc1, enc2, enc3, enc4;
-      var i = 0;
-      input = input.replace(/[^A-Za-z0-9+/=]/g, '');
-
-      while (i < input.length) {
-        enc1 = Base64._keyStr.indexOf(input.charAt(i++));
-        enc2 = Base64._keyStr.indexOf(input.charAt(i++));
-        enc3 = Base64._keyStr.indexOf(input.charAt(i++));
-        enc4 = Base64._keyStr.indexOf(input.charAt(i++));
-        chr1 = enc1 << 2 | enc2 >> 4;
-        chr2 = (enc2 & 15) << 4 | enc3 >> 2;
-        chr3 = (enc3 & 3) << 6 | enc4;
-        output = output + String.fromCharCode(chr1);
-
-        if (enc3 !== 64) {
-          output = output + String.fromCharCode(chr2);
-        }
-
-        if (enc4 !== 64) {
-          output = output + String.fromCharCode(chr3);
-        }
-      }
-
-      output = UTF8.decode(output);
-      return output;
-    }
-  };
-
-  /**
-   * toString ref.
-   * @private
-   */
-  var toString = Object.prototype.toString;
-  /**
-   * Return the type of `val`.
-   * @private
-   * @param {Mixed} val
-   * @return {String}
-   * @api public
-   */
-
-  function type (val) {
-    switch (toString.call(val)) {
-      case '[object Date]':
-        return 'date';
-
-      case '[object RegExp]':
-        return 'regexp';
-
-      case '[object Arguments]':
-        return 'arguments';
-
-      case '[object Array]':
-        return 'array';
-
-      case '[object Error]':
-        return 'error';
-    }
-
-    if (val === null) {
-      return 'null';
-    }
-
-    if (val === undefined) {
-      return 'undefined';
-    }
-
-    if (val !== val) {
-      return 'nan';
-    }
-
-    if (val && val.nodeType === 1) {
-      return 'element';
-    }
-
-    if (typeof Buffer !== 'undefined' && typeof Buffer.isBuffer === 'function' && Buffer.isBuffer(val)) {
-      return 'buffer';
-    }
-
-    val = val.valueOf ? val.valueOf() : Object.prototype.valueOf.apply(val);
-    return _typeof(val);
-  }
-
-  var logLevels = {
-    DISABLE: 0,
-    ERROR: 1,
-    WARN: 2,
-    INFO: 3
-  };
-  var logLevel = logLevels.WARN;
-
-  var setLogLevel = function setLogLevel(logLevelName) {
-    if (Object.prototype.hasOwnProperty.call(logLevels, logLevelName)) {
-      logLevel = logLevels[logLevelName];
-    }
-  };
-
-  var getLogLevel = function getLogLevel() {
-    return logLevel;
-  };
-
-  var log = {
-    error: function error(s) {
-      if (logLevel >= logLevels.ERROR) {
-        _log(s);
-      }
-    },
-    warn: function warn(s) {
-      if (logLevel >= logLevels.WARN) {
-        _log(s);
-      }
-    },
-    info: function info(s) {
-      if (logLevel >= logLevels.INFO) {
-        _log(s);
-      }
-    }
-  };
-
-  var _log = function _log(s) {
-    try {
-      console.log('[Amplitude] ' + s);
-    } catch (e) {// console logging not available
-    }
-  };
-
-  var isEmptyString = function isEmptyString(str) {
-    return !str || str.length === 0;
-  };
-
-  var sessionStorageEnabled = function sessionStorageEnabled() {
-    try {
-      if (window.sessionStorage) {
-        return true;
-      }
-    } catch (e) {// sessionStorage disabled
-    }
-
-    return false;
-  }; // truncate string values in event and user properties so that request size does not get too large
-
-
-  var truncate = function truncate(value) {
-    if (type(value) === 'array') {
-      for (var i = 0; i < value.length; i++) {
-        value[i] = truncate(value[i]);
-      }
-    } else if (type(value) === 'object') {
-      for (var key in value) {
-        if (key in value) {
-          value[key] = truncate(value[key]);
-        }
-      }
-    } else {
-      value = _truncateValue(value);
-    }
-
-    return value;
-  };
-
-  var _truncateValue = function _truncateValue(value) {
-    if (type(value) === 'string') {
-      return value.length > Constants.MAX_STRING_LENGTH ? value.substring(0, Constants.MAX_STRING_LENGTH) : value;
-    }
-
-    return value;
-  };
-
-  var validateInput = function validateInput(input, name, expectedType) {
-    if (type(input) !== expectedType) {
-      log.error('Invalid ' + name + ' input type. Expected ' + expectedType + ' but received ' + type(input));
-      return false;
-    }
-
-    return true;
-  };
-
-  var validateDeviceId = function validateDeviceId(deviceId) {
-    if (!validateInput(deviceId, 'deviceId', 'string')) {
-      return false;
-    }
-
-    if (deviceId.includes('.')) {
-      log.error("Device IDs may not contain '.' characters. Value will be ignored: \"".concat(deviceId, "\""));
-      return false;
-    }
-
-    return true;
-  };
-
-  var validateTransport = function validateTransport(transport) {
-    if (!validateInput(transport, 'transport', 'string')) {
-      return false;
-    }
-
-    if (transport !== Constants.TRANSPORT_HTTP && transport !== Constants.TRANSPORT_BEACON) {
-      log.error("transport value must be one of '".concat(Constants.TRANSPORT_BEACON, "' or '").concat(Constants.TRANSPORT_HTTP, "'"));
-      return false;
-    }
-
-    if (transport !== Constants.TRANSPORT_HTTP && !navigator.sendBeacon) {
-      log.error("browser does not support sendBeacon, so transport must be HTTP");
-      return false;
-    }
-
-    return true;
-  }; // do some basic sanitization and type checking, also catch property dicts with more than 1000 key/value pairs
-
-
-  var validateProperties = function validateProperties(properties) {
-    var propsType = type(properties);
-
-    if (propsType !== 'object') {
-      log.error('Error: invalid properties format. Expecting Javascript object, received ' + propsType + ', ignoring');
-      return {};
-    }
-
-    if (Object.keys(properties).length > Constants.MAX_PROPERTY_KEYS) {
-      log.error('Error: too many properties (more than 1000), ignoring');
-      return {};
-    }
-
-    var copy = {}; // create a copy with all of the valid properties
-
-    for (var property in properties) {
-      if (!Object.prototype.hasOwnProperty.call(properties, property)) {
-        continue;
-      } // validate key
-
-
-      var key = property;
-      var keyType = type(key);
-
-      if (keyType !== 'string') {
-        key = String(key);
-        log.warn('WARNING: Non-string property key, received type ' + keyType + ', coercing to string "' + key + '"');
-      } // validate value
-
-
-      var value = validatePropertyValue(key, properties[property]);
-
-      if (value === null) {
-        continue;
-      }
-
-      copy[key] = value;
-    }
-
-    return copy;
-  };
-
-  var invalidValueTypes = ['nan', 'function', 'arguments', 'regexp', 'element'];
-
-  var validatePropertyValue = function validatePropertyValue(key, value) {
-    var valueType = type(value);
-
-    if (invalidValueTypes.indexOf(valueType) !== -1) {
-      log.warn('WARNING: Property key "' + key + '" with invalid value type ' + valueType + ', ignoring');
-      value = null;
-    } else if (valueType === 'undefined') {
-      value = null;
-    } else if (valueType === 'error') {
-      value = String(value);
-      log.warn('WARNING: Property key "' + key + '" with value type error, coercing to ' + value);
-    } else if (valueType === 'array') {
-      // check for nested arrays or objects
-      var arrayCopy = [];
-
-      for (var i = 0; i < value.length; i++) {
-        var element = value[i];
-        var elemType = type(element);
-
-        if (elemType === 'array') {
-          log.warn('WARNING: Cannot have ' + elemType + ' nested in an array property value, skipping');
-          continue;
-        } else if (elemType === 'object') {
-          arrayCopy.push(validateProperties(element));
-        } else {
-          arrayCopy.push(validatePropertyValue(key, element));
-        }
-      }
-
-      value = arrayCopy;
-    } else if (valueType === 'object') {
-      value = validateProperties(value);
-    }
-
-    return value;
-  };
-
-  var validateGroups = function validateGroups(groups) {
-    var groupsType = type(groups);
-
-    if (groupsType !== 'object') {
-      log.error('Error: invalid groups format. Expecting Javascript object, received ' + groupsType + ', ignoring');
-      return {};
-    }
-
-    var copy = {}; // create a copy with all of the valid properties
-
-    for (var group in groups) {
-      if (!Object.prototype.hasOwnProperty.call(groups, group)) {
-        continue;
-      } // validate key
-
-
-      var key = group;
-      var keyType = type(key);
-
-      if (keyType !== 'string') {
-        key = String(key);
-        log.warn('WARNING: Non-string groupType, received type ' + keyType + ', coercing to string "' + key + '"');
-      } // validate value
-
-
-      var value = validateGroupName(key, groups[group]);
-
-      if (value === null) {
-        continue;
-      }
-
-      copy[key] = value;
-    }
-
-    return copy;
-  };
-
-  var validateGroupName = function validateGroupName(key, groupName) {
-    var groupNameType = type(groupName);
-
-    if (groupNameType === 'string') {
-      return groupName;
-    }
-
-    if (groupNameType === 'date' || groupNameType === 'number' || groupNameType === 'boolean') {
-      groupName = String(groupName);
-      log.warn('WARNING: Non-string groupName, received type ' + groupNameType + ', coercing to string "' + groupName + '"');
-      return groupName;
-    }
-
-    if (groupNameType === 'array') {
-      // check for nested arrays or objects
-      var arrayCopy = [];
-
-      for (var i = 0; i < groupName.length; i++) {
-        var element = groupName[i];
-        var elemType = type(element);
-
-        if (elemType === 'array' || elemType === 'object') {
-          log.warn('WARNING: Skipping nested ' + elemType + ' in array groupName');
-          continue;
-        } else if (elemType === 'string') {
-          arrayCopy.push(element);
-        } else if (elemType === 'date' || elemType === 'number' || elemType === 'boolean') {
-          element = String(element);
-          log.warn('WARNING: Non-string groupName, received type ' + elemType + ', coercing to string "' + element + '"');
-          arrayCopy.push(element);
-        }
-      }
-
-      return arrayCopy;
-    }
-
-    log.warn('WARNING: Non-string groupName, received type ' + groupNameType + '. Please use strings or array of strings for groupName');
-  }; // parses the value of a url param (for example ?gclid=1234&...)
-
-
-  var getQueryParam = function getQueryParam(name, query) {
-    name = name.replace(/[[]/, '\\[').replace(/[\]]/, '\\]');
-    var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
-    var results = regex.exec(query);
-    return results === null ? undefined : decodeURIComponent(results[1].replace(/\+/g, ' '));
-  };
-
-  var utils = {
-    setLogLevel: setLogLevel,
-    getLogLevel: getLogLevel,
-    logLevels: logLevels,
-    log: log,
-    isEmptyString: isEmptyString,
-    getQueryParam: getQueryParam,
-    sessionStorageEnabled: sessionStorageEnabled,
-    truncate: truncate,
-    validateGroups: validateGroups,
-    validateInput: validateInput,
-    validateProperties: validateProperties,
-    validateDeviceId: validateDeviceId,
-    validateTransport: validateTransport
-  };
-
-  var getLocation = function getLocation() {
-    return window.location;
-  };
-
-  // A URL safe variation on the the list of Base64 characters
-  var base64Chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
-
-  var base64Id = function base64Id() {
-    var str = '';
-
-    for (var i = 0; i < 22; ++i) {
-      str += base64Chars.charAt(Math.floor(Math.random() * 64));
-    }
-
-    return str;
-  };
-
-  var get = function get(name) {
-    try {
-      var ca = document.cookie.split(';');
-      var value = null;
-
-      for (var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-
-        while (c.charAt(0) === ' ') {
-          c = c.substring(1, c.length);
-        }
-
-        if (c.indexOf(name) === 0) {
-          value = c.substring(name.length, c.length);
-          break;
-        }
-      }
-
-      return value;
-    } catch (e) {
-      return null;
-    }
-  };
-
-  var getAll = function getAll(name) {
-    try {
-      var cookieArray = document.cookie.split(';').map(function (c) {
-        return c.trimStart();
-      });
-      var values = [];
-      var _iteratorNormalCompletion = true;
-      var _didIteratorError = false;
-      var _iteratorError = undefined;
-
-      try {
-        for (var _iterator = cookieArray[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-          var cookie = _step.value;
-
-          while (cookie.charAt(0) === ' ') {
-            cookie = cookie.substring(1);
-          }
-
-          if (cookie.indexOf(name) === 0) {
-            values.push(cookie.substring(name.length));
-          }
-        }
-      } catch (err) {
-        _didIteratorError = true;
-        _iteratorError = err;
-      } finally {
-        try {
-          if (!_iteratorNormalCompletion && _iterator.return != null) {
-            _iterator.return();
-          }
-        } finally {
-          if (_didIteratorError) {
-            throw _iteratorError;
-          }
-        }
-      }
-
-      return values;
-    } catch (e) {
-      return [];
-    }
-  };
-
-  var set = function set(name, value, opts) {
-    var expires = value !== null ? opts.expirationDays : -1;
-
-    if (expires) {
-      var date = new Date();
-      date.setTime(date.getTime() + expires * 24 * 60 * 60 * 1000);
-      expires = date;
-    }
-
-    var str = name + '=' + value;
-
-    if (expires) {
-      str += '; expires=' + expires.toUTCString();
-    }
-
-    str += '; path=/';
-
-    if (opts.domain) {
-      str += '; domain=' + opts.domain;
-    }
-
-    if (opts.secure) {
-      str += '; Secure';
-    }
-
-    if (opts.sameSite) {
-      str += '; SameSite=' + opts.sameSite;
-    }
-
-    document.cookie = str;
-  };
-
-  var getLastEventTime = function getLastEventTime() {
-    var cookie = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '';
-    var strValue = cookie.split('.')[Constants.LAST_EVENT_TIME_INDEX];
-    var parsedValue;
-
-    if (strValue) {
-      parsedValue = parseInt(strValue, 32);
-    }
-
-    if (parsedValue) {
-      return parsedValue;
-    } else {
-      utils.log.warn("unable to parse malformed cookie: ".concat(cookie));
-      return 0;
-    }
-  };
-
-  var sortByEventTime = function sortByEventTime(cookies) {
-    return _toConsumableArray(cookies).sort(function (c1, c2) {
-      var t1 = getLastEventTime(c1);
-      var t2 = getLastEventTime(c2); // sort c1 first if its last event time is more recent
-      // i.e its event time integer is larger that c2's
-
-      return t2 - t1;
-    });
-  }; // test that cookies are enabled - navigator.cookiesEnabled yields false positives in IE, need to test directly
-
-
-  var areCookiesEnabled = function areCookiesEnabled() {
-    var opts = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var cookieName = Constants.COOKIE_TEST_PREFIX + base64Id();
-    var _areCookiesEnabled = false;
-
-    try {
-      var uid = String(new Date());
-      set(cookieName, uid, opts);
-      utils.log.info("Testing if cookies available");
-      _areCookiesEnabled = get(cookieName + '=') === uid;
-    } catch (e) {
-      utils.log.warn("Error thrown when checking for cookies. Reason: \"".concat(e, "\""));
-    } finally {
-      utils.log.info("Cleaning up cookies availability test");
-      set(cookieName, null, opts);
-    }
-
-    return _areCookiesEnabled;
-  };
-
-  var baseCookie = {
-    set: set,
-    get: get,
-    getAll: getAll,
-    getLastEventTime: getLastEventTime,
-    sortByEventTime: sortByEventTime,
-    areCookiesEnabled: areCookiesEnabled
-  };
-
-  var getHost = function getHost(url) {
-    var a = document.createElement('a');
-    a.href = url;
-    return a.hostname || location.hostname;
-  };
-
-  var topDomain = function topDomain(url) {
-    var host = getHost(url);
-    var parts = host.split('.');
-    var levels = [];
-    var cname = '_tldtest_' + base64Id();
-
-    for (var i = parts.length - 2; i >= 0; --i) {
-      levels.push(parts.slice(i).join('.'));
-    }
-
-    for (var _i = 0; _i < levels.length; ++_i) {
-      var domain = levels[_i];
-      var opts = {
-        domain: '.' + domain
-      };
-      baseCookie.set(cname, 1, opts);
-
-      if (baseCookie.get(cname)) {
-        baseCookie.set(cname, null, opts);
-        return domain;
-      }
-    }
-
-    return '';
-  };
-
-  /*
-   * Cookie data
-   */
-  var _options = {
-    expirationDays: undefined,
-    domain: undefined
-  };
-
-  var reset = function reset() {
-    _options = {
-      expirationDays: undefined,
-      domain: undefined
-    };
-  };
-
-  var options = function options(opts) {
-    if (arguments.length === 0) {
-      return _options;
-    }
-
-    opts = opts || {};
-    _options.expirationDays = opts.expirationDays;
-    _options.secure = opts.secure;
-    _options.sameSite = opts.sameSite;
-    var domain = !utils.isEmptyString(opts.domain) ? opts.domain : '.' + topDomain(getLocation().href);
-    var token = Math.random();
-    _options.domain = domain;
-    set$1('amplitude_test', token);
-    var stored = get$1('amplitude_test');
-
-    if (!stored || stored !== token) {
-      domain = null;
-    }
-
-    remove('amplitude_test');
-    _options.domain = domain;
-    return _options;
-  };
-
-  var _domainSpecific = function _domainSpecific(name) {
-    // differentiate between cookies on different domains
-    var suffix = '';
-
-    if (_options.domain) {
-      suffix = _options.domain.charAt(0) === '.' ? _options.domain.substring(1) : _options.domain;
-    }
-
-    return name + suffix;
-  };
-
-  var get$1 = function get(name) {
-    var nameEq = _domainSpecific(name) + '=';
-    var value = baseCookie.get(nameEq);
-
-    try {
-      if (value) {
-        return JSON.parse(Base64.decode(value));
-      }
-    } catch (e) {
-      return null;
-    }
-
-    return null;
-  };
-
-  var set$1 = function set(name, value) {
-    try {
-      baseCookie.set(_domainSpecific(name), Base64.encode(JSON.stringify(value)), _options);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  var setRaw = function setRaw(name, value) {
-    try {
-      baseCookie.set(_domainSpecific(name), value, _options);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  var getRaw = function getRaw(name) {
-    var nameEq = _domainSpecific(name) + '=';
-    return baseCookie.get(nameEq);
-  };
-
-  var remove = function remove(name) {
-    try {
-      baseCookie.set(_domainSpecific(name), null, _options);
-      return true;
-    } catch (e) {
-      return false;
-    }
-  };
-
-  var Cookie = {
-    reset: reset,
-    options: options,
-    get: get$1,
-    set: set$1,
-    remove: remove,
-    setRaw: setRaw,
-    getRaw: getRaw
-  };
-
-  /*
-   * Implement localStorage to support Firefox 2-3 and IE 5-7
-   */
-  var localStorage;
-
-  {
-    // test that Window.localStorage is available and works
-    var windowLocalStorageAvailable = function windowLocalStorageAvailable() {
-      var uid = new Date();
-      var result;
-
-      try {
-        window.localStorage.setItem(uid, uid);
-        result = window.localStorage.getItem(uid) === String(uid);
-        window.localStorage.removeItem(uid);
-        return result;
-      } catch (e) {// localStorage not available
-      }
-
-      return false;
-    };
-
-    if (windowLocalStorageAvailable()) {
-      localStorage = window.localStorage;
-    } else if (window.globalStorage) {
-      // Firefox 2-3 use globalStorage
-      // See https://developer.mozilla.org/en/dom/storage#globalStorage
-      try {
-        localStorage = window.globalStorage[window.location.hostname];
-      } catch (e) {// Something bad happened...
-      }
-    } else if (typeof document !== 'undefined') {
-      // IE 5-7 use userData
-      // See http://msdn.microsoft.com/en-us/library/ms531424(v=vs.85).aspx
-      var div = document.createElement('div'),
-          attrKey = 'localStorage';
-      div.style.display = 'none';
-      document.getElementsByTagName('head')[0].appendChild(div);
-
-      if (div.addBehavior) {
-        div.addBehavior('#default#userdata');
-        localStorage = {
-          length: 0,
-          setItem: function setItem(k, v) {
-            div.load(attrKey);
-
-            if (!div.getAttribute(k)) {
-              this.length++;
+/***/ "./node_modules/@lubycon/react/node_modules/@firebase/analytics/dist/index.esm.js":
+/*!****************************************************************************************!*\
+  !*** ./node_modules/@lubycon/react/node_modules/@firebase/analytics/dist/index.esm.js ***!
+  \****************************************************************************************/
+/*! exports provided: factory, getGlobalVars, registerAnalytics, resetGlobalVars, settings */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "factory", function() { return factory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getGlobalVars", function() { return getGlobalVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerAnalytics", function() { return registerAnalytics; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "resetGlobalVars", function() { return resetGlobalVars; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "settings", function() { return settings; });
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "./node_modules/@lubycon/react/node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/index.esm.js");
+/* harmony import */ var _firebase_installations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @firebase/installations */ "./node_modules/@lubycon/react/node_modules/@firebase/installations/dist/index.esm.js");
+/* harmony import */ var _firebase_logger__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/logger */ "./node_modules/@firebase/logger/dist/index.esm.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/index.esm.js");
+
+
+
+
+
+
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+// Key to attach FID to in gtag params.
+var GA_FID_KEY = 'firebase_id';
+var ORIGIN_KEY = 'origin';
+var FETCH_TIMEOUT_MILLIS = 60 * 1000;
+var DYNAMIC_CONFIG_URL = 'https://firebase.googleapis.com/v1alpha/projects/-/apps/{app-id}/webConfig';
+var GTAG_URL = 'https://www.googletagmanager.com/gtag/js';
+var GtagCommand;
+(function (GtagCommand) {
+    GtagCommand["EVENT"] = "event";
+    GtagCommand["SET"] = "set";
+    GtagCommand["CONFIG"] = "config";
+})(GtagCommand || (GtagCommand = {}));
+/**
+ * Officially recommended event names for gtag.js
+ * Any other string is also allowed.
+ *
+ * @public
+ */
+var EventName;
+(function (EventName) {
+    EventName["ADD_SHIPPING_INFO"] = "add_shipping_info";
+    EventName["ADD_PAYMENT_INFO"] = "add_payment_info";
+    EventName["ADD_TO_CART"] = "add_to_cart";
+    EventName["ADD_TO_WISHLIST"] = "add_to_wishlist";
+    EventName["BEGIN_CHECKOUT"] = "begin_checkout";
+    /**
+     * @deprecated
+     * This event name is deprecated and is unsupported in updated
+     * Enhanced Ecommerce reports.
+     */
+    EventName["CHECKOUT_PROGRESS"] = "checkout_progress";
+    EventName["EXCEPTION"] = "exception";
+    EventName["GENERATE_LEAD"] = "generate_lead";
+    EventName["LOGIN"] = "login";
+    EventName["PAGE_VIEW"] = "page_view";
+    EventName["PURCHASE"] = "purchase";
+    EventName["REFUND"] = "refund";
+    EventName["REMOVE_FROM_CART"] = "remove_from_cart";
+    EventName["SCREEN_VIEW"] = "screen_view";
+    EventName["SEARCH"] = "search";
+    EventName["SELECT_CONTENT"] = "select_content";
+    EventName["SELECT_ITEM"] = "select_item";
+    EventName["SELECT_PROMOTION"] = "select_promotion";
+    /** @deprecated */
+    EventName["SET_CHECKOUT_OPTION"] = "set_checkout_option";
+    EventName["SHARE"] = "share";
+    EventName["SIGN_UP"] = "sign_up";
+    EventName["TIMING_COMPLETE"] = "timing_complete";
+    EventName["VIEW_CART"] = "view_cart";
+    EventName["VIEW_ITEM"] = "view_item";
+    EventName["VIEW_ITEM_LIST"] = "view_item_list";
+    EventName["VIEW_PROMOTION"] = "view_promotion";
+    EventName["VIEW_SEARCH_RESULTS"] = "view_search_results";
+})(EventName || (EventName = {}));
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Logs an analytics event through the Firebase SDK.
+ *
+ * @param gtagFunction Wrapped gtag function that waits for fid to be set before sending an event
+ * @param eventName Google Analytics event name, choose from standard list or use a custom string.
+ * @param eventParams Analytics event parameters.
+ */
+function logEvent(gtagFunction, initializationPromise, eventName, eventParams, options) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var measurementId, params;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(options && options.global)) return [3 /*break*/, 1];
+                    gtagFunction(GtagCommand.EVENT, eventName, eventParams);
+                    return [2 /*return*/];
+                case 1: return [4 /*yield*/, initializationPromise];
+                case 2:
+                    measurementId = _a.sent();
+                    params = Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__assign"])({}, eventParams), { 'send_to': measurementId });
+                    gtagFunction(GtagCommand.EVENT, eventName, params);
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
             }
-
-            div.setAttribute(k, v);
-            div.save(attrKey);
-          },
-          getItem: function getItem(k) {
-            div.load(attrKey);
-            return div.getAttribute(k);
-          },
-          removeItem: function removeItem(k) {
-            div.load(attrKey);
-
-            if (div.getAttribute(k)) {
-              this.length--;
-            }
-
-            div.removeAttribute(k);
-            div.save(attrKey);
-          },
-          clear: function clear() {
-            div.load(attrKey);
-            var i = 0;
-            var attr;
-
-            while (attr = div.XMLDocument.documentElement.attributes[i++]) {
-              div.removeAttribute(attr.name);
-            }
-
-            div.save(attrKey);
-            this.length = 0;
-          },
-          key: function key(k) {
-            div.load(attrKey);
-            return div.XMLDocument.documentElement.attributes[k];
-          }
-        };
-        div.load(attrKey);
-        localStorage.length = div.XMLDocument.documentElement.attributes.length;
-      }
-    }
-
-    if (!localStorage) {
-      /* eslint-disable no-unused-vars */
-      localStorage = {
-        length: 0,
-        setItem: function setItem(k, v) {},
-        getItem: function getItem(k) {},
-        removeItem: function removeItem(k) {},
-        clear: function clear() {},
-        key: function key(k) {}
-      };
-      /* eslint-enable no-unused-vars */
-    }
-  }
-
-  var ampLocalStorage = localStorage;
-
-  /*
-   * Abstraction layer for cookie storage.
-   * Uses cookie if available, otherwise fallback to localstorage.
-   */
-
-  var cookieStorage = function cookieStorage() {
-    this.storage = null;
-  };
-
-  cookieStorage.prototype.getStorage = function () {
-    if (this.storage !== null) {
-      return this.storage;
-    }
-
-    if (baseCookie.areCookiesEnabled()) {
-      this.storage = Cookie;
-    } else {
-      // if cookies disabled, fallback to localstorage
-      // note: localstorage does not persist across subdomains
-      var keyPrefix = 'amp_cookiestore_';
-      this.storage = {
-        _options: {
-          expirationDays: undefined,
-          domain: undefined,
-          secure: false
-        },
-        reset: function reset() {
-          this._options = {
-            expirationDays: undefined,
-            domain: undefined,
-            secure: false
-          };
-        },
-        options: function options(opts) {
-          if (arguments.length === 0) {
-            return this._options;
-          }
-
-          opts = opts || {};
-          this._options.expirationDays = opts.expirationDays || this._options.expirationDays; // localStorage is specific to subdomains
-
-          this._options.domain = opts.domain || this._options.domain || window && window.location && window.location.hostname;
-          return this._options.secure = opts.secure || false;
-        },
-        get: function get(name) {
-          try {
-            return JSON.parse(ampLocalStorage.getItem(keyPrefix + name));
-          } catch (e) {}
-          /* eslint-disable-line no-empty */
-
-
-          return null;
-        },
-        set: function set(name, value) {
-          try {
-            ampLocalStorage.setItem(keyPrefix + name, JSON.stringify(value));
-            return true;
-          } catch (e) {}
-          /* eslint-disable-line no-empty */
-
-
-          return false;
-        },
-        remove: function remove(name) {
-          try {
-            ampLocalStorage.removeItem(keyPrefix + name);
-          } catch (e) {
-            return false;
-          }
-        }
-      };
-    }
-
-    return this.storage;
-  };
-
-  var _storageOptionExists;
-  var storageOptionExists = (_storageOptionExists = {}, _defineProperty(_storageOptionExists, Constants.STORAGE_COOKIES, true), _defineProperty(_storageOptionExists, Constants.STORAGE_NONE, true), _defineProperty(_storageOptionExists, Constants.STORAGE_LOCAL, true), _defineProperty(_storageOptionExists, Constants.STORAGE_SESSION, true), _storageOptionExists);
-  /**
-   * MetadataStorage involves SDK data persistance
-   * storage priority: cookies -> localStorage -> in memory
-   * This priority can be overriden by setting the storage options.
-   * if in localStorage, unable track users between subdomains
-   * if in memory, then memory can't be shared between different tabs
-   */
-
-  var MetadataStorage =
-  /*#__PURE__*/
-  function () {
-    function MetadataStorage(_ref) {
-      var storageKey = _ref.storageKey,
-          disableCookies = _ref.disableCookies,
-          domain = _ref.domain,
-          secure = _ref.secure,
-          sameSite = _ref.sameSite,
-          expirationDays = _ref.expirationDays,
-          storage = _ref.storage;
-
-      _classCallCheck(this, MetadataStorage);
-
-      this.storageKey = storageKey;
-      this.domain = domain;
-      this.secure = secure;
-      this.sameSite = sameSite;
-      this.expirationDays = expirationDays;
-      this.cookieDomain = '';
-      var writableTopDomain = topDomain(getLocation().href);
-      this.cookieDomain = domain || (writableTopDomain ? '.' + writableTopDomain : null);
-
-      if (storageOptionExists[storage]) {
-        this.storage = storage;
-      } else {
-        var disableCookieStorage = disableCookies || !baseCookie.areCookiesEnabled({
-          domain: this.cookieDomain,
-          secure: this.secure,
-          sameSite: this.sameSite,
-          expirationDays: this.expirationDays
         });
+    });
+}
+/**
+ * Set screen_name parameter for this Google Analytics ID.
+ *
+ * @param gtagFunction Wrapped gtag function that waits for fid to be set before sending an event
+ * @param screenName Screen name string to set.
+ */
+function setCurrentScreen(gtagFunction, initializationPromise, screenName, options) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var measurementId;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(options && options.global)) return [3 /*break*/, 1];
+                    gtagFunction(GtagCommand.SET, { 'screen_name': screenName });
+                    return [2 /*return*/, Promise.resolve()];
+                case 1: return [4 /*yield*/, initializationPromise];
+                case 2:
+                    measurementId = _a.sent();
+                    gtagFunction(GtagCommand.CONFIG, measurementId, {
+                        update: true,
+                        'screen_name': screenName
+                    });
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Set user_id parameter for this Google Analytics ID.
+ *
+ * @param gtagFunction Wrapped gtag function that waits for fid to be set before sending an event
+ * @param id User ID string to set
+ */
+function setUserId(gtagFunction, initializationPromise, id, options) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var measurementId;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!(options && options.global)) return [3 /*break*/, 1];
+                    gtagFunction(GtagCommand.SET, { 'user_id': id });
+                    return [2 /*return*/, Promise.resolve()];
+                case 1: return [4 /*yield*/, initializationPromise];
+                case 2:
+                    measurementId = _a.sent();
+                    gtagFunction(GtagCommand.CONFIG, measurementId, {
+                        update: true,
+                        'user_id': id
+                    });
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Set all other user properties other than user_id and screen_name.
+ *
+ * @param gtagFunction Wrapped gtag function that waits for fid to be set before sending an event
+ * @param properties Map of user properties to set
+ */
+function setUserProperties(gtagFunction, initializationPromise, properties, options) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var flatProperties, _i, _a, key, measurementId;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    if (!(options && options.global)) return [3 /*break*/, 1];
+                    flatProperties = {};
+                    for (_i = 0, _a = Object.keys(properties); _i < _a.length; _i++) {
+                        key = _a[_i];
+                        // use dot notation for merge behavior in gtag.js
+                        flatProperties["user_properties." + key] = properties[key];
+                    }
+                    gtagFunction(GtagCommand.SET, flatProperties);
+                    return [2 /*return*/, Promise.resolve()];
+                case 1: return [4 /*yield*/, initializationPromise];
+                case 2:
+                    measurementId = _b.sent();
+                    gtagFunction(GtagCommand.CONFIG, measurementId, {
+                        update: true,
+                        'user_properties': properties
+                    });
+                    _b.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Set whether collection is enabled for this ID.
+ *
+ * @param enabled If true, collection is enabled for this ID.
+ */
+function setAnalyticsCollectionEnabled(initializationPromise, enabled) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var measurementId;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, initializationPromise];
+                case 1:
+                    measurementId = _a.sent();
+                    window["ga-disable-" + measurementId] = !enabled;
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
 
-        if (disableCookieStorage) {
-          this.storage = Constants.STORAGE_LOCAL;
-        } else {
-          this.storage = Constants.STORAGE_COOKIES;
-        }
-      }
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var logger = new _firebase_logger__WEBPACK_IMPORTED_MODULE_3__["Logger"]('@firebase/analytics');
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Inserts gtag script tag into the page to asynchronously download gtag.
+ * @param dataLayerName Name of datalayer (most often the default, "_dataLayer").
+ */
+function insertScriptTag(dataLayerName, measurementId) {
+    var script = document.createElement('script');
+    script.src = GTAG_URL + "?l=" + dataLayerName + "&id=" + measurementId;
+    script.async = true;
+    document.head.appendChild(script);
+}
+/**
+ * Get reference to, or create, global datalayer.
+ * @param dataLayerName Name of datalayer (most often the default, "_dataLayer").
+ */
+function getOrCreateDataLayer(dataLayerName) {
+    // Check for existing dataLayer and create if needed.
+    var dataLayer = [];
+    if (Array.isArray(window[dataLayerName])) {
+        dataLayer = window[dataLayerName];
     }
-
-    _createClass(MetadataStorage, [{
-      key: "getCookieStorageKey",
-      value: function getCookieStorageKey() {
-        if (!this.domain) {
-          return this.storageKey;
+    else {
+        window[dataLayerName] = dataLayer;
+    }
+    return dataLayer;
+}
+/**
+ * Wrapped gtag logic when gtag is called with 'config' command.
+ *
+ * @param gtagCore Basic gtag function that just appends to dataLayer.
+ * @param initializationPromisesMap Map of appIds to their initialization promises.
+ * @param dynamicConfigPromisesList Array of dynamic config fetch promises.
+ * @param measurementIdToAppId Map of GA measurementIDs to corresponding Firebase appId.
+ * @param measurementId GA Measurement ID to set config for.
+ * @param gtagParams Gtag config params to set.
+ */
+function gtagOnConfig(gtagCore, initializationPromisesMap, dynamicConfigPromisesList, measurementIdToAppId, measurementId, gtagParams) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var correspondingAppId, dynamicConfigResults, foundConfig, e_1;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    correspondingAppId = measurementIdToAppId[measurementId];
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 7, , 8]);
+                    if (!correspondingAppId) return [3 /*break*/, 3];
+                    return [4 /*yield*/, initializationPromisesMap[correspondingAppId]];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 3: return [4 /*yield*/, Promise.all(dynamicConfigPromisesList)];
+                case 4:
+                    dynamicConfigResults = _a.sent();
+                    foundConfig = dynamicConfigResults.find(function (config) { return config.measurementId === measurementId; });
+                    if (!foundConfig) return [3 /*break*/, 6];
+                    return [4 /*yield*/, initializationPromisesMap[foundConfig.appId]];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6: return [3 /*break*/, 8];
+                case 7:
+                    e_1 = _a.sent();
+                    logger.error(e_1);
+                    return [3 /*break*/, 8];
+                case 8:
+                    gtagCore(GtagCommand.CONFIG, measurementId, gtagParams);
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Wrapped gtag logic when gtag is called with 'event' command.
+ *
+ * @param gtagCore Basic gtag function that just appends to dataLayer.
+ * @param initializationPromisesMap Map of appIds to their initialization promises.
+ * @param dynamicConfigPromisesList Array of dynamic config fetch promises.
+ * @param measurementId GA Measurement ID to log event to.
+ * @param gtagParams Params to log with this event.
+ */
+function gtagOnEvent(gtagCore, initializationPromisesMap, dynamicConfigPromisesList, measurementId, gtagParams) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var initializationPromisesToWaitFor, gaSendToList, dynamicConfigResults, _loop_1, _i, gaSendToList_1, sendToId, state_1, e_2;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 4, , 5]);
+                    initializationPromisesToWaitFor = [];
+                    if (!(gtagParams && gtagParams['send_to'])) return [3 /*break*/, 2];
+                    gaSendToList = gtagParams['send_to'];
+                    // Make it an array if is isn't, so it can be dealt with the same way.
+                    if (!Array.isArray(gaSendToList)) {
+                        gaSendToList = [gaSendToList];
+                    }
+                    return [4 /*yield*/, Promise.all(dynamicConfigPromisesList)];
+                case 1:
+                    dynamicConfigResults = _a.sent();
+                    _loop_1 = function (sendToId) {
+                        // Any fetched dynamic measurement ID that matches this 'send_to' ID
+                        var foundConfig = dynamicConfigResults.find(function (config) { return config.measurementId === sendToId; });
+                        var initializationPromise = foundConfig && initializationPromisesMap[foundConfig.appId];
+                        if (initializationPromise) {
+                            initializationPromisesToWaitFor.push(initializationPromise);
+                        }
+                        else {
+                            // Found an item in 'send_to' that is not associated
+                            // directly with an FID, possibly a group.  Empty this array,
+                            // exit the loop early, and let it get populated below.
+                            initializationPromisesToWaitFor = [];
+                            return "break";
+                        }
+                    };
+                    for (_i = 0, gaSendToList_1 = gaSendToList; _i < gaSendToList_1.length; _i++) {
+                        sendToId = gaSendToList_1[_i];
+                        state_1 = _loop_1(sendToId);
+                        if (state_1 === "break")
+                            break;
+                    }
+                    _a.label = 2;
+                case 2:
+                    // This will be unpopulated if there was no 'send_to' field , or
+                    // if not all entries in the 'send_to' field could be mapped to
+                    // a FID. In these cases, wait on all pending initialization promises.
+                    if (initializationPromisesToWaitFor.length === 0) {
+                        initializationPromisesToWaitFor = Object.values(initializationPromisesMap);
+                    }
+                    // Run core gtag function with args after all relevant initialization
+                    // promises have been resolved.
+                    return [4 /*yield*/, Promise.all(initializationPromisesToWaitFor)];
+                case 3:
+                    // Run core gtag function with args after all relevant initialization
+                    // promises have been resolved.
+                    _a.sent();
+                    // Workaround for http://b/141370449 - third argument cannot be undefined.
+                    gtagCore(GtagCommand.EVENT, measurementId, gtagParams || {});
+                    return [3 /*break*/, 5];
+                case 4:
+                    e_2 = _a.sent();
+                    logger.error(e_2);
+                    return [3 /*break*/, 5];
+                case 5: return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Wraps a standard gtag function with extra code to wait for completion of
+ * relevant initialization promises before sending requests.
+ *
+ * @param gtagCore Basic gtag function that just appends to dataLayer.
+ * @param initializationPromisesMap Map of appIds to their initialization promises.
+ * @param dynamicConfigPromisesList Array of dynamic config fetch promises.
+ * @param measurementIdToAppId Map of GA measurementIDs to corresponding Firebase appId.
+ */
+function wrapGtag(gtagCore, 
+/**
+ * Allows wrapped gtag calls to wait on whichever intialization promises are required,
+ * depending on the contents of the gtag params' `send_to` field, if any.
+ */
+initializationPromisesMap, 
+/**
+ * Wrapped gtag calls sometimes require all dynamic config fetches to have returned
+ * before determining what initialization promises (which include FIDs) to wait for.
+ */
+dynamicConfigPromisesList, 
+/**
+ * Wrapped gtag config calls can narrow down which initialization promise (with FID)
+ * to wait for if the measurementId is already fetched, by getting the corresponding appId,
+ * which is the key for the initialization promises map.
+ */
+measurementIdToAppId) {
+    /**
+     * Wrapper around gtag that ensures FID is sent with gtag calls.
+     * @param command Gtag command type.
+     * @param idOrNameOrParams Measurement ID if command is EVENT/CONFIG, params if command is SET.
+     * @param gtagParams Params if event is EVENT/CONFIG.
+     */
+    function gtagWrapper(command, idOrNameOrParams, gtagParams) {
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+            var e_3;
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        _a.trys.push([0, 6, , 7]);
+                        if (!(command === GtagCommand.EVENT)) return [3 /*break*/, 2];
+                        // If EVENT, second arg must be measurementId.
+                        return [4 /*yield*/, gtagOnEvent(gtagCore, initializationPromisesMap, dynamicConfigPromisesList, idOrNameOrParams, gtagParams)];
+                    case 1:
+                        // If EVENT, second arg must be measurementId.
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 2:
+                        if (!(command === GtagCommand.CONFIG)) return [3 /*break*/, 4];
+                        // If CONFIG, second arg must be measurementId.
+                        return [4 /*yield*/, gtagOnConfig(gtagCore, initializationPromisesMap, dynamicConfigPromisesList, measurementIdToAppId, idOrNameOrParams, gtagParams)];
+                    case 3:
+                        // If CONFIG, second arg must be measurementId.
+                        _a.sent();
+                        return [3 /*break*/, 5];
+                    case 4:
+                        // If SET, second arg must be params.
+                        gtagCore(GtagCommand.SET, idOrNameOrParams);
+                        _a.label = 5;
+                    case 5: return [3 /*break*/, 7];
+                    case 6:
+                        e_3 = _a.sent();
+                        logger.error(e_3);
+                        return [3 /*break*/, 7];
+                    case 7: return [2 /*return*/];
+                }
+            });
+        });
+    }
+    return gtagWrapper;
+}
+/**
+ * Creates global gtag function or wraps existing one if found.
+ * This wrapped function attaches Firebase instance ID (FID) to gtag 'config' and
+ * 'event' calls that belong to the GAID associated with this Firebase instance.
+ *
+ * @param initializationPromisesMap Map of appIds to their initialization promises.
+ * @param dynamicConfigPromisesList Array of dynamic config fetch promises.
+ * @param measurementIdToAppId Map of GA measurementIDs to corresponding Firebase appId.
+ * @param dataLayerName Name of global GA datalayer array.
+ * @param gtagFunctionName Name of global gtag function ("gtag" if not user-specified).
+ */
+function wrapOrCreateGtag(initializationPromisesMap, dynamicConfigPromisesList, measurementIdToAppId, dataLayerName, gtagFunctionName) {
+    // Create a basic core gtag function
+    var gtagCore = function () {
+        var _args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            _args[_i] = arguments[_i];
         }
+        // Must push IArguments object, not an array.
+        window[dataLayerName].push(arguments);
+    };
+    // Replace it with existing one if found
+    if (window[gtagFunctionName] &&
+        typeof window[gtagFunctionName] === 'function') {
+        // @ts-ignore
+        gtagCore = window[gtagFunctionName];
+    }
+    window[gtagFunctionName] = wrapGtag(gtagCore, initializationPromisesMap, dynamicConfigPromisesList, measurementIdToAppId);
+    return {
+        gtagCore: gtagCore,
+        wrappedGtag: window[gtagFunctionName]
+    };
+}
+/**
+ * Returns first script tag in DOM matching our gtag url pattern.
+ */
+function findGtagScriptOnPage() {
+    var scriptTags = window.document.getElementsByTagName('script');
+    for (var _i = 0, _a = Object.values(scriptTags); _i < _a.length; _i++) {
+        var tag = _a[_i];
+        if (tag.src && tag.src.includes(GTAG_URL)) {
+            return tag;
+        }
+    }
+    return null;
+}
 
-        var suffix = this.domain.charAt(0) === '.' ? this.domain.substring(1) : this.domain;
-        return "".concat(this.storageKey).concat(suffix ? "_".concat(suffix) : '');
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var _a;
+var ERRORS = (_a = {},
+    _a["already-exists" /* ALREADY_EXISTS */] = 'A Firebase Analytics instance with the appId {$id} ' +
+        ' already exists. ' +
+        'Only one Firebase Analytics instance can be created for each appId.',
+    _a["already-initialized" /* ALREADY_INITIALIZED */] = 'Firebase Analytics has already been initialized.' +
+        'settings() must be called before initializing any Analytics instance' +
+        'or it will have no effect.',
+    _a["interop-component-reg-failed" /* INTEROP_COMPONENT_REG_FAILED */] = 'Firebase Analytics Interop Component failed to instantiate: {$reason}',
+    _a["invalid-analytics-context" /* INVALID_ANALYTICS_CONTEXT */] = 'Firebase Analytics is not supported in this environment. ' +
+        'Wrap initialization of analytics in analytics.isSupported() ' +
+        'to prevent initialization in unsupported environments. Details: {$errorInfo}',
+    _a["indexeddb-unavailable" /* INDEXEDDB_UNAVAILABLE */] = 'IndexedDB unavailable or restricted in this environment. ' +
+        'Wrap initialization of analytics in analytics.isSupported() ' +
+        'to prevent initialization in unsupported environments. Details: {$errorInfo}',
+    _a["fetch-throttle" /* FETCH_THROTTLE */] = 'The config fetch request timed out while in an exponential backoff state.' +
+        ' Unix timestamp in milliseconds when fetch request throttling ends: {$throttleEndTimeMillis}.',
+    _a["config-fetch-failed" /* CONFIG_FETCH_FAILED */] = 'Dynamic config fetch failed: [{$httpStatus}] {$responseMessage}',
+    _a["no-api-key" /* NO_API_KEY */] = 'The "apiKey" field is empty in the local Firebase config. Firebase Analytics requires this field to' +
+        'contain a valid API key.',
+    _a["no-app-id" /* NO_APP_ID */] = 'The "appId" field is empty in the local Firebase config. Firebase Analytics requires this field to' +
+        'contain a valid app ID.',
+    _a);
+var ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_4__["ErrorFactory"]('analytics', 'Analytics', ERRORS);
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Backoff factor for 503 errors, which we want to be conservative about
+ * to avoid overloading servers. Each retry interval will be
+ * BASE_INTERVAL_MILLIS * LONG_RETRY_FACTOR ^ retryCount, so the second one
+ * will be ~30 seconds (with fuzzing).
+ */
+var LONG_RETRY_FACTOR = 30;
+/**
+ * Base wait interval to multiplied by backoffFactor^backoffCount.
+ */
+var BASE_INTERVAL_MILLIS = 1000;
+/**
+ * Stubbable retry data storage class.
+ */
+var RetryData = /** @class */ (function () {
+    function RetryData(throttleMetadata, intervalMillis) {
+        if (throttleMetadata === void 0) { throttleMetadata = {}; }
+        if (intervalMillis === void 0) { intervalMillis = BASE_INTERVAL_MILLIS; }
+        this.throttleMetadata = throttleMetadata;
+        this.intervalMillis = intervalMillis;
+    }
+    RetryData.prototype.getThrottleMetadata = function (appId) {
+        return this.throttleMetadata[appId];
+    };
+    RetryData.prototype.setThrottleMetadata = function (appId, metadata) {
+        this.throttleMetadata[appId] = metadata;
+    };
+    RetryData.prototype.deleteThrottleMetadata = function (appId) {
+        delete this.throttleMetadata[appId];
+    };
+    return RetryData;
+}());
+var defaultRetryData = new RetryData();
+/**
+ * Set GET request headers.
+ * @param apiKey App API key.
+ */
+function getHeaders(apiKey) {
+    return new Headers({
+        Accept: 'application/json',
+        'x-goog-api-key': apiKey
+    });
+}
+/**
+ * Fetches dynamic config from backend.
+ * @param app Firebase app to fetch config for.
+ */
+function fetchDynamicConfig(appFields) {
+    var _a;
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var appId, apiKey, request, appUrl, response, errorMessage, jsonResponse;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    appId = appFields.appId, apiKey = appFields.apiKey;
+                    request = {
+                        method: 'GET',
+                        headers: getHeaders(apiKey)
+                    };
+                    appUrl = DYNAMIC_CONFIG_URL.replace('{app-id}', appId);
+                    return [4 /*yield*/, fetch(appUrl, request)];
+                case 1:
+                    response = _b.sent();
+                    if (!(response.status !== 200 && response.status !== 304)) return [3 /*break*/, 6];
+                    errorMessage = '';
+                    _b.label = 2;
+                case 2:
+                    _b.trys.push([2, 4, , 5]);
+                    return [4 /*yield*/, response.json()];
+                case 3:
+                    jsonResponse = (_b.sent());
+                    if ((_a = jsonResponse.error) === null || _a === void 0 ? void 0 : _a.message) {
+                        errorMessage = jsonResponse.error.message;
+                    }
+                    return [3 /*break*/, 5];
+                case 4:
+                    _b.sent();
+                    return [3 /*break*/, 5];
+                case 5: throw ERROR_FACTORY.create("config-fetch-failed" /* CONFIG_FETCH_FAILED */, {
+                    httpStatus: response.status,
+                    responseMessage: errorMessage
+                });
+                case 6: return [2 /*return*/, response.json()];
+            }
+        });
+    });
+}
+/**
+ * Fetches dynamic config from backend, retrying if failed.
+ * @param app Firebase app to fetch config for.
+ */
+function fetchDynamicConfigWithRetry(app, 
+// retryData and timeoutMillis are parameterized to allow passing a different value for testing.
+retryData, timeoutMillis) {
+    if (retryData === void 0) { retryData = defaultRetryData; }
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var _a, appId, apiKey, measurementId, throttleMetadata, signal;
+        var _this = this;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_b) {
+            _a = app.options, appId = _a.appId, apiKey = _a.apiKey, measurementId = _a.measurementId;
+            if (!appId) {
+                throw ERROR_FACTORY.create("no-app-id" /* NO_APP_ID */);
+            }
+            if (!apiKey) {
+                if (measurementId) {
+                    return [2 /*return*/, {
+                            measurementId: measurementId,
+                            appId: appId
+                        }];
+                }
+                throw ERROR_FACTORY.create("no-api-key" /* NO_API_KEY */);
+            }
+            throttleMetadata = retryData.getThrottleMetadata(appId) || {
+                backoffCount: 0,
+                throttleEndTimeMillis: Date.now()
+            };
+            signal = new AnalyticsAbortSignal();
+            setTimeout(function () { return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(_this, void 0, void 0, function () {
+                return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+                    // Note a very low delay, eg < 10ms, can elapse before listeners are initialized.
+                    signal.abort();
+                    return [2 /*return*/];
+                });
+            }); }, timeoutMillis !== undefined ? timeoutMillis : FETCH_TIMEOUT_MILLIS);
+            return [2 /*return*/, attemptFetchDynamicConfigWithRetry({ appId: appId, apiKey: apiKey, measurementId: measurementId }, throttleMetadata, signal, retryData)];
+        });
+    });
+}
+/**
+ * Runs one retry attempt.
+ * @param appFields Necessary app config fields.
+ * @param throttleMetadata Ongoing metadata to determine throttling times.
+ * @param signal Abort signal.
+ */
+function attemptFetchDynamicConfigWithRetry(appFields, _a, signal, retryData // for testing
+) {
+    var throttleEndTimeMillis = _a.throttleEndTimeMillis, backoffCount = _a.backoffCount;
+    if (retryData === void 0) { retryData = defaultRetryData; }
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var appId, measurementId, e_1, response, e_2, backoffMillis, throttleMetadata;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    appId = appFields.appId, measurementId = appFields.measurementId;
+                    _b.label = 1;
+                case 1:
+                    _b.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, setAbortableTimeout(signal, throttleEndTimeMillis)];
+                case 2:
+                    _b.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_1 = _b.sent();
+                    if (measurementId) {
+                        logger.warn("Timed out fetching this Firebase app's measurement ID from the server." +
+                            (" Falling back to the measurement ID " + measurementId) +
+                            (" provided in the \"measurementId\" field in the local Firebase config. [" + e_1.message + "]"));
+                        return [2 /*return*/, { appId: appId, measurementId: measurementId }];
+                    }
+                    throw e_1;
+                case 4:
+                    _b.trys.push([4, 6, , 7]);
+                    return [4 /*yield*/, fetchDynamicConfig(appFields)];
+                case 5:
+                    response = _b.sent();
+                    // Note the SDK only clears throttle state if response is success or non-retriable.
+                    retryData.deleteThrottleMetadata(appId);
+                    return [2 /*return*/, response];
+                case 6:
+                    e_2 = _b.sent();
+                    if (!isRetriableError(e_2)) {
+                        retryData.deleteThrottleMetadata(appId);
+                        if (measurementId) {
+                            logger.warn("Failed to fetch this Firebase app's measurement ID from the server." +
+                                (" Falling back to the measurement ID " + measurementId) +
+                                (" provided in the \"measurementId\" field in the local Firebase config. [" + e_2.message + "]"));
+                            return [2 /*return*/, { appId: appId, measurementId: measurementId }];
+                        }
+                        else {
+                            throw e_2;
+                        }
+                    }
+                    backoffMillis = Number(e_2.customData.httpStatus) === 503
+                        ? Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["calculateBackoffMillis"])(backoffCount, retryData.intervalMillis, LONG_RETRY_FACTOR)
+                        : Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["calculateBackoffMillis"])(backoffCount, retryData.intervalMillis);
+                    throttleMetadata = {
+                        throttleEndTimeMillis: Date.now() + backoffMillis,
+                        backoffCount: backoffCount + 1
+                    };
+                    // Persists state.
+                    retryData.setThrottleMetadata(appId, throttleMetadata);
+                    logger.debug("Calling attemptFetch again in " + backoffMillis + " millis");
+                    return [2 /*return*/, attemptFetchDynamicConfigWithRetry(appFields, throttleMetadata, signal, retryData)];
+                case 7: return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Supports waiting on a backoff by:
+ *
+ * <ul>
+ *   <li>Promisifying setTimeout, so we can set a timeout in our Promise chain</li>
+ *   <li>Listening on a signal bus for abort events, just like the Fetch API</li>
+ *   <li>Failing in the same way the Fetch API fails, so timing out a live request and a throttled
+ *       request appear the same.</li>
+ * </ul>
+ *
+ * <p>Visible for testing.
+ */
+function setAbortableTimeout(signal, throttleEndTimeMillis) {
+    return new Promise(function (resolve, reject) {
+        // Derives backoff from given end time, normalizing negative numbers to zero.
+        var backoffMillis = Math.max(throttleEndTimeMillis - Date.now(), 0);
+        var timeout = setTimeout(resolve, backoffMillis);
+        // Adds listener, rather than sets onabort, because signal is a shared object.
+        signal.addEventListener(function () {
+            clearTimeout(timeout);
+            // If the request completes before this timeout, the rejection has no effect.
+            reject(ERROR_FACTORY.create("fetch-throttle" /* FETCH_THROTTLE */, {
+                throttleEndTimeMillis: throttleEndTimeMillis
+            }));
+        });
+    });
+}
+/**
+ * Returns true if the {@link Error} indicates a fetch request may succeed later.
+ */
+function isRetriableError(e) {
+    if (!(e instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_4__["FirebaseError"]) || !e.customData) {
+        return false;
+    }
+    // Uses string index defined by ErrorData, which FirebaseError implements.
+    var httpStatus = Number(e.customData['httpStatus']);
+    return (httpStatus === 429 ||
+        httpStatus === 500 ||
+        httpStatus === 503 ||
+        httpStatus === 504);
+}
+/**
+ * Shims a minimal AbortSignal (copied from Remote Config).
+ *
+ * <p>AbortController's AbortSignal conveniently decouples fetch timeout logic from other aspects
+ * of networking, such as retries. Firebase doesn't use AbortController enough to justify a
+ * polyfill recommendation, like we do with the Fetch API, but this minimal shim can easily be
+ * swapped out if/when we do.
+ */
+var AnalyticsAbortSignal = /** @class */ (function () {
+    function AnalyticsAbortSignal() {
+        this.listeners = [];
+    }
+    AnalyticsAbortSignal.prototype.addEventListener = function (listener) {
+        this.listeners.push(listener);
+    };
+    AnalyticsAbortSignal.prototype.abort = function () {
+        this.listeners.forEach(function (listener) { return listener(); });
+    };
+    return AnalyticsAbortSignal;
+}());
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function validateIndexedDB() {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var e_1;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!!Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["isIndexedDBAvailable"])()) return [3 /*break*/, 1];
+                    logger.warn(ERROR_FACTORY.create("indexeddb-unavailable" /* INDEXEDDB_UNAVAILABLE */, {
+                        errorInfo: 'IndexedDB is not available in this environment.'
+                    }).message);
+                    return [2 /*return*/, false];
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["validateIndexedDBOpenable"])()];
+                case 2:
+                    _a.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    e_1 = _a.sent();
+                    logger.warn(ERROR_FACTORY.create("indexeddb-unavailable" /* INDEXEDDB_UNAVAILABLE */, {
+                        errorInfo: e_1
+                    }).message);
+                    return [2 /*return*/, false];
+                case 4: return [2 /*return*/, true];
+            }
+        });
+    });
+}
+/**
+ * Initialize the analytics instance in gtag.js by calling config command with fid.
+ *
+ * NOTE: We combine analytics initialization and setting fid together because we want fid to be
+ * part of the `page_view` event that's sent during the initialization
+ * @param app Firebase app
+ * @param gtagCore The gtag function that's not wrapped.
+ * @param dynamicConfigPromisesList Array of all dynamic config promises.
+ * @param measurementIdToAppId Maps measurementID to appID.
+ * @param installations FirebaseInstallations instance.
+ *
+ * @returns Measurement ID.
+ */
+function initializeIds(app, dynamicConfigPromisesList, measurementIdToAppId, installations, gtagCore, dataLayerName) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var dynamicConfigPromise, fidPromise, _a, dynamicConfig, fid, configProperties;
+        var _b;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_c) {
+            switch (_c.label) {
+                case 0:
+                    dynamicConfigPromise = fetchDynamicConfigWithRetry(app);
+                    // Once fetched, map measurementIds to appId, for ease of lookup in wrapped gtag function.
+                    dynamicConfigPromise
+                        .then(function (config) {
+                        measurementIdToAppId[config.measurementId] = config.appId;
+                        if (app.options.measurementId &&
+                            config.measurementId !== app.options.measurementId) {
+                            logger.warn("The measurement ID in the local Firebase config (" + app.options.measurementId + ")" +
+                                (" does not match the measurement ID fetched from the server (" + config.measurementId + ").") +
+                                " To ensure analytics events are always sent to the correct Analytics property," +
+                                " update the" +
+                                " measurement ID field in the local config or remove it from the local config.");
+                        }
+                    })
+                        .catch(function (e) { return logger.error(e); });
+                    // Add to list to track state of all dynamic config promises.
+                    dynamicConfigPromisesList.push(dynamicConfigPromise);
+                    fidPromise = validateIndexedDB().then(function (envIsValid) {
+                        if (envIsValid) {
+                            return installations.getId();
+                        }
+                        else {
+                            return undefined;
+                        }
+                    });
+                    return [4 /*yield*/, Promise.all([
+                            dynamicConfigPromise,
+                            fidPromise
+                        ])];
+                case 1:
+                    _a = _c.sent(), dynamicConfig = _a[0], fid = _a[1];
+                    // Detect if user has already put the gtag <script> tag on this page.
+                    if (!findGtagScriptOnPage()) {
+                        insertScriptTag(dataLayerName, dynamicConfig.measurementId);
+                    }
+                    // This command initializes gtag.js and only needs to be called once for the entire web app,
+                    // but since it is idempotent, we can call it multiple times.
+                    // We keep it together with other initialization logic for better code structure.
+                    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+                    gtagCore('js', new Date());
+                    configProperties = (_b = {},
+                        // guard against developers accidentally setting properties with prefix `firebase_`
+                        _b[ORIGIN_KEY] = 'firebase',
+                        _b.update = true,
+                        _b);
+                    if (fid != null) {
+                        configProperties[GA_FID_KEY] = fid;
+                    }
+                    // It should be the first config command called on this GA-ID
+                    // Initialize this GA-ID and set FID on it using the gtag config API.
+                    // Note: This will trigger a page_view event unless 'send_page_view' is set to false in
+                    // `configProperties`.
+                    gtagCore(GtagCommand.CONFIG, dynamicConfig.measurementId, configProperties);
+                    return [2 /*return*/, dynamicConfig.measurementId];
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Maps appId to full initialization promise. Wrapped gtag calls must wait on
+ * all or some of these, depending on the call's `send_to` param and the status
+ * of the dynamic config fetches (see below).
+ */
+var initializationPromisesMap = {};
+/**
+ * List of dynamic config fetch promises. In certain cases, wrapped gtag calls
+ * wait on all these to be complete in order to determine if it can selectively
+ * wait for only certain initialization (FID) promises or if it must wait for all.
+ */
+var dynamicConfigPromisesList = [];
+/**
+ * Maps fetched measurementIds to appId. Populated when the app's dynamic config
+ * fetch completes. If already populated, gtag config calls can use this to
+ * selectively wait for only this app's initialization promise (FID) instead of all
+ * initialization promises.
+ */
+var measurementIdToAppId = {};
+/**
+ * Name for window global data layer array used by GA: defaults to 'dataLayer'.
+ */
+var dataLayerName = 'dataLayer';
+/**
+ * Name for window global gtag function used by GA: defaults to 'gtag'.
+ */
+var gtagName = 'gtag';
+/**
+ * Reproduction of standard gtag function or reference to existing
+ * gtag function on window object.
+ */
+var gtagCoreFunction;
+/**
+ * Wrapper around gtag function that ensures FID is sent with all
+ * relevant event and config calls.
+ */
+var wrappedGtagFunction;
+/**
+ * Flag to ensure page initialization steps (creation or wrapping of
+ * dataLayer and gtag script) are only run once per page load.
+ */
+var globalInitDone = false;
+/**
+ * For testing
+ */
+function resetGlobalVars(newGlobalInitDone, newInitializationPromisesMap, newDynamicPromises) {
+    if (newGlobalInitDone === void 0) { newGlobalInitDone = false; }
+    if (newInitializationPromisesMap === void 0) { newInitializationPromisesMap = {}; }
+    if (newDynamicPromises === void 0) { newDynamicPromises = []; }
+    globalInitDone = newGlobalInitDone;
+    initializationPromisesMap = newInitializationPromisesMap;
+    dynamicConfigPromisesList = newDynamicPromises;
+    dataLayerName = 'dataLayer';
+    gtagName = 'gtag';
+}
+/**
+ * For testing
+ */
+function getGlobalVars() {
+    return {
+        initializationPromisesMap: initializationPromisesMap,
+        dynamicConfigPromisesList: dynamicConfigPromisesList
+    };
+}
+/**
+ * This must be run before calling firebase.analytics() or it won't
+ * have any effect.
+ * @param options Custom gtag and dataLayer names.
+ */
+function settings(options) {
+    if (globalInitDone) {
+        throw ERROR_FACTORY.create("already-initialized" /* ALREADY_INITIALIZED */);
+    }
+    if (options.dataLayerName) {
+        dataLayerName = options.dataLayerName;
+    }
+    if (options.gtagName) {
+        gtagName = options.gtagName;
+    }
+}
+/**
+ * Returns true if no environment mismatch is found.
+ * If environment mismatches are found, throws an INVALID_ANALYTICS_CONTEXT
+ * error that also lists details for each mismatch found.
+ */
+function warnOnBrowserContextMismatch() {
+    var mismatchedEnvMessages = [];
+    if (Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["isBrowserExtension"])()) {
+        mismatchedEnvMessages.push('This is a browser extension environment.');
+    }
+    if (!Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["areCookiesEnabled"])()) {
+        mismatchedEnvMessages.push('Cookies are not available.');
+    }
+    if (mismatchedEnvMessages.length > 0) {
+        var details = mismatchedEnvMessages
+            .map(function (message, index) { return "(" + (index + 1) + ") " + message; })
+            .join(' ');
+        var err = ERROR_FACTORY.create("invalid-analytics-context" /* INVALID_ANALYTICS_CONTEXT */, {
+            errorInfo: details
+        });
+        logger.warn(err.message);
+    }
+}
+function factory(app, installations) {
+    warnOnBrowserContextMismatch();
+    var appId = app.options.appId;
+    if (!appId) {
+        throw ERROR_FACTORY.create("no-app-id" /* NO_APP_ID */);
+    }
+    if (!app.options.apiKey) {
+        if (app.options.measurementId) {
+            logger.warn("The \"apiKey\" field is empty in the local Firebase config. This is needed to fetch the latest" +
+                (" measurement ID for this Firebase app. Falling back to the measurement ID " + app.options.measurementId) +
+                " provided in the \"measurementId\" field in the local Firebase config.");
+        }
+        else {
+            throw ERROR_FACTORY.create("no-api-key" /* NO_API_KEY */);
+        }
+    }
+    if (initializationPromisesMap[appId] != null) {
+        throw ERROR_FACTORY.create("already-exists" /* ALREADY_EXISTS */, {
+            id: appId
+        });
+    }
+    if (!globalInitDone) {
+        // Steps here should only be done once per page: creation or wrapping
+        // of dataLayer and global gtag function.
+        getOrCreateDataLayer(dataLayerName);
+        var _a = wrapOrCreateGtag(initializationPromisesMap, dynamicConfigPromisesList, measurementIdToAppId, dataLayerName, gtagName), wrappedGtag = _a.wrappedGtag, gtagCore = _a.gtagCore;
+        wrappedGtagFunction = wrappedGtag;
+        gtagCoreFunction = gtagCore;
+        globalInitDone = true;
+    }
+    // Async but non-blocking.
+    // This map reflects the completion state of all promises for each appId.
+    initializationPromisesMap[appId] = initializeIds(app, dynamicConfigPromisesList, measurementIdToAppId, installations, gtagCoreFunction, dataLayerName);
+    var analyticsInstance = {
+        app: app,
+        // Public methods return void for API simplicity and to better match gtag,
+        // while internal implementations return promises.
+        logEvent: function (eventName, eventParams, options) {
+            logEvent(wrappedGtagFunction, initializationPromisesMap[appId], eventName, eventParams, options).catch(function (e) { return logger.error(e); });
+        },
+        setCurrentScreen: function (screenName, options) {
+            setCurrentScreen(wrappedGtagFunction, initializationPromisesMap[appId], screenName, options).catch(function (e) { return logger.error(e); });
+        },
+        setUserId: function (id, options) {
+            setUserId(wrappedGtagFunction, initializationPromisesMap[appId], id, options).catch(function (e) { return logger.error(e); });
+        },
+        setUserProperties: function (properties, options) {
+            setUserProperties(wrappedGtagFunction, initializationPromisesMap[appId], properties, options).catch(function (e) { return logger.error(e); });
+        },
+        setAnalyticsCollectionEnabled: function (enabled) {
+            setAnalyticsCollectionEnabled(initializationPromisesMap[appId], enabled).catch(function (e) { return logger.error(e); });
+        },
+        INTERNAL: {
+            delete: function () {
+                delete initializationPromisesMap[appId];
+                return Promise.resolve();
+            }
+        }
+    };
+    return analyticsInstance;
+}
+
+var name = "@firebase/analytics";
+var version = "0.6.18";
+
+/**
+ * Type constant for Firebase Analytics.
+ */
+var ANALYTICS_TYPE = 'analytics';
+function registerAnalytics(instance) {
+    instance.INTERNAL.registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_5__["Component"](ANALYTICS_TYPE, function (container) {
+        // getImmediate for FirebaseApp will always succeed
+        var app = container.getProvider('app').getImmediate();
+        var installations = container
+            .getProvider('installations')
+            .getImmediate();
+        return factory(app, installations);
+    }, "PUBLIC" /* PUBLIC */).setServiceProps({
+        settings: settings,
+        EventName: EventName,
+        isSupported: isSupported
+    }));
+    instance.INTERNAL.registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_5__["Component"]('analytics-internal', internalFactory, "PRIVATE" /* PRIVATE */));
+    instance.registerVersion(name, version);
+    function internalFactory(container) {
+        try {
+            var analytics = container.getProvider(ANALYTICS_TYPE).getImmediate();
+            return {
+                logEvent: analytics.logEvent
+            };
+        }
+        catch (e) {
+            throw ERROR_FACTORY.create("interop-component-reg-failed" /* INTEROP_COMPONENT_REG_FAILED */, {
+                reason: e
+            });
+        }
+    }
+}
+registerAnalytics(_firebase_app__WEBPACK_IMPORTED_MODULE_1__["default"]);
+/**
+ * this is a public static method provided to users that wraps four different checks:
+ *
+ * 1. check if it's not a browser extension environment.
+ * 1. check if cookie is enabled in current browser.
+ * 3. check if IndexedDB is supported by the browser environment.
+ * 4. check if the current browser context is valid for using IndexedDB.
+ *
+ */
+function isSupported() {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__awaiter"])(this, void 0, void 0, function () {
+        var isDBOpenable;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_0__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["isBrowserExtension"])()) {
+                        return [2 /*return*/, false];
+                    }
+                    if (!Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["areCookiesEnabled"])()) {
+                        return [2 /*return*/, false];
+                    }
+                    if (!Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["isIndexedDBAvailable"])()) {
+                        return [2 /*return*/, false];
+                    }
+                    _a.label = 1;
+                case 1:
+                    _a.trys.push([1, 3, , 4]);
+                    return [4 /*yield*/, Object(_firebase_util__WEBPACK_IMPORTED_MODULE_4__["validateIndexedDBOpenable"])()];
+                case 2:
+                    isDBOpenable = _a.sent();
+                    return [2 /*return*/, isDBOpenable];
+                case 3:
+                    _a.sent();
+                    return [2 /*return*/, false];
+                case 4: return [2 /*return*/];
+            }
+        });
+    });
+}
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@lubycon/react/node_modules/@firebase/installations/dist/index.esm.js":
+/*!********************************************************************************************!*\
+  !*** ./node_modules/@lubycon/react/node_modules/@firebase/installations/dist/index.esm.js ***!
+  \********************************************************************************************/
+/*! exports provided: registerInstallations */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "registerInstallations", function() { return registerInstallations; });
+/* harmony import */ var _firebase_app__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/app */ "./node_modules/@firebase/app/dist/index.esm.js");
+/* harmony import */ var _firebase_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @firebase/component */ "./node_modules/@firebase/component/dist/index.esm.js");
+/* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! tslib */ "./node_modules/@lubycon/react/node_modules/tslib/tslib.es6.js");
+/* harmony import */ var _firebase_util__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @firebase/util */ "./node_modules/@firebase/util/dist/index.esm.js");
+/* harmony import */ var idb__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! idb */ "./node_modules/idb/lib/idb.mjs");
+
+
+
+
+
+
+var name = "@firebase/installations";
+var version = "0.4.32";
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var PENDING_TIMEOUT_MS = 10000;
+var PACKAGE_VERSION = "w:" + version;
+var INTERNAL_AUTH_VERSION = 'FIS_v2';
+var INSTALLATIONS_API_URL = 'https://firebaseinstallations.googleapis.com/v1';
+var TOKEN_EXPIRATION_BUFFER = 60 * 60 * 1000; // One hour
+var SERVICE = 'installations';
+var SERVICE_NAME = 'Installations';
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var _a;
+var ERROR_DESCRIPTION_MAP = (_a = {},
+    _a["missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */] = 'Missing App configuration value: "{$valueName}"',
+    _a["not-registered" /* NOT_REGISTERED */] = 'Firebase Installation is not registered.',
+    _a["installation-not-found" /* INSTALLATION_NOT_FOUND */] = 'Firebase Installation not found.',
+    _a["request-failed" /* REQUEST_FAILED */] = '{$requestName} request failed with error "{$serverCode} {$serverStatus}: {$serverMessage}"',
+    _a["app-offline" /* APP_OFFLINE */] = 'Could not process request. Application offline.',
+    _a["delete-pending-registration" /* DELETE_PENDING_REGISTRATION */] = "Can't delete installation while there is a pending registration request.",
+    _a);
+var ERROR_FACTORY = new _firebase_util__WEBPACK_IMPORTED_MODULE_3__["ErrorFactory"](SERVICE, SERVICE_NAME, ERROR_DESCRIPTION_MAP);
+/** Returns true if error is a FirebaseError that is based on an error from the server. */
+function isServerError(error) {
+    return (error instanceof _firebase_util__WEBPACK_IMPORTED_MODULE_3__["FirebaseError"] &&
+        error.code.includes("request-failed" /* REQUEST_FAILED */));
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getInstallationsEndpoint(_a) {
+    var projectId = _a.projectId;
+    return INSTALLATIONS_API_URL + "/projects/" + projectId + "/installations";
+}
+function extractAuthTokenInfoFromResponse(response) {
+    return {
+        token: response.token,
+        requestStatus: 2 /* COMPLETED */,
+        expiresIn: getExpiresInFromResponseExpiresIn(response.expiresIn),
+        creationTime: Date.now()
+    };
+}
+function getErrorFromResponse(requestName, response) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var responseJson, errorData;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, response.json()];
+                case 1:
+                    responseJson = _a.sent();
+                    errorData = responseJson.error;
+                    return [2 /*return*/, ERROR_FACTORY.create("request-failed" /* REQUEST_FAILED */, {
+                            requestName: requestName,
+                            serverCode: errorData.code,
+                            serverMessage: errorData.message,
+                            serverStatus: errorData.status
+                        })];
+            }
+        });
+    });
+}
+function getHeaders(_a) {
+    var apiKey = _a.apiKey;
+    return new Headers({
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        'x-goog-api-key': apiKey
+    });
+}
+function getHeadersWithAuth(appConfig, _a) {
+    var refreshToken = _a.refreshToken;
+    var headers = getHeaders(appConfig);
+    headers.append('Authorization', getAuthorizationHeader(refreshToken));
+    return headers;
+}
+/**
+ * Calls the passed in fetch wrapper and returns the response.
+ * If the returned response has a status of 5xx, re-runs the function once and
+ * returns the response.
+ */
+function retryIfServerError(fn) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var result;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, fn()];
+                case 1:
+                    result = _a.sent();
+                    if (result.status >= 500 && result.status < 600) {
+                        // Internal Server Error. Retry request.
+                        return [2 /*return*/, fn()];
+                    }
+                    return [2 /*return*/, result];
+            }
+        });
+    });
+}
+function getExpiresInFromResponseExpiresIn(responseExpiresIn) {
+    // This works because the server will never respond with fractions of a second.
+    return Number(responseExpiresIn.replace('s', '000'));
+}
+function getAuthorizationHeader(refreshToken) {
+    return INTERNAL_AUTH_VERSION + " " + refreshToken;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function createInstallationRequest(appConfig, _a) {
+    var fid = _a.fid;
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var endpoint, headers, body, request, response, responseValue, registeredInstallationEntry;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    endpoint = getInstallationsEndpoint(appConfig);
+                    headers = getHeaders(appConfig);
+                    body = {
+                        fid: fid,
+                        authVersion: INTERNAL_AUTH_VERSION,
+                        appId: appConfig.appId,
+                        sdkVersion: PACKAGE_VERSION
+                    };
+                    request = {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(body)
+                    };
+                    return [4 /*yield*/, retryIfServerError(function () { return fetch(endpoint, request); })];
+                case 1:
+                    response = _b.sent();
+                    if (!response.ok) return [3 /*break*/, 3];
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    responseValue = _b.sent();
+                    registeredInstallationEntry = {
+                        fid: responseValue.fid || fid,
+                        registrationStatus: 2 /* COMPLETED */,
+                        refreshToken: responseValue.refreshToken,
+                        authToken: extractAuthTokenInfoFromResponse(responseValue.authToken)
+                    };
+                    return [2 /*return*/, registeredInstallationEntry];
+                case 3: return [4 /*yield*/, getErrorFromResponse('Create Installation', response)];
+                case 4: throw _b.sent();
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2020 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a promise that resolves after given time passes. */
+function sleep(ms) {
+    return new Promise(function (resolve) {
+        setTimeout(resolve, ms);
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function bufferToBase64UrlSafe(array) {
+    var b64 = btoa(String.fromCharCode.apply(String, Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__spreadArray"])([], Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__read"])(array))));
+    return b64.replace(/\+/g, '-').replace(/\//g, '_');
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var VALID_FID_PATTERN = /^[cdef][\w-]{21}$/;
+var INVALID_FID = '';
+/**
+ * Generates a new FID using random values from Web Crypto API.
+ * Returns an empty string if FID generation fails for any reason.
+ */
+function generateFid() {
+    try {
+        // A valid FID has exactly 22 base64 characters, which is 132 bits, or 16.5
+        // bytes. our implementation generates a 17 byte array instead.
+        var fidByteArray = new Uint8Array(17);
+        var crypto_1 = self.crypto || self.msCrypto;
+        crypto_1.getRandomValues(fidByteArray);
+        // Replace the first 4 random bits with the constant FID header of 0b0111.
+        fidByteArray[0] = 112 + (fidByteArray[0] % 16);
+        var fid = encode(fidByteArray);
+        return VALID_FID_PATTERN.test(fid) ? fid : INVALID_FID;
+    }
+    catch (_a) {
+        // FID generation errored
+        return INVALID_FID;
+    }
+}
+/** Converts a FID Uint8Array to a base64 string representation. */
+function encode(fidByteArray) {
+    var b64String = bufferToBase64UrlSafe(fidByteArray);
+    // Remove the 23rd character that was added because of the extra 4 bits at the
+    // end of our 17 byte array, and the '=' padding.
+    return b64String.substr(0, 22);
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/** Returns a string key that can be used to identify the app. */
+function getKey(appConfig) {
+    return appConfig.appName + "!" + appConfig.appId;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var fidChangeCallbacks = new Map();
+/**
+ * Calls the onIdChange callbacks with the new FID value, and broadcasts the
+ * change to other tabs.
+ */
+function fidChanged(appConfig, fid) {
+    var key = getKey(appConfig);
+    callFidChangeCallbacks(key, fid);
+    broadcastFidChange(key, fid);
+}
+function addCallback(appConfig, callback) {
+    // Open the broadcast channel if it's not already open,
+    // to be able to listen to change events from other tabs.
+    getBroadcastChannel();
+    var key = getKey(appConfig);
+    var callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        callbackSet = new Set();
+        fidChangeCallbacks.set(key, callbackSet);
+    }
+    callbackSet.add(callback);
+}
+function removeCallback(appConfig, callback) {
+    var key = getKey(appConfig);
+    var callbackSet = fidChangeCallbacks.get(key);
+    if (!callbackSet) {
+        return;
+    }
+    callbackSet.delete(callback);
+    if (callbackSet.size === 0) {
+        fidChangeCallbacks.delete(key);
+    }
+    // Close broadcast channel if there are no more callbacks.
+    closeBroadcastChannel();
+}
+function callFidChangeCallbacks(key, fid) {
+    var e_1, _a;
+    var callbacks = fidChangeCallbacks.get(key);
+    if (!callbacks) {
+        return;
+    }
+    try {
+        for (var callbacks_1 = Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__values"])(callbacks), callbacks_1_1 = callbacks_1.next(); !callbacks_1_1.done; callbacks_1_1 = callbacks_1.next()) {
+            var callback = callbacks_1_1.value;
+            callback(fid);
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (callbacks_1_1 && !callbacks_1_1.done && (_a = callbacks_1.return)) _a.call(callbacks_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+}
+function broadcastFidChange(key, fid) {
+    var channel = getBroadcastChannel();
+    if (channel) {
+        channel.postMessage({ key: key, fid: fid });
+    }
+    closeBroadcastChannel();
+}
+var broadcastChannel = null;
+/** Opens and returns a BroadcastChannel if it is supported by the browser. */
+function getBroadcastChannel() {
+    if (!broadcastChannel && 'BroadcastChannel' in self) {
+        broadcastChannel = new BroadcastChannel('[Firebase] FID Change');
+        broadcastChannel.onmessage = function (e) {
+            callFidChangeCallbacks(e.data.key, e.data.fid);
+        };
+    }
+    return broadcastChannel;
+}
+function closeBroadcastChannel() {
+    if (fidChangeCallbacks.size === 0 && broadcastChannel) {
+        broadcastChannel.close();
+        broadcastChannel = null;
+    }
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+var DATABASE_NAME = 'firebase-installations-database';
+var DATABASE_VERSION = 1;
+var OBJECT_STORE_NAME = 'firebase-installations-store';
+var dbPromise = null;
+function getDbPromise() {
+    if (!dbPromise) {
+        dbPromise = Object(idb__WEBPACK_IMPORTED_MODULE_4__["openDb"])(DATABASE_NAME, DATABASE_VERSION, function (upgradeDB) {
+            // We don't use 'break' in this switch statement, the fall-through
+            // behavior is what we want, because if there are multiple versions between
+            // the old version and the current version, we want ALL the migrations
+            // that correspond to those versions to run, not only the last one.
+            // eslint-disable-next-line default-case
+            switch (upgradeDB.oldVersion) {
+                case 0:
+                    upgradeDB.createObjectStore(OBJECT_STORE_NAME);
+            }
+        });
+    }
+    return dbPromise;
+}
+/** Assigns or overwrites the record for the given key with the given value. */
+function set(appConfig, value) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var key, db, tx, objectStore, oldValue;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    key = getKey(appConfig);
+                    return [4 /*yield*/, getDbPromise()];
+                case 1:
+                    db = _a.sent();
+                    tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+                    objectStore = tx.objectStore(OBJECT_STORE_NAME);
+                    return [4 /*yield*/, objectStore.get(key)];
+                case 2:
+                    oldValue = _a.sent();
+                    return [4 /*yield*/, objectStore.put(value, key)];
+                case 3:
+                    _a.sent();
+                    return [4 /*yield*/, tx.complete];
+                case 4:
+                    _a.sent();
+                    if (!oldValue || oldValue.fid !== value.fid) {
+                        fidChanged(appConfig, value.fid);
+                    }
+                    return [2 /*return*/, value];
+            }
+        });
+    });
+}
+/** Removes record(s) from the objectStore that match the given key. */
+function remove(appConfig) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var key, db, tx;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    key = getKey(appConfig);
+                    return [4 /*yield*/, getDbPromise()];
+                case 1:
+                    db = _a.sent();
+                    tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+                    return [4 /*yield*/, tx.objectStore(OBJECT_STORE_NAME).delete(key)];
+                case 2:
+                    _a.sent();
+                    return [4 /*yield*/, tx.complete];
+                case 3:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+/**
+ * Atomically updates a record with the result of updateFn, which gets
+ * called with the current value. If newValue is undefined, the record is
+ * deleted instead.
+ * @return Updated value
+ */
+function update(appConfig, updateFn) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var key, db, tx, store, oldValue, newValue;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    key = getKey(appConfig);
+                    return [4 /*yield*/, getDbPromise()];
+                case 1:
+                    db = _a.sent();
+                    tx = db.transaction(OBJECT_STORE_NAME, 'readwrite');
+                    store = tx.objectStore(OBJECT_STORE_NAME);
+                    return [4 /*yield*/, store.get(key)];
+                case 2:
+                    oldValue = _a.sent();
+                    newValue = updateFn(oldValue);
+                    if (!(newValue === undefined)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, store.delete(key)];
+                case 3:
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 4: return [4 /*yield*/, store.put(newValue, key)];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6: return [4 /*yield*/, tx.complete];
+                case 7:
+                    _a.sent();
+                    if (newValue && (!oldValue || oldValue.fid !== newValue.fid)) {
+                        fidChanged(appConfig, newValue.fid);
+                    }
+                    return [2 /*return*/, newValue];
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Updates and returns the InstallationEntry from the database.
+ * Also triggers a registration request if it is necessary and possible.
+ */
+function getInstallationEntry(appConfig) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var registrationPromise, installationEntry;
+        var _a;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, update(appConfig, function (oldEntry) {
+                        var installationEntry = updateOrCreateInstallationEntry(oldEntry);
+                        var entryWithPromise = triggerRegistrationIfNecessary(appConfig, installationEntry);
+                        registrationPromise = entryWithPromise.registrationPromise;
+                        return entryWithPromise.installationEntry;
+                    })];
+                case 1:
+                    installationEntry = _b.sent();
+                    if (!(installationEntry.fid === INVALID_FID)) return [3 /*break*/, 3];
+                    _a = {};
+                    return [4 /*yield*/, registrationPromise];
+                case 2: 
+                // FID generation failed. Waiting for the FID from the server.
+                return [2 /*return*/, (_a.installationEntry = _b.sent(), _a)];
+                case 3: return [2 /*return*/, {
+                        installationEntry: installationEntry,
+                        registrationPromise: registrationPromise
+                    }];
+            }
+        });
+    });
+}
+/**
+ * Creates a new Installation Entry if one does not exist.
+ * Also clears timed out pending requests.
+ */
+function updateOrCreateInstallationEntry(oldEntry) {
+    var entry = oldEntry || {
+        fid: generateFid(),
+        registrationStatus: 0 /* NOT_STARTED */
+    };
+    return clearTimedOutRequest(entry);
+}
+/**
+ * If the Firebase Installation is not registered yet, this will trigger the
+ * registration and return an InProgressInstallationEntry.
+ *
+ * If registrationPromise does not exist, the installationEntry is guaranteed
+ * to be registered.
+ */
+function triggerRegistrationIfNecessary(appConfig, installationEntry) {
+    if (installationEntry.registrationStatus === 0 /* NOT_STARTED */) {
+        if (!navigator.onLine) {
+            // Registration required but app is offline.
+            var registrationPromiseWithError = Promise.reject(ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */));
+            return {
+                installationEntry: installationEntry,
+                registrationPromise: registrationPromiseWithError
+            };
+        }
+        // Try registering. Change status to IN_PROGRESS.
+        var inProgressEntry = {
+            fid: installationEntry.fid,
+            registrationStatus: 1 /* IN_PROGRESS */,
+            registrationTime: Date.now()
+        };
+        var registrationPromise = registerInstallation(appConfig, inProgressEntry);
+        return { installationEntry: inProgressEntry, registrationPromise: registrationPromise };
+    }
+    else if (installationEntry.registrationStatus === 1 /* IN_PROGRESS */) {
+        return {
+            installationEntry: installationEntry,
+            registrationPromise: waitUntilFidRegistration(appConfig)
+        };
+    }
+    else {
+        return { installationEntry: installationEntry };
+    }
+}
+/** This will be executed only once for each new Firebase Installation. */
+function registerInstallation(appConfig, installationEntry) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var registeredInstallationEntry, e_1;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 2, , 7]);
+                    return [4 /*yield*/, createInstallationRequest(appConfig, installationEntry)];
+                case 1:
+                    registeredInstallationEntry = _a.sent();
+                    return [2 /*return*/, set(appConfig, registeredInstallationEntry)];
+                case 2:
+                    e_1 = _a.sent();
+                    if (!(isServerError(e_1) && e_1.customData.serverCode === 409)) return [3 /*break*/, 4];
+                    // Server returned a "FID can not be used" error.
+                    // Generate a new ID next time.
+                    return [4 /*yield*/, remove(appConfig)];
+                case 3:
+                    // Server returned a "FID can not be used" error.
+                    // Generate a new ID next time.
+                    _a.sent();
+                    return [3 /*break*/, 6];
+                case 4: 
+                // Registration failed. Set FID as not registered.
+                return [4 /*yield*/, set(appConfig, {
+                        fid: installationEntry.fid,
+                        registrationStatus: 0 /* NOT_STARTED */
+                    })];
+                case 5:
+                    // Registration failed. Set FID as not registered.
+                    _a.sent();
+                    _a.label = 6;
+                case 6: throw e_1;
+                case 7: return [2 /*return*/];
+            }
+        });
+    });
+}
+/** Call if FID registration is pending in another request. */
+function waitUntilFidRegistration(appConfig) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var entry, _a, installationEntry, registrationPromise;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, updateInstallationRequest(appConfig)];
+                case 1:
+                    entry = _b.sent();
+                    _b.label = 2;
+                case 2:
+                    if (!(entry.registrationStatus === 1 /* IN_PROGRESS */)) return [3 /*break*/, 5];
+                    // createInstallation request still in progress.
+                    return [4 /*yield*/, sleep(100)];
+                case 3:
+                    // createInstallation request still in progress.
+                    _b.sent();
+                    return [4 /*yield*/, updateInstallationRequest(appConfig)];
+                case 4:
+                    entry = _b.sent();
+                    return [3 /*break*/, 2];
+                case 5:
+                    if (!(entry.registrationStatus === 0 /* NOT_STARTED */)) return [3 /*break*/, 7];
+                    return [4 /*yield*/, getInstallationEntry(appConfig)];
+                case 6:
+                    _a = _b.sent(), installationEntry = _a.installationEntry, registrationPromise = _a.registrationPromise;
+                    if (registrationPromise) {
+                        return [2 /*return*/, registrationPromise];
+                    }
+                    else {
+                        // if there is no registrationPromise, entry is registered.
+                        return [2 /*return*/, installationEntry];
+                    }
+                case 7: return [2 /*return*/, entry];
+            }
+        });
+    });
+}
+/**
+ * Called only if there is a CreateInstallation request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * CreateInstallation request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateInstallationRequest(appConfig) {
+    return update(appConfig, function (oldEntry) {
+        if (!oldEntry) {
+            throw ERROR_FACTORY.create("installation-not-found" /* INSTALLATION_NOT_FOUND */);
+        }
+        return clearTimedOutRequest(oldEntry);
+    });
+}
+function clearTimedOutRequest(entry) {
+    if (hasInstallationRequestTimedOut(entry)) {
+        return {
+            fid: entry.fid,
+            registrationStatus: 0 /* NOT_STARTED */
+        };
+    }
+    return entry;
+}
+function hasInstallationRequestTimedOut(installationEntry) {
+    return (installationEntry.registrationStatus === 1 /* IN_PROGRESS */ &&
+        installationEntry.registrationTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function generateAuthTokenRequest(_a, installationEntry) {
+    var appConfig = _a.appConfig, platformLoggerProvider = _a.platformLoggerProvider;
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var endpoint, headers, platformLogger, body, request, response, responseValue, completedAuthToken;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    endpoint = getGenerateAuthTokenEndpoint(appConfig, installationEntry);
+                    headers = getHeadersWithAuth(appConfig, installationEntry);
+                    platformLogger = platformLoggerProvider.getImmediate({
+                        optional: true
+                    });
+                    if (platformLogger) {
+                        headers.append('x-firebase-client', platformLogger.getPlatformInfoString());
+                    }
+                    body = {
+                        installation: {
+                            sdkVersion: PACKAGE_VERSION
+                        }
+                    };
+                    request = {
+                        method: 'POST',
+                        headers: headers,
+                        body: JSON.stringify(body)
+                    };
+                    return [4 /*yield*/, retryIfServerError(function () { return fetch(endpoint, request); })];
+                case 1:
+                    response = _b.sent();
+                    if (!response.ok) return [3 /*break*/, 3];
+                    return [4 /*yield*/, response.json()];
+                case 2:
+                    responseValue = _b.sent();
+                    completedAuthToken = extractAuthTokenInfoFromResponse(responseValue);
+                    return [2 /*return*/, completedAuthToken];
+                case 3: return [4 /*yield*/, getErrorFromResponse('Generate Auth Token', response)];
+                case 4: throw _b.sent();
+            }
+        });
+    });
+}
+function getGenerateAuthTokenEndpoint(appConfig, _a) {
+    var fid = _a.fid;
+    return getInstallationsEndpoint(appConfig) + "/" + fid + "/authTokens:generate";
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Returns a valid authentication token for the installation. Generates a new
+ * token if one doesn't exist, is expired or about to expire.
+ *
+ * Should only be called if the Firebase Installation is registered.
+ */
+function refreshAuthToken(dependencies, forceRefresh) {
+    if (forceRefresh === void 0) { forceRefresh = false; }
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var tokenPromise, entry, authToken, _a;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, update(dependencies.appConfig, function (oldEntry) {
+                        if (!isEntryRegistered(oldEntry)) {
+                            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+                        }
+                        var oldAuthToken = oldEntry.authToken;
+                        if (!forceRefresh && isAuthTokenValid(oldAuthToken)) {
+                            // There is a valid token in the DB.
+                            return oldEntry;
+                        }
+                        else if (oldAuthToken.requestStatus === 1 /* IN_PROGRESS */) {
+                            // There already is a token request in progress.
+                            tokenPromise = waitUntilAuthTokenRequest(dependencies, forceRefresh);
+                            return oldEntry;
+                        }
+                        else {
+                            // No token or token expired.
+                            if (!navigator.onLine) {
+                                throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+                            }
+                            var inProgressEntry = makeAuthTokenRequestInProgressEntry(oldEntry);
+                            tokenPromise = fetchAuthTokenFromServer(dependencies, inProgressEntry);
+                            return inProgressEntry;
+                        }
+                    })];
+                case 1:
+                    entry = _b.sent();
+                    if (!tokenPromise) return [3 /*break*/, 3];
+                    return [4 /*yield*/, tokenPromise];
+                case 2:
+                    _a = _b.sent();
+                    return [3 /*break*/, 4];
+                case 3:
+                    _a = entry.authToken;
+                    _b.label = 4;
+                case 4:
+                    authToken = _a;
+                    return [2 /*return*/, authToken];
+            }
+        });
+    });
+}
+/**
+ * Call only if FID is registered and Auth Token request is in progress.
+ *
+ * Waits until the current pending request finishes. If the request times out,
+ * tries once in this thread as well.
+ */
+function waitUntilAuthTokenRequest(dependencies, forceRefresh) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var entry, authToken;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, updateAuthTokenRequest(dependencies.appConfig)];
+                case 1:
+                    entry = _a.sent();
+                    _a.label = 2;
+                case 2:
+                    if (!(entry.authToken.requestStatus === 1 /* IN_PROGRESS */)) return [3 /*break*/, 5];
+                    // generateAuthToken still in progress.
+                    return [4 /*yield*/, sleep(100)];
+                case 3:
+                    // generateAuthToken still in progress.
+                    _a.sent();
+                    return [4 /*yield*/, updateAuthTokenRequest(dependencies.appConfig)];
+                case 4:
+                    entry = _a.sent();
+                    return [3 /*break*/, 2];
+                case 5:
+                    authToken = entry.authToken;
+                    if (authToken.requestStatus === 0 /* NOT_STARTED */) {
+                        // The request timed out or failed in a different call. Try again.
+                        return [2 /*return*/, refreshAuthToken(dependencies, forceRefresh)];
+                    }
+                    else {
+                        return [2 /*return*/, authToken];
+                    }
+            }
+        });
+    });
+}
+/**
+ * Called only if there is a GenerateAuthToken request in progress.
+ *
+ * Updates the InstallationEntry in the DB based on the status of the
+ * GenerateAuthToken request.
+ *
+ * Returns the updated InstallationEntry.
+ */
+function updateAuthTokenRequest(appConfig) {
+    return update(appConfig, function (oldEntry) {
+        if (!isEntryRegistered(oldEntry)) {
+            throw ERROR_FACTORY.create("not-registered" /* NOT_REGISTERED */);
+        }
+        var oldAuthToken = oldEntry.authToken;
+        if (hasAuthTokenRequestTimedOut(oldAuthToken)) {
+            return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])({}, oldEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+        }
+        return oldEntry;
+    });
+}
+function fetchAuthTokenFromServer(dependencies, installationEntry) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var authToken, updatedInstallationEntry, e_1, updatedInstallationEntry;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    _a.trys.push([0, 3, , 8]);
+                    return [4 /*yield*/, generateAuthTokenRequest(dependencies, installationEntry)];
+                case 1:
+                    authToken = _a.sent();
+                    updatedInstallationEntry = Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])({}, installationEntry), { authToken: authToken });
+                    return [4 /*yield*/, set(dependencies.appConfig, updatedInstallationEntry)];
+                case 2:
+                    _a.sent();
+                    return [2 /*return*/, authToken];
+                case 3:
+                    e_1 = _a.sent();
+                    if (!(isServerError(e_1) &&
+                        (e_1.customData.serverCode === 401 || e_1.customData.serverCode === 404))) return [3 /*break*/, 5];
+                    // Server returned a "FID not found" or a "Invalid authentication" error.
+                    // Generate a new ID next time.
+                    return [4 /*yield*/, remove(dependencies.appConfig)];
+                case 4:
+                    // Server returned a "FID not found" or a "Invalid authentication" error.
+                    // Generate a new ID next time.
+                    _a.sent();
+                    return [3 /*break*/, 7];
+                case 5:
+                    updatedInstallationEntry = Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])({}, installationEntry), { authToken: { requestStatus: 0 /* NOT_STARTED */ } });
+                    return [4 /*yield*/, set(dependencies.appConfig, updatedInstallationEntry)];
+                case 6:
+                    _a.sent();
+                    _a.label = 7;
+                case 7: throw e_1;
+                case 8: return [2 /*return*/];
+            }
+        });
+    });
+}
+function isEntryRegistered(installationEntry) {
+    return (installationEntry !== undefined &&
+        installationEntry.registrationStatus === 2 /* COMPLETED */);
+}
+function isAuthTokenValid(authToken) {
+    return (authToken.requestStatus === 2 /* COMPLETED */ &&
+        !isAuthTokenExpired(authToken));
+}
+function isAuthTokenExpired(authToken) {
+    var now = Date.now();
+    return (now < authToken.creationTime ||
+        authToken.creationTime + authToken.expiresIn < now + TOKEN_EXPIRATION_BUFFER);
+}
+/** Returns an updated InstallationEntry with an InProgressAuthToken. */
+function makeAuthTokenRequestInProgressEntry(oldEntry) {
+    var inProgressAuthToken = {
+        requestStatus: 1 /* IN_PROGRESS */,
+        requestTime: Date.now()
+    };
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])(Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__assign"])({}, oldEntry), { authToken: inProgressAuthToken });
+}
+function hasAuthTokenRequestTimedOut(authToken) {
+    return (authToken.requestStatus === 1 /* IN_PROGRESS */ &&
+        authToken.requestTime + PENDING_TIMEOUT_MS < Date.now());
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getId(dependencies) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var _a, installationEntry, registrationPromise;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, getInstallationEntry(dependencies.appConfig)];
+                case 1:
+                    _a = _b.sent(), installationEntry = _a.installationEntry, registrationPromise = _a.registrationPromise;
+                    if (registrationPromise) {
+                        registrationPromise.catch(console.error);
+                    }
+                    else {
+                        // If the installation is already registered, update the authentication
+                        // token if needed.
+                        refreshAuthToken(dependencies).catch(console.error);
+                    }
+                    return [2 /*return*/, installationEntry.fid];
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function getToken(dependencies, forceRefresh) {
+    if (forceRefresh === void 0) { forceRefresh = false; }
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var authToken;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, completeInstallationRegistration(dependencies.appConfig)];
+                case 1:
+                    _a.sent();
+                    return [4 /*yield*/, refreshAuthToken(dependencies, forceRefresh)];
+                case 2:
+                    authToken = _a.sent();
+                    return [2 /*return*/, authToken.token];
+            }
+        });
+    });
+}
+function completeInstallationRegistration(appConfig) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var registrationPromise;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getInstallationEntry(appConfig)];
+                case 1:
+                    registrationPromise = (_a.sent()).registrationPromise;
+                    if (!registrationPromise) return [3 /*break*/, 3];
+                    // A createInstallation request is in progress. Wait until it finishes.
+                    return [4 /*yield*/, registrationPromise];
+                case 2:
+                    // A createInstallation request is in progress. Wait until it finishes.
+                    _a.sent();
+                    _a.label = 3;
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function deleteInstallationRequest(appConfig, installationEntry) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var endpoint, headers, request, response;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    endpoint = getDeleteEndpoint(appConfig, installationEntry);
+                    headers = getHeadersWithAuth(appConfig, installationEntry);
+                    request = {
+                        method: 'DELETE',
+                        headers: headers
+                    };
+                    return [4 /*yield*/, retryIfServerError(function () { return fetch(endpoint, request); })];
+                case 1:
+                    response = _a.sent();
+                    if (!!response.ok) return [3 /*break*/, 3];
+                    return [4 /*yield*/, getErrorFromResponse('Delete Installation', response)];
+                case 2: throw _a.sent();
+                case 3: return [2 /*return*/];
+            }
+        });
+    });
+}
+function getDeleteEndpoint(appConfig, _a) {
+    var fid = _a.fid;
+    return getInstallationsEndpoint(appConfig) + "/" + fid;
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function deleteInstallation(dependencies) {
+    return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__awaiter"])(this, void 0, void 0, function () {
+        var appConfig, entry;
+        return Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__generator"])(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    appConfig = dependencies.appConfig;
+                    return [4 /*yield*/, update(appConfig, function (oldEntry) {
+                            if (oldEntry && oldEntry.registrationStatus === 0 /* NOT_STARTED */) {
+                                // Delete the unregistered entry without sending a deleteInstallation request.
+                                return undefined;
+                            }
+                            return oldEntry;
+                        })];
+                case 1:
+                    entry = _a.sent();
+                    if (!entry) return [3 /*break*/, 6];
+                    if (!(entry.registrationStatus === 1 /* IN_PROGRESS */)) return [3 /*break*/, 2];
+                    // Can't delete while trying to register.
+                    throw ERROR_FACTORY.create("delete-pending-registration" /* DELETE_PENDING_REGISTRATION */);
+                case 2:
+                    if (!(entry.registrationStatus === 2 /* COMPLETED */)) return [3 /*break*/, 6];
+                    if (!!navigator.onLine) return [3 /*break*/, 3];
+                    throw ERROR_FACTORY.create("app-offline" /* APP_OFFLINE */);
+                case 3: return [4 /*yield*/, deleteInstallationRequest(appConfig, entry)];
+                case 4:
+                    _a.sent();
+                    return [4 /*yield*/, remove(appConfig)];
+                case 5:
+                    _a.sent();
+                    _a.label = 6;
+                case 6: return [2 /*return*/];
+            }
+        });
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+/**
+ * Sets a new callback that will get called when Installation ID changes.
+ * Returns an unsubscribe function that will remove the callback when called.
+ */
+function onIdChange(_a, callback) {
+    var appConfig = _a.appConfig;
+    addCallback(appConfig, callback);
+    return function () {
+        removeCallback(appConfig, callback);
+    };
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function extractAppConfig(app) {
+    var e_1, _a;
+    if (!app || !app.options) {
+        throw getMissingValueError('App Configuration');
+    }
+    if (!app.name) {
+        throw getMissingValueError('App Name');
+    }
+    // Required app config keys
+    var configKeys = [
+        'projectId',
+        'apiKey',
+        'appId'
+    ];
+    try {
+        for (var configKeys_1 = Object(tslib__WEBPACK_IMPORTED_MODULE_2__["__values"])(configKeys), configKeys_1_1 = configKeys_1.next(); !configKeys_1_1.done; configKeys_1_1 = configKeys_1.next()) {
+            var keyName = configKeys_1_1.value;
+            if (!app.options[keyName]) {
+                throw getMissingValueError(keyName);
+            }
+        }
+    }
+    catch (e_1_1) { e_1 = { error: e_1_1 }; }
+    finally {
+        try {
+            if (configKeys_1_1 && !configKeys_1_1.done && (_a = configKeys_1.return)) _a.call(configKeys_1);
+        }
+        finally { if (e_1) throw e_1.error; }
+    }
+    return {
+        appName: app.name,
+        projectId: app.options.projectId,
+        apiKey: app.options.apiKey,
+        appId: app.options.appId
+    };
+}
+function getMissingValueError(valueName) {
+    return ERROR_FACTORY.create("missing-app-config-values" /* MISSING_APP_CONFIG_VALUES */, {
+        valueName: valueName
+    });
+}
+
+/**
+ * @license
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+function registerInstallations(instance) {
+    var installationsName = 'installations';
+    instance.INTERNAL.registerComponent(new _firebase_component__WEBPACK_IMPORTED_MODULE_1__["Component"](installationsName, function (container) {
+        var app = container.getProvider('app').getImmediate();
+        // Throws if app isn't configured properly.
+        var appConfig = extractAppConfig(app);
+        var platformLoggerProvider = container.getProvider('platform-logger');
+        var dependencies = {
+            appConfig: appConfig,
+            platformLoggerProvider: platformLoggerProvider
+        };
+        var installations = {
+            app: app,
+            getId: function () { return getId(dependencies); },
+            getToken: function (forceRefresh) {
+                return getToken(dependencies, forceRefresh);
+            },
+            delete: function () { return deleteInstallation(dependencies); },
+            onIdChange: function (callback) {
+                return onIdChange(dependencies, callback);
+            }
+        };
+        return installations;
+    }, "PUBLIC" /* PUBLIC */));
+    instance.registerVersion(name, version);
+}
+registerInstallations(_firebase_app__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@lubycon/react/node_modules/firebase/analytics/dist/index.esm.js":
+/*!***************************************************************************************!*\
+  !*** ./node_modules/@lubycon/react/node_modules/firebase/analytics/dist/index.esm.js ***!
+  \***************************************************************************************/
+/*! no exports provided */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _firebase_analytics__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @firebase/analytics */ "./node_modules/@lubycon/react/node_modules/@firebase/analytics/dist/index.esm.js");
+
+//# sourceMappingURL=index.esm.js.map
+
+
+/***/ }),
+
+/***/ "./node_modules/@lubycon/react/node_modules/tslib/tslib.es6.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@lubycon/react/node_modules/tslib/tslib.es6.js ***!
+  \*********************************************************************/
+/*! exports provided: __extends, __assign, __rest, __decorate, __param, __metadata, __awaiter, __generator, __createBinding, __exportStar, __values, __read, __spread, __spreadArrays, __spreadArray, __await, __asyncGenerator, __asyncDelegator, __asyncValues, __makeTemplateObject, __importStar, __importDefault, __classPrivateFieldGet, __classPrivateFieldSet */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__extends", function() { return __extends; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__assign", function() { return __assign; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__rest", function() { return __rest; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__decorate", function() { return __decorate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__param", function() { return __param; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__metadata", function() { return __metadata; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__awaiter", function() { return __awaiter; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__generator", function() { return __generator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__createBinding", function() { return __createBinding; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__exportStar", function() { return __exportStar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__values", function() { return __values; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__read", function() { return __read; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spread", function() { return __spread; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArrays", function() { return __spreadArrays; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__spreadArray", function() { return __spreadArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__await", function() { return __await; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncGenerator", function() { return __asyncGenerator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncDelegator", function() { return __asyncDelegator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__asyncValues", function() { return __asyncValues; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__makeTemplateObject", function() { return __makeTemplateObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importStar", function() { return __importStar; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__importDefault", function() { return __importDefault; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldGet", function() { return __classPrivateFieldGet; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "__classPrivateFieldSet", function() { return __classPrivateFieldSet; });
+/*! *****************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+/* global Reflect, Promise */
+
+var extendStatics = function(d, b) {
+    extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+    return extendStatics(d, b);
+};
+
+function __extends(d, b) {
+    if (typeof b !== "function" && b !== null)
+        throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+    extendStatics(d, b);
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+}
+
+var __assign = function() {
+    __assign = Object.assign || function __assign(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p)) t[p] = s[p];
+        }
+        return t;
+    }
+    return __assign.apply(this, arguments);
+}
+
+function __rest(s, e) {
+    var t = {};
+    for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p) && e.indexOf(p) < 0)
+        t[p] = s[p];
+    if (s != null && typeof Object.getOwnPropertySymbols === "function")
+        for (var i = 0, p = Object.getOwnPropertySymbols(s); i < p.length; i++) {
+            if (e.indexOf(p[i]) < 0 && Object.prototype.propertyIsEnumerable.call(s, p[i]))
+                t[p[i]] = s[p[i]];
+        }
+    return t;
+}
+
+function __decorate(decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+}
+
+function __param(paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+}
+
+function __metadata(metadataKey, metadataValue) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(metadataKey, metadataValue);
+}
+
+function __awaiter(thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+}
+
+function __generator(thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (_) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+}
+
+var __createBinding = Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+});
+
+function __exportStar(m, o) {
+    for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(o, p)) __createBinding(o, m, p);
+}
+
+function __values(o) {
+    var s = typeof Symbol === "function" && Symbol.iterator, m = s && o[s], i = 0;
+    if (m) return m.call(o);
+    if (o && typeof o.length === "number") return {
+        next: function () {
+            if (o && i >= o.length) o = void 0;
+            return { value: o && o[i++], done: !o };
+        }
+    };
+    throw new TypeError(s ? "Object is not iterable." : "Symbol.iterator is not defined.");
+}
+
+function __read(o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+}
+
+/** @deprecated */
+function __spread() {
+    for (var ar = [], i = 0; i < arguments.length; i++)
+        ar = ar.concat(__read(arguments[i]));
+    return ar;
+}
+
+/** @deprecated */
+function __spreadArrays() {
+    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
+    for (var r = Array(s), k = 0, i = 0; i < il; i++)
+        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
+            r[k] = a[j];
+    return r;
+}
+
+function __spreadArray(to, from, pack) {
+    if (pack || arguments.length === 2) for (var i = 0, l = from.length, ar; i < l; i++) {
+        if (ar || !(i in from)) {
+            if (!ar) ar = Array.prototype.slice.call(from, 0, i);
+            ar[i] = from[i];
+        }
+    }
+    return to.concat(ar || Array.prototype.slice.call(from));
+}
+
+function __await(v) {
+    return this instanceof __await ? (this.v = v, this) : new __await(v);
+}
+
+function __asyncGenerator(thisArg, _arguments, generator) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var g = generator.apply(thisArg, _arguments || []), i, q = [];
+    return i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i;
+    function verb(n) { if (g[n]) i[n] = function (v) { return new Promise(function (a, b) { q.push([n, v, a, b]) > 1 || resume(n, v); }); }; }
+    function resume(n, v) { try { step(g[n](v)); } catch (e) { settle(q[0][3], e); } }
+    function step(r) { r.value instanceof __await ? Promise.resolve(r.value.v).then(fulfill, reject) : settle(q[0][2], r); }
+    function fulfill(value) { resume("next", value); }
+    function reject(value) { resume("throw", value); }
+    function settle(f, v) { if (f(v), q.shift(), q.length) resume(q[0][0], q[0][1]); }
+}
+
+function __asyncDelegator(o) {
+    var i, p;
+    return i = {}, verb("next"), verb("throw", function (e) { throw e; }), verb("return"), i[Symbol.iterator] = function () { return this; }, i;
+    function verb(n, f) { i[n] = o[n] ? function (v) { return (p = !p) ? { value: __await(o[n](v)), done: n === "return" } : f ? f(v) : v; } : f; }
+}
+
+function __asyncValues(o) {
+    if (!Symbol.asyncIterator) throw new TypeError("Symbol.asyncIterator is not defined.");
+    var m = o[Symbol.asyncIterator], i;
+    return m ? m.call(o) : (o = typeof __values === "function" ? __values(o) : o[Symbol.iterator](), i = {}, verb("next"), verb("throw"), verb("return"), i[Symbol.asyncIterator] = function () { return this; }, i);
+    function verb(n) { i[n] = o[n] && function (v) { return new Promise(function (resolve, reject) { v = o[n](v), settle(resolve, reject, v.done, v.value); }); }; }
+    function settle(resolve, reject, d, v) { Promise.resolve(v).then(function(v) { resolve({ value: v, done: d }); }, reject); }
+}
+
+function __makeTemplateObject(cooked, raw) {
+    if (Object.defineProperty) { Object.defineProperty(cooked, "raw", { value: raw }); } else { cooked.raw = raw; }
+    return cooked;
+};
+
+var __setModuleDefault = Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+};
+
+function __importStar(mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+}
+
+function __importDefault(mod) {
+    return (mod && mod.__esModule) ? mod : { default: mod };
+}
+
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/idb/lib/idb.mjs":
+/*!**************************************!*\
+  !*** ./node_modules/idb/lib/idb.mjs ***!
+  \**************************************/
+/*! exports provided: openDb, deleteDb */
+/***/ (function(__webpack_module__, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "openDb", function() { return openDb; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "deleteDb", function() { return deleteDb; });
+function toArray(arr) {
+  return Array.prototype.slice.call(arr);
+}
+
+function promisifyRequest(request) {
+  return new Promise(function(resolve, reject) {
+    request.onsuccess = function() {
+      resolve(request.result);
+    };
+
+    request.onerror = function() {
+      reject(request.error);
+    };
+  });
+}
+
+function promisifyRequestCall(obj, method, args) {
+  var request;
+  var p = new Promise(function(resolve, reject) {
+    request = obj[method].apply(obj, args);
+    promisifyRequest(request).then(resolve, reject);
+  });
+
+  p.request = request;
+  return p;
+}
+
+function promisifyCursorRequestCall(obj, method, args) {
+  var p = promisifyRequestCall(obj, method, args);
+  return p.then(function(value) {
+    if (!value) return;
+    return new Cursor(value, p.request);
+  });
+}
+
+function proxyProperties(ProxyClass, targetProp, properties) {
+  properties.forEach(function(prop) {
+    Object.defineProperty(ProxyClass.prototype, prop, {
+      get: function() {
+        return this[targetProp][prop];
+      },
+      set: function(val) {
+        this[targetProp][prop] = val;
       }
-      /*
-       * Data is saved as delimited values rather than JSO to minimize cookie space
-       * Should not change order of the items
-       */
+    });
+  });
+}
 
-    }, {
-      key: "save",
-      value: function save(_ref2) {
-        var deviceId = _ref2.deviceId,
-            userId = _ref2.userId,
-            optOut = _ref2.optOut,
-            sessionId = _ref2.sessionId,
-            lastEventTime = _ref2.lastEventTime,
-            eventId = _ref2.eventId,
-            identifyId = _ref2.identifyId,
-            sequenceNumber = _ref2.sequenceNumber;
+function proxyRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+  properties.forEach(function(prop) {
+    if (!(prop in Constructor.prototype)) return;
+    ProxyClass.prototype[prop] = function() {
+      return promisifyRequestCall(this[targetProp], prop, arguments);
+    };
+  });
+}
 
-        if (this.storage === Constants.STORAGE_NONE) {
+function proxyMethods(ProxyClass, targetProp, Constructor, properties) {
+  properties.forEach(function(prop) {
+    if (!(prop in Constructor.prototype)) return;
+    ProxyClass.prototype[prop] = function() {
+      return this[targetProp][prop].apply(this[targetProp], arguments);
+    };
+  });
+}
+
+function proxyCursorRequestMethods(ProxyClass, targetProp, Constructor, properties) {
+  properties.forEach(function(prop) {
+    if (!(prop in Constructor.prototype)) return;
+    ProxyClass.prototype[prop] = function() {
+      return promisifyCursorRequestCall(this[targetProp], prop, arguments);
+    };
+  });
+}
+
+function Index(index) {
+  this._index = index;
+}
+
+proxyProperties(Index, '_index', [
+  'name',
+  'keyPath',
+  'multiEntry',
+  'unique'
+]);
+
+proxyRequestMethods(Index, '_index', IDBIndex, [
+  'get',
+  'getKey',
+  'getAll',
+  'getAllKeys',
+  'count'
+]);
+
+proxyCursorRequestMethods(Index, '_index', IDBIndex, [
+  'openCursor',
+  'openKeyCursor'
+]);
+
+function Cursor(cursor, request) {
+  this._cursor = cursor;
+  this._request = request;
+}
+
+proxyProperties(Cursor, '_cursor', [
+  'direction',
+  'key',
+  'primaryKey',
+  'value'
+]);
+
+proxyRequestMethods(Cursor, '_cursor', IDBCursor, [
+  'update',
+  'delete'
+]);
+
+// proxy 'next' methods
+['advance', 'continue', 'continuePrimaryKey'].forEach(function(methodName) {
+  if (!(methodName in IDBCursor.prototype)) return;
+  Cursor.prototype[methodName] = function() {
+    var cursor = this;
+    var args = arguments;
+    return Promise.resolve().then(function() {
+      cursor._cursor[methodName].apply(cursor._cursor, args);
+      return promisifyRequest(cursor._request).then(function(value) {
+        if (!value) return;
+        return new Cursor(value, cursor._request);
+      });
+    });
+  };
+});
+
+function ObjectStore(store) {
+  this._store = store;
+}
+
+ObjectStore.prototype.createIndex = function() {
+  return new Index(this._store.createIndex.apply(this._store, arguments));
+};
+
+ObjectStore.prototype.index = function() {
+  return new Index(this._store.index.apply(this._store, arguments));
+};
+
+proxyProperties(ObjectStore, '_store', [
+  'name',
+  'keyPath',
+  'indexNames',
+  'autoIncrement'
+]);
+
+proxyRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+  'put',
+  'add',
+  'delete',
+  'clear',
+  'get',
+  'getAll',
+  'getKey',
+  'getAllKeys',
+  'count'
+]);
+
+proxyCursorRequestMethods(ObjectStore, '_store', IDBObjectStore, [
+  'openCursor',
+  'openKeyCursor'
+]);
+
+proxyMethods(ObjectStore, '_store', IDBObjectStore, [
+  'deleteIndex'
+]);
+
+function Transaction(idbTransaction) {
+  this._tx = idbTransaction;
+  this.complete = new Promise(function(resolve, reject) {
+    idbTransaction.oncomplete = function() {
+      resolve();
+    };
+    idbTransaction.onerror = function() {
+      reject(idbTransaction.error);
+    };
+    idbTransaction.onabort = function() {
+      reject(idbTransaction.error);
+    };
+  });
+}
+
+Transaction.prototype.objectStore = function() {
+  return new ObjectStore(this._tx.objectStore.apply(this._tx, arguments));
+};
+
+proxyProperties(Transaction, '_tx', [
+  'objectStoreNames',
+  'mode'
+]);
+
+proxyMethods(Transaction, '_tx', IDBTransaction, [
+  'abort'
+]);
+
+function UpgradeDB(db, oldVersion, transaction) {
+  this._db = db;
+  this.oldVersion = oldVersion;
+  this.transaction = new Transaction(transaction);
+}
+
+UpgradeDB.prototype.createObjectStore = function() {
+  return new ObjectStore(this._db.createObjectStore.apply(this._db, arguments));
+};
+
+proxyProperties(UpgradeDB, '_db', [
+  'name',
+  'version',
+  'objectStoreNames'
+]);
+
+proxyMethods(UpgradeDB, '_db', IDBDatabase, [
+  'deleteObjectStore',
+  'close'
+]);
+
+function DB(db) {
+  this._db = db;
+}
+
+DB.prototype.transaction = function() {
+  return new Transaction(this._db.transaction.apply(this._db, arguments));
+};
+
+proxyProperties(DB, '_db', [
+  'name',
+  'version',
+  'objectStoreNames'
+]);
+
+proxyMethods(DB, '_db', IDBDatabase, [
+  'close'
+]);
+
+// Add cursor iterators
+// TODO: remove this once browsers do the right thing with promises
+['openCursor', 'openKeyCursor'].forEach(function(funcName) {
+  [ObjectStore, Index].forEach(function(Constructor) {
+    // Don't create iterateKeyCursor if openKeyCursor doesn't exist.
+    if (!(funcName in Constructor.prototype)) return;
+
+    Constructor.prototype[funcName.replace('open', 'iterate')] = function() {
+      var args = toArray(arguments);
+      var callback = args[args.length - 1];
+      var nativeObject = this._store || this._index;
+      var request = nativeObject[funcName].apply(nativeObject, args.slice(0, -1));
+      request.onsuccess = function() {
+        callback(request.result);
+      };
+    };
+  });
+});
+
+// polyfill getAll
+[Index, ObjectStore].forEach(function(Constructor) {
+  if (Constructor.prototype.getAll) return;
+  Constructor.prototype.getAll = function(query, count) {
+    var instance = this;
+    var items = [];
+
+    return new Promise(function(resolve) {
+      instance.iterateCursor(query, function(cursor) {
+        if (!cursor) {
+          resolve(items);
           return;
         }
+        items.push(cursor.value);
 
-        var value = [deviceId, Base64.encode(userId || ''), // used to convert not unicode to alphanumeric since cookies only use alphanumeric
-        optOut ? '1' : '', sessionId ? sessionId.toString(32) : '0', // generated when instantiated, timestamp (but re-uses session id in cookie if not expired) @TODO clients may want custom session id
-        lastEventTime ? lastEventTime.toString(32) : '0', // last time an event was set
-        eventId ? eventId.toString(32) : '0', identifyId ? identifyId.toString(32) : '0', sequenceNumber ? sequenceNumber.toString(32) : '0'].join('.');
-
-        switch (this.storage) {
-          case Constants.STORAGE_SESSION:
-            if (window.sessionStorage) {
-              window.sessionStorage.setItem(this.storageKey, value);
-            }
-
-            break;
-
-          case Constants.STORAGE_LOCAL:
-            ampLocalStorage.setItem(this.storageKey, value);
-            break;
-
-          case Constants.STORAGE_COOKIES:
-            this.saveCookie(value);
-            break;
+        if (count !== undefined && items.length == count) {
+          resolve(items);
+          return;
         }
-      }
-    }, {
-      key: "saveCookie",
-      value: function saveCookie(value) {
-        baseCookie.set(this.getCookieStorageKey(), value, {
-          domain: this.cookieDomain,
-          secure: this.secure,
-          sameSite: this.sameSite,
-          expirationDays: this.expirationDays
-        });
-      }
-    }, {
-      key: "load",
-      value: function load() {
-        var _this = this;
-
-        var str;
-
-        if (this.storage === Constants.STORAGE_COOKIES) {
-          var cookieKey = this.getCookieStorageKey() + '=';
-          var allCookies = baseCookie.getAll(cookieKey);
-
-          if (allCookies.length === 0 || allCookies.length === 1) {
-            str = allCookies[0];
-          } else {
-            // dedup cookies by deleting them all and restoring
-            // the one with the most recent event time
-            var latestCookie = baseCookie.sortByEventTime(allCookies)[0];
-            allCookies.forEach(function () {
-              return baseCookie.set(_this.getCookieStorageKey(), null, {});
-            });
-            this.saveCookie(latestCookie);
-            str = baseCookie.get(cookieKey);
-          }
-        }
-
-        if (!str) {
-          str = ampLocalStorage.getItem(this.storageKey);
-        }
-
-        if (!str) {
-          try {
-            str = window.sessionStorage && window.sessionStorage.getItem(this.storageKey);
-          } catch (e) {
-            utils.log.info("window.sessionStorage unavailable. Reason: \"".concat(e, "\""));
-          }
-        }
-
-        if (!str) {
-          return null;
-        }
-
-        var values = str.split('.');
-        var userId = null;
-
-        if (values[Constants.USER_ID_INDEX]) {
-          try {
-            userId = Base64.decode(values[Constants.USER_ID_INDEX]);
-          } catch (e) {
-            userId = null;
-          }
-        }
-
-        return {
-          deviceId: values[Constants.DEVICE_ID_INDEX],
-          userId: userId,
-          optOut: values[Constants.OPT_OUT_INDEX] === '1',
-          sessionId: parseInt(values[Constants.SESSION_ID_INDEX], 32),
-          lastEventTime: parseInt(values[Constants.LAST_EVENT_TIME_INDEX], 32),
-          eventId: parseInt(values[Constants.EVENT_ID_INDEX], 32),
-          identifyId: parseInt(values[Constants.IDENTIFY_ID_INDEX], 32),
-          sequenceNumber: parseInt(values[Constants.SEQUENCE_NUMBER_INDEX], 32)
-        };
-      }
-      /**
-       * Clears any saved metadata storage
-       * @constructor AmplitudeClient
-       * @public
-       * @return {boolean} True if metadata was cleared, false if none existed
-       */
-
-    }, {
-      key: "clear",
-      value: function clear() {
-        var str;
-
-        if (this.storage === Constants.STORAGE_COOKIES) {
-          str = baseCookie.get(this.getCookieStorageKey() + '=');
-          baseCookie.set(this.getCookieStorageKey(), null, {
-            domain: this.cookieDomain,
-            secure: this.secure,
-            sameSite: this.sameSite,
-            expirationDays: 0
-          });
-        }
-
-        if (!str) {
-          str = ampLocalStorage.getItem(this.storageKey);
-          ampLocalStorage.clear();
-        }
-
-        if (!str) {
-          try {
-            str = window.sessionStorage && window.sessionStorage.getItem(this.storageKey);
-            window.sessionStorage.clear();
-          } catch (e) {
-            utils.log.info("window.sessionStorage unavailable. Reason: \"".concat(e, "\""));
-          }
-        }
-
-        return !!str;
-      }
-    }]);
-
-    return MetadataStorage;
-  }();
-
-  var getUtmData = function getUtmData(rawCookie, query) {
-    // Translate the utmz cookie format into url query string format.
-    var cookie = rawCookie ? '?' + rawCookie.split('.').slice(-1)[0].replace(/\|/g, '&') : '';
-
-    var fetchParam = function fetchParam(queryName, query, cookieName, cookie) {
-      return utils.getQueryParam(queryName, query) || utils.getQueryParam(cookieName, cookie);
-    };
-
-    var utmSource = fetchParam(Constants.UTM_SOURCE, query, 'utmcsr', cookie);
-    var utmMedium = fetchParam(Constants.UTM_MEDIUM, query, 'utmcmd', cookie);
-    var utmCampaign = fetchParam(Constants.UTM_CAMPAIGN, query, 'utmccn', cookie);
-    var utmTerm = fetchParam(Constants.UTM_TERM, query, 'utmctr', cookie);
-    var utmContent = fetchParam(Constants.UTM_CONTENT, query, 'utmcct', cookie);
-    var utmData = {};
-
-    var addIfNotNull = function addIfNotNull(key, value) {
-      if (!utils.isEmptyString(value)) {
-        utmData[key] = value;
-      }
-    };
-
-    addIfNotNull(Constants.UTM_SOURCE, utmSource);
-    addIfNotNull(Constants.UTM_MEDIUM, utmMedium);
-    addIfNotNull(Constants.UTM_CAMPAIGN, utmCampaign);
-    addIfNotNull(Constants.UTM_TERM, utmTerm);
-    addIfNotNull(Constants.UTM_CONTENT, utmContent);
-    return utmData;
-  };
-
-  /*
-   * Wrapper for a user properties JSON object that supports operations.
-   * Note: if a user property is used in multiple operations on the same Identify object,
-   * only the first operation will be saved, and the rest will be ignored.
-   */
-
-  var AMP_OP_ADD = '$add';
-  var AMP_OP_APPEND = '$append';
-  var AMP_OP_CLEAR_ALL = '$clearAll';
-  var AMP_OP_PREPEND = '$prepend';
-  var AMP_OP_SET = '$set';
-  var AMP_OP_SET_ONCE = '$setOnce';
-  var AMP_OP_UNSET = '$unset';
-  var AMP_OP_PREINSERT = '$preInsert';
-  var AMP_OP_POSTINSERT = '$postInsert';
-  var AMP_OP_REMOVE = '$remove';
-  /**
-   * Identify API - instance constructor. Identify objects are a wrapper for user property operations.
-   * Each method adds a user property operation to the Identify object, and returns the same Identify object,
-   * allowing you to chain multiple method calls together.
-   * Note: if the same user property is used in multiple operations on a single Identify object,
-   * only the first operation on that property will be saved, and the rest will be ignored.
-   * @constructor Identify
-   * @public
-   * @example var identify = new amplitude.Identify();
-   */
-
-  var Identify = function Identify() {
-    this.userPropertiesOperations = {};
-    this.properties = []; // keep track of keys that have been added
-  };
-  /**
-   * Increment a user property by a given value (can also be negative to decrement).
-   * If the user property does not have a value set yet, it will be initialized to 0 before being incremented.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string} value - The amount by which to increment the user property. Allows numbers as strings (ex: '123').
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().add('karma', 1).add('friends', 1);
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.add = function (property, value) {
-    if (type(value) === 'number' || type(value) === 'string') {
-      this._addOperation(AMP_OP_ADD, property, value);
-    } else {
-      utils.log.error('Unsupported type for value: ' + type(value) + ', expecting number or string');
-    }
-
-    return this;
-  };
-  /**
-   * Append a value or values to a user property.
-   * If the user property does not have a value set yet,
-   * it will be initialized to an empty list before the new values are appended.
-   * If the user property has an existing value and it is not a list,
-   * the existing value will be converted into a list with the new values appended.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string|list|object} value - A value or values to append.
-   * Values can be numbers, strings, lists, or object (key:value dict will be flattened).
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().append('ab-tests', 'new-user-tests');
-   * identify.append('some_list', [1, 2, 3, 4, 'values']);
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.append = function (property, value) {
-    this._addOperation(AMP_OP_APPEND, property, value);
-
-    return this;
-  };
-  /**
-   * Clear all user properties for the current user.
-   * SDK user should instead call amplitude.clearUserProperties() instead of using this.
-   * $clearAll needs to be sent on its own Identify object. If there are already other operations, then don't add $clearAll.
-   * If $clearAll already in an Identify object, don't allow other operations to be added.
-   * @private
-   */
-
-
-  Identify.prototype.clearAll = function () {
-    if (Object.keys(this.userPropertiesOperations).length > 0) {
-      if (!Object.prototype.hasOwnProperty.call(this.userPropertiesOperations, AMP_OP_CLEAR_ALL)) {
-        utils.log.error('Need to send $clearAll on its own Identify object without any other operations, skipping $clearAll');
-      }
-
-      return this;
-    }
-
-    this.userPropertiesOperations[AMP_OP_CLEAR_ALL] = '-';
-    return this;
-  };
-  /**
-   * Prepend a value or values to a user property.
-   * Prepend means inserting the value or values at the front of a list.
-   * If the user property does not have a value set yet,
-   * it will be initialized to an empty list before the new values are prepended.
-   * If the user property has an existing value and it is not a list,
-   * the existing value will be converted into a list with the new values prepended.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string|list|object} value - A value or values to prepend.
-   * Values can be numbers, strings, lists, or object (key:value dict will be flattened).
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().prepend('ab-tests', 'new-user-tests');
-   * identify.prepend('some_list', [1, 2, 3, 4, 'values']);
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.prepend = function (property, value) {
-    this._addOperation(AMP_OP_PREPEND, property, value);
-
-    return this;
-  };
-  /**
-   * Sets the value of a given user property. If a value already exists, it will be overwriten with the new value.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string|list|boolean|object} value - A value or values to set.
-   * Values can be numbers, strings, lists, or object (key:value dict will be flattened).
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().set('user_type', 'beta');
-   * identify.set('name', {'first': 'John', 'last': 'Doe'}); // dict is flattened and becomes name.first: John, name.last: Doe
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.set = function (property, value) {
-    this._addOperation(AMP_OP_SET, property, value);
-
-    return this;
-  };
-  /**
-   * Sets the value of a given user property only once. Subsequent setOnce operations on that user property will be ignored;
-   * however, that user property can still be modified through any of the other operations.
-   * Useful for capturing properties such as 'initial_signup_date', 'initial_referrer', etc.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string|list|boolean|object} value - A value or values to set once.
-   * Values can be numbers, strings, lists, or object (key:value dict will be flattened).
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().setOnce('sign_up_date', '2016-04-01');
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.setOnce = function (property, value) {
-    this._addOperation(AMP_OP_SET_ONCE, property, value);
-
-    return this;
-  };
-  /**
-   * Unset and remove a user property. This user property will no longer show up in a user's profile.
-   * @public
-   * @param {string} property - The user property key.
-   * @return {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   * @example var identify = new amplitude.Identify().unset('user_type').unset('age');
-   * amplitude.identify(identify); // send the Identify call
-   */
-
-
-  Identify.prototype.unset = function (property) {
-    this._addOperation(AMP_OP_UNSET, property, '-');
-
-    return this;
-  };
-  /**
-   * Preinsert a value or values to a user property, if it does not exist in the user property already.
-   * Preinsert means inserting the value or values to the beginning of the specified user property.
-   * If the item already exists in the user property, it will be a no-op.
-   * @public
-   * @param {string} property - The user property key.
-   * @param {number|string|list|object} value - A value or values to insert.
-   * @returns {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   */
-
-
-  Identify.prototype.preInsert = function (property, value) {
-    this._addOperation(AMP_OP_PREINSERT, property, value);
-
-    return this;
-  };
-  /**
-   * Postinsert a value or values to a user property, if it does not exist in the user property already.
-   * Postinsert means inserting the value or values to the beginning of the specified user property.
-   * If the item already exists in the user property, it will be a no-op.
-   * @param {string} property - The user property key.
-   * @param {number|string|list|object} value - A value or values to insert.
-   * @returns {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   */
-
-
-  Identify.prototype.postInsert = function (property, value) {
-    this._addOperation(AMP_OP_POSTINSERT, property, value);
-
-    return this;
-  };
-  /**
-   * Remove a value or values to a user property, if it does exist in the user property.
-   * If the item does not exist in the user property, it will be a no-op.
-   * @param {string} property - The user property key.
-   * @param {number|string|list|object} value - A value or values to remove.
-   * @returns {Identify} Returns the same Identify object, allowing you to chain multiple method calls together.
-   */
-
-
-  Identify.prototype.remove = function (property, value) {
-    this._addOperation(AMP_OP_REMOVE, property, value);
-
-    return this;
-  };
-  /**
-   * Helper function that adds operation to the Identify's object
-   * Handle's filtering of duplicate user property keys, and filtering for clearAll.
-   * @private
-   */
-
-
-  Identify.prototype._addOperation = function (operation, property, value) {
-    // check that the identify doesn't already contain a clearAll
-    if (Object.prototype.hasOwnProperty.call(this.userPropertiesOperations, AMP_OP_CLEAR_ALL)) {
-      utils.log.error('This identify already contains a $clearAll operation, skipping operation ' + operation);
-      return;
-    } // check that property wasn't already used in this Identify
-
-
-    if (this.properties.indexOf(property) !== -1) {
-      utils.log.error('User property "' + property + '" already used in this identify, skipping operation ' + operation);
-      return;
-    }
-
-    if (!Object.prototype.hasOwnProperty.call(this.userPropertiesOperations, operation)) {
-      this.userPropertiesOperations[operation] = {};
-    }
-
-    this.userPropertiesOperations[operation][property] = value;
-    this.properties.push(property);
-  };
-
-  var commonjsGlobal = typeof window !== 'undefined' ? window : typeof global !== 'undefined' ? global : typeof self !== 'undefined' ? self : {};
-
-  function createCommonjsModule(fn, module) {
-  	return module = { exports: {} }, fn(module, module.exports), module.exports;
-  }
-
-  var md5 = createCommonjsModule(function (module) {
-  (function ($) {
-
-    /*
-    * Add integers, wrapping at 2^32. This uses 16-bit operations internally
-    * to work around bugs in some JS interpreters.
-    */
-    function safeAdd (x, y) {
-      var lsw = (x & 0xffff) + (y & 0xffff);
-      var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
-      return (msw << 16) | (lsw & 0xffff)
-    }
-
-    /*
-    * Bitwise rotate a 32-bit number to the left.
-    */
-    function bitRotateLeft (num, cnt) {
-      return (num << cnt) | (num >>> (32 - cnt))
-    }
-
-    /*
-    * These functions implement the four basic operations the algorithm uses.
-    */
-    function md5cmn (q, a, b, x, s, t) {
-      return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b)
-    }
-    function md5ff (a, b, c, d, x, s, t) {
-      return md5cmn((b & c) | (~b & d), a, b, x, s, t)
-    }
-    function md5gg (a, b, c, d, x, s, t) {
-      return md5cmn((b & d) | (c & ~d), a, b, x, s, t)
-    }
-    function md5hh (a, b, c, d, x, s, t) {
-      return md5cmn(b ^ c ^ d, a, b, x, s, t)
-    }
-    function md5ii (a, b, c, d, x, s, t) {
-      return md5cmn(c ^ (b | ~d), a, b, x, s, t)
-    }
-
-    /*
-    * Calculate the MD5 of an array of little-endian words, and a bit length.
-    */
-    function binlMD5 (x, len) {
-      /* append padding */
-      x[len >> 5] |= 0x80 << (len % 32);
-      x[((len + 64) >>> 9 << 4) + 14] = len;
-
-      var i;
-      var olda;
-      var oldb;
-      var oldc;
-      var oldd;
-      var a = 1732584193;
-      var b = -271733879;
-      var c = -1732584194;
-      var d = 271733878;
-
-      for (i = 0; i < x.length; i += 16) {
-        olda = a;
-        oldb = b;
-        oldc = c;
-        oldd = d;
-
-        a = md5ff(a, b, c, d, x[i], 7, -680876936);
-        d = md5ff(d, a, b, c, x[i + 1], 12, -389564586);
-        c = md5ff(c, d, a, b, x[i + 2], 17, 606105819);
-        b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
-        a = md5ff(a, b, c, d, x[i + 4], 7, -176418897);
-        d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
-        c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
-        b = md5ff(b, c, d, a, x[i + 7], 22, -45705983);
-        a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
-        d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
-        c = md5ff(c, d, a, b, x[i + 10], 17, -42063);
-        b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
-        a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
-        d = md5ff(d, a, b, c, x[i + 13], 12, -40341101);
-        c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
-        b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
-
-        a = md5gg(a, b, c, d, x[i + 1], 5, -165796510);
-        d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
-        c = md5gg(c, d, a, b, x[i + 11], 14, 643717713);
-        b = md5gg(b, c, d, a, x[i], 20, -373897302);
-        a = md5gg(a, b, c, d, x[i + 5], 5, -701558691);
-        d = md5gg(d, a, b, c, x[i + 10], 9, 38016083);
-        c = md5gg(c, d, a, b, x[i + 15], 14, -660478335);
-        b = md5gg(b, c, d, a, x[i + 4], 20, -405537848);
-        a = md5gg(a, b, c, d, x[i + 9], 5, 568446438);
-        d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
-        c = md5gg(c, d, a, b, x[i + 3], 14, -187363961);
-        b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
-        a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
-        d = md5gg(d, a, b, c, x[i + 2], 9, -51403784);
-        c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
-        b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
-
-        a = md5hh(a, b, c, d, x[i + 5], 4, -378558);
-        d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
-        c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
-        b = md5hh(b, c, d, a, x[i + 14], 23, -35309556);
-        a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
-        d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
-        c = md5hh(c, d, a, b, x[i + 7], 16, -155497632);
-        b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
-        a = md5hh(a, b, c, d, x[i + 13], 4, 681279174);
-        d = md5hh(d, a, b, c, x[i], 11, -358537222);
-        c = md5hh(c, d, a, b, x[i + 3], 16, -722521979);
-        b = md5hh(b, c, d, a, x[i + 6], 23, 76029189);
-        a = md5hh(a, b, c, d, x[i + 9], 4, -640364487);
-        d = md5hh(d, a, b, c, x[i + 12], 11, -421815835);
-        c = md5hh(c, d, a, b, x[i + 15], 16, 530742520);
-        b = md5hh(b, c, d, a, x[i + 2], 23, -995338651);
-
-        a = md5ii(a, b, c, d, x[i], 6, -198630844);
-        d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
-        c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
-        b = md5ii(b, c, d, a, x[i + 5], 21, -57434055);
-        a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
-        d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
-        c = md5ii(c, d, a, b, x[i + 10], 15, -1051523);
-        b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
-        a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
-        d = md5ii(d, a, b, c, x[i + 15], 10, -30611744);
-        c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
-        b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
-        a = md5ii(a, b, c, d, x[i + 4], 6, -145523070);
-        d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
-        c = md5ii(c, d, a, b, x[i + 2], 15, 718787259);
-        b = md5ii(b, c, d, a, x[i + 9], 21, -343485551);
-
-        a = safeAdd(a, olda);
-        b = safeAdd(b, oldb);
-        c = safeAdd(c, oldc);
-        d = safeAdd(d, oldd);
-      }
-      return [a, b, c, d]
-    }
-
-    /*
-    * Convert an array of little-endian words to a string
-    */
-    function binl2rstr (input) {
-      var i;
-      var output = '';
-      var length32 = input.length * 32;
-      for (i = 0; i < length32; i += 8) {
-        output += String.fromCharCode((input[i >> 5] >>> (i % 32)) & 0xff);
-      }
-      return output
-    }
-
-    /*
-    * Convert a raw string to an array of little-endian words
-    * Characters >255 have their high-byte silently ignored.
-    */
-    function rstr2binl (input) {
-      var i;
-      var output = [];
-      output[(input.length >> 2) - 1] = undefined;
-      for (i = 0; i < output.length; i += 1) {
-        output[i] = 0;
-      }
-      var length8 = input.length * 8;
-      for (i = 0; i < length8; i += 8) {
-        output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << (i % 32);
-      }
-      return output
-    }
-
-    /*
-    * Calculate the MD5 of a raw string
-    */
-    function rstrMD5 (s) {
-      return binl2rstr(binlMD5(rstr2binl(s), s.length * 8))
-    }
-
-    /*
-    * Calculate the HMAC-MD5, of a key and some data (raw strings)
-    */
-    function rstrHMACMD5 (key, data) {
-      var i;
-      var bkey = rstr2binl(key);
-      var ipad = [];
-      var opad = [];
-      var hash;
-      ipad[15] = opad[15] = undefined;
-      if (bkey.length > 16) {
-        bkey = binlMD5(bkey, key.length * 8);
-      }
-      for (i = 0; i < 16; i += 1) {
-        ipad[i] = bkey[i] ^ 0x36363636;
-        opad[i] = bkey[i] ^ 0x5c5c5c5c;
-      }
-      hash = binlMD5(ipad.concat(rstr2binl(data)), 512 + data.length * 8);
-      return binl2rstr(binlMD5(opad.concat(hash), 512 + 128))
-    }
-
-    /*
-    * Convert a raw string to a hex string
-    */
-    function rstr2hex (input) {
-      var hexTab = '0123456789abcdef';
-      var output = '';
-      var x;
-      var i;
-      for (i = 0; i < input.length; i += 1) {
-        x = input.charCodeAt(i);
-        output += hexTab.charAt((x >>> 4) & 0x0f) + hexTab.charAt(x & 0x0f);
-      }
-      return output
-    }
-
-    /*
-    * Encode a string as utf-8
-    */
-    function str2rstrUTF8 (input) {
-      return unescape(encodeURIComponent(input))
-    }
-
-    /*
-    * Take string arguments and return either raw or hex encoded strings
-    */
-    function rawMD5 (s) {
-      return rstrMD5(str2rstrUTF8(s))
-    }
-    function hexMD5 (s) {
-      return rstr2hex(rawMD5(s))
-    }
-    function rawHMACMD5 (k, d) {
-      return rstrHMACMD5(str2rstrUTF8(k), str2rstrUTF8(d))
-    }
-    function hexHMACMD5 (k, d) {
-      return rstr2hex(rawHMACMD5(k, d))
-    }
-
-    function md5 (string, key, raw) {
-      if (!key) {
-        if (!raw) {
-          return hexMD5(string)
-        }
-        return rawMD5(string)
-      }
-      if (!raw) {
-        return hexHMACMD5(key, string)
-      }
-      return rawHMACMD5(key, string)
-    }
-
-    if (module.exports) {
-      module.exports = md5;
-    } else {
-      $.md5 = md5;
-    }
-  })(commonjsGlobal);
-  });
-
-  var strictUriEncode = function (str) {
-  	return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-  		return '%' + c.charCodeAt(0).toString(16).toUpperCase();
-  	});
-  };
-
-  /*
-  object-assign
-  (c) Sindre Sorhus
-  @license MIT
-  */
-  /* eslint-disable no-unused-vars */
-  var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-  var hasOwnProperty = Object.prototype.hasOwnProperty;
-  var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-  function toObject(val) {
-  	if (val === null || val === undefined) {
-  		throw new TypeError('Object.assign cannot be called with null or undefined');
-  	}
-
-  	return Object(val);
-  }
-
-  function shouldUseNative() {
-  	try {
-  		if (!Object.assign) {
-  			return false;
-  		}
-
-  		// Detect buggy property enumeration order in older V8 versions.
-
-  		// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-  		var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-  		test1[5] = 'de';
-  		if (Object.getOwnPropertyNames(test1)[0] === '5') {
-  			return false;
-  		}
-
-  		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-  		var test2 = {};
-  		for (var i = 0; i < 10; i++) {
-  			test2['_' + String.fromCharCode(i)] = i;
-  		}
-  		var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-  			return test2[n];
-  		});
-  		if (order2.join('') !== '0123456789') {
-  			return false;
-  		}
-
-  		// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-  		var test3 = {};
-  		'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-  			test3[letter] = letter;
-  		});
-  		if (Object.keys(Object.assign({}, test3)).join('') !==
-  				'abcdefghijklmnopqrst') {
-  			return false;
-  		}
-
-  		return true;
-  	} catch (err) {
-  		// We don't expect any of the above to throw, but better to be safe.
-  		return false;
-  	}
-  }
-
-  var objectAssign = shouldUseNative() ? Object.assign : function (target, source) {
-  	var from;
-  	var to = toObject(target);
-  	var symbols;
-
-  	for (var s = 1; s < arguments.length; s++) {
-  		from = Object(arguments[s]);
-
-  		for (var key in from) {
-  			if (hasOwnProperty.call(from, key)) {
-  				to[key] = from[key];
-  			}
-  		}
-
-  		if (getOwnPropertySymbols) {
-  			symbols = getOwnPropertySymbols(from);
-  			for (var i = 0; i < symbols.length; i++) {
-  				if (propIsEnumerable.call(from, symbols[i])) {
-  					to[symbols[i]] = from[symbols[i]];
-  				}
-  			}
-  		}
-  	}
-
-  	return to;
-  };
-
-  var token = '%[a-f0-9]{2}';
-  var singleMatcher = new RegExp(token, 'gi');
-  var multiMatcher = new RegExp('(' + token + ')+', 'gi');
-
-  function decodeComponents(components, split) {
-  	try {
-  		// Try to decode the entire string first
-  		return decodeURIComponent(components.join(''));
-  	} catch (err) {
-  		// Do nothing
-  	}
-
-  	if (components.length === 1) {
-  		return components;
-  	}
-
-  	split = split || 1;
-
-  	// Split the array in 2 parts
-  	var left = components.slice(0, split);
-  	var right = components.slice(split);
-
-  	return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
-  }
-
-  function decode(input) {
-  	try {
-  		return decodeURIComponent(input);
-  	} catch (err) {
-  		var tokens = input.match(singleMatcher);
-
-  		for (var i = 1; i < tokens.length; i++) {
-  			input = decodeComponents(tokens, i).join('');
-
-  			tokens = input.match(singleMatcher);
-  		}
-
-  		return input;
-  	}
-  }
-
-  function customDecodeURIComponent(input) {
-  	// Keep track of all the replacements and prefill the map with the `BOM`
-  	var replaceMap = {
-  		'%FE%FF': '\uFFFD\uFFFD',
-  		'%FF%FE': '\uFFFD\uFFFD'
-  	};
-
-  	var match = multiMatcher.exec(input);
-  	while (match) {
-  		try {
-  			// Decode as big chunks as possible
-  			replaceMap[match[0]] = decodeURIComponent(match[0]);
-  		} catch (err) {
-  			var result = decode(match[0]);
-
-  			if (result !== match[0]) {
-  				replaceMap[match[0]] = result;
-  			}
-  		}
-
-  		match = multiMatcher.exec(input);
-  	}
-
-  	// Add `%C2` at the end of the map to make sure it does not replace the combinator before everything else
-  	replaceMap['%C2'] = '\uFFFD';
-
-  	var entries = Object.keys(replaceMap);
-
-  	for (var i = 0; i < entries.length; i++) {
-  		// Replace all decoded components
-  		var key = entries[i];
-  		input = input.replace(new RegExp(key, 'g'), replaceMap[key]);
-  	}
-
-  	return input;
-  }
-
-  var decodeUriComponent = function (encodedURI) {
-  	if (typeof encodedURI !== 'string') {
-  		throw new TypeError('Expected `encodedURI` to be of type `string`, got `' + typeof encodedURI + '`');
-  	}
-
-  	try {
-  		encodedURI = encodedURI.replace(/\+/g, ' ');
-
-  		// Try the built in decoder first
-  		return decodeURIComponent(encodedURI);
-  	} catch (err) {
-  		// Fallback to a more advanced decoder
-  		return customDecodeURIComponent(encodedURI);
-  	}
-  };
-
-  function encoderForArrayFormat(opts) {
-  	switch (opts.arrayFormat) {
-  		case 'index':
-  			return function (key, value, index) {
-  				return value === null ? [
-  					encode(key, opts),
-  					'[',
-  					index,
-  					']'
-  				].join('') : [
-  					encode(key, opts),
-  					'[',
-  					encode(index, opts),
-  					']=',
-  					encode(value, opts)
-  				].join('');
-  			};
-
-  		case 'bracket':
-  			return function (key, value) {
-  				return value === null ? encode(key, opts) : [
-  					encode(key, opts),
-  					'[]=',
-  					encode(value, opts)
-  				].join('');
-  			};
-
-  		default:
-  			return function (key, value) {
-  				return value === null ? encode(key, opts) : [
-  					encode(key, opts),
-  					'=',
-  					encode(value, opts)
-  				].join('');
-  			};
-  	}
-  }
-
-  function parserForArrayFormat(opts) {
-  	var result;
-
-  	switch (opts.arrayFormat) {
-  		case 'index':
-  			return function (key, value, accumulator) {
-  				result = /\[(\d*)\]$/.exec(key);
-
-  				key = key.replace(/\[\d*\]$/, '');
-
-  				if (!result) {
-  					accumulator[key] = value;
-  					return;
-  				}
-
-  				if (accumulator[key] === undefined) {
-  					accumulator[key] = {};
-  				}
-
-  				accumulator[key][result[1]] = value;
-  			};
-
-  		case 'bracket':
-  			return function (key, value, accumulator) {
-  				result = /(\[\])$/.exec(key);
-  				key = key.replace(/\[\]$/, '');
-
-  				if (!result) {
-  					accumulator[key] = value;
-  					return;
-  				} else if (accumulator[key] === undefined) {
-  					accumulator[key] = [value];
-  					return;
-  				}
-
-  				accumulator[key] = [].concat(accumulator[key], value);
-  			};
-
-  		default:
-  			return function (key, value, accumulator) {
-  				if (accumulator[key] === undefined) {
-  					accumulator[key] = value;
-  					return;
-  				}
-
-  				accumulator[key] = [].concat(accumulator[key], value);
-  			};
-  	}
-  }
-
-  function encode(value, opts) {
-  	if (opts.encode) {
-  		return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
-  	}
-
-  	return value;
-  }
-
-  function keysSorter(input) {
-  	if (Array.isArray(input)) {
-  		return input.sort();
-  	} else if (typeof input === 'object') {
-  		return keysSorter(Object.keys(input)).sort(function (a, b) {
-  			return Number(a) - Number(b);
-  		}).map(function (key) {
-  			return input[key];
-  		});
-  	}
-
-  	return input;
-  }
-
-  function extract(str) {
-  	var queryStart = str.indexOf('?');
-  	if (queryStart === -1) {
-  		return '';
-  	}
-  	return str.slice(queryStart + 1);
-  }
-
-  function parse(str, opts) {
-  	opts = objectAssign({arrayFormat: 'none'}, opts);
-
-  	var formatter = parserForArrayFormat(opts);
-
-  	// Create an object with no prototype
-  	// https://github.com/sindresorhus/query-string/issues/47
-  	var ret = Object.create(null);
-
-  	if (typeof str !== 'string') {
-  		return ret;
-  	}
-
-  	str = str.trim().replace(/^[?#&]/, '');
-
-  	if (!str) {
-  		return ret;
-  	}
-
-  	str.split('&').forEach(function (param) {
-  		var parts = param.replace(/\+/g, ' ').split('=');
-  		// Firefox (pre 40) decodes `%3D` to `=`
-  		// https://github.com/sindresorhus/query-string/pull/37
-  		var key = parts.shift();
-  		var val = parts.length > 0 ? parts.join('=') : undefined;
-
-  		// missing `=` should be `null`:
-  		// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-  		val = val === undefined ? null : decodeUriComponent(val);
-
-  		formatter(decodeUriComponent(key), val, ret);
-  	});
-
-  	return Object.keys(ret).sort().reduce(function (result, key) {
-  		var val = ret[key];
-  		if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
-  			// Sort object keys, not values
-  			result[key] = keysSorter(val);
-  		} else {
-  			result[key] = val;
-  		}
-
-  		return result;
-  	}, Object.create(null));
-  }
-
-  var extract_1 = extract;
-  var parse_1 = parse;
-
-  var stringify = function (obj, opts) {
-  	var defaults = {
-  		encode: true,
-  		strict: true,
-  		arrayFormat: 'none'
-  	};
-
-  	opts = objectAssign(defaults, opts);
-
-  	if (opts.sort === false) {
-  		opts.sort = function () {};
-  	}
-
-  	var formatter = encoderForArrayFormat(opts);
-
-  	return obj ? Object.keys(obj).sort(opts.sort).map(function (key) {
-  		var val = obj[key];
-
-  		if (val === undefined) {
-  			return '';
-  		}
-
-  		if (val === null) {
-  			return encode(key, opts);
-  		}
-
-  		if (Array.isArray(val)) {
-  			var result = [];
-
-  			val.slice().forEach(function (val2) {
-  				if (val2 === undefined) {
-  					return;
-  				}
-
-  				result.push(formatter(key, val2, result.length));
-  			});
-
-  			return result.join('&');
-  		}
-
-  		return encode(key, opts) + '=' + encode(val, opts);
-  	}).filter(function (x) {
-  		return x.length > 0;
-  	}).join('&') : '';
-  };
-
-  var parseUrl = function (str, opts) {
-  	return {
-  		url: str.split('?')[0] || '',
-  		query: parse(extract(str), opts)
-  	};
-  };
-
-  var queryString = {
-  	extract: extract_1,
-  	parse: parse_1,
-  	stringify: stringify,
-  	parseUrl: parseUrl
-  };
-
-  /*
-   * Simple AJAX request object
-   */
-
-  var Request = function Request(url, data, headers) {
-    this.url = url;
-    this.data = data || {};
-    this.headers = headers;
-  };
-
-  function setHeaders(xhr, headers) {
-    for (var header in headers) {
-      xhr.setRequestHeader(header, headers[header]);
-    }
-  }
-
-  Request.prototype.send = function (callback) {
-    var isIE = window.XDomainRequest ? true : false;
-
-    if (isIE) {
-      var xdr = new window.XDomainRequest();
-      xdr.open('POST', this.url, true);
-
-      xdr.onload = function () {
-        callback(200, xdr.responseText);
-      };
-
-      xdr.onerror = function () {
-        // status code not available from xdr, try string matching on responseText
-        if (xdr.responseText === 'Request Entity Too Large') {
-          callback(413, xdr.responseText);
-        } else {
-          callback(500, xdr.responseText);
-        }
-      };
-
-      xdr.ontimeout = function () {};
-
-      xdr.onprogress = function () {};
-
-      xdr.send(queryString.stringify(this.data));
-    } else {
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', this.url, true);
-
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4) {
-          callback(xhr.status, xhr.responseText);
-        }
-      };
-
-      setHeaders(xhr, this.headers);
-      xhr.send(queryString.stringify(this.data));
-    } //log('sent request to ' + this.url + ' with data ' + decodeURIComponent(queryString(this.data)));
-
-  };
-
-  /**
-   * Revenue API - instance constructor. Wrapper for logging Revenue data. Revenue objects get passed to amplitude.logRevenueV2 to send to Amplitude servers.
-   * Each method updates a revenue property in the Revenue object, and returns the same Revenue object,
-   * allowing you to chain multiple method calls together.
-   *
-   * Note: price is a required field to log revenue events.
-   * If quantity is not specified then defaults to 1.
-   * @constructor Revenue
-   * @public
-   * @example var revenue = new amplitude.Revenue();
-   */
-
-  var Revenue = function Revenue() {
-    // required fields
-    this._price = null; // optional fields
-
-    this._productId = null;
-    this._quantity = 1;
-    this._revenueType = null;
-    this._properties = null;
-  };
-  /**
-   * Set a value for the product identifer.
-   * @public
-   * @param {string} productId - The value for the product identifier. Empty and invalid strings are ignored.
-   * @return {Revenue} Returns the same Revenue object, allowing you to chain multiple method calls together.
-   * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99);
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  Revenue.prototype.setProductId = function setProductId(productId) {
-    if (type(productId) !== 'string') {
-      utils.log.error('Unsupported type for productId: ' + type(productId) + ', expecting string');
-    } else if (utils.isEmptyString(productId)) {
-      utils.log.error('Invalid empty productId');
-    } else {
-      this._productId = productId;
-    }
-
-    return this;
-  };
-  /**
-   * Set a value for the quantity. Note revenue amount is calculated as price * quantity.
-   * @public
-   * @param {number} quantity - Integer value for the quantity. If not set, quantity defaults to 1.
-   * @return {Revenue} Returns the same Revenue object, allowing you to chain multiple method calls together.
-   * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99).setQuantity(5);
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  Revenue.prototype.setQuantity = function setQuantity(quantity) {
-    if (type(quantity) !== 'number') {
-      utils.log.error('Unsupported type for quantity: ' + type(quantity) + ', expecting number');
-    } else {
-      this._quantity = parseInt(quantity);
-    }
-
-    return this;
-  };
-  /**
-   * Set a value for the price. This field is required for all revenue being logged.
-   *
-   * Note: revenue amount is calculated as price * quantity.
-   * @public
-   * @param {number} price - Double value for the quantity.
-   * @return {Revenue} Returns the same Revenue object, allowing you to chain multiple method calls together.
-   * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99);
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  Revenue.prototype.setPrice = function setPrice(price) {
-    if (type(price) !== 'number') {
-      utils.log.error('Unsupported type for price: ' + type(price) + ', expecting number');
-    } else {
-      this._price = price;
-    }
-
-    return this;
-  };
-  /**
-   * Set a value for the revenueType (for example purchase, cost, tax, refund, etc).
-   * @public
-   * @param {string} revenueType - RevenueType to designate.
-   * @return {Revenue} Returns the same Revenue object, allowing you to chain multiple method calls together.
-   * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99).setRevenueType('purchase');
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  Revenue.prototype.setRevenueType = function setRevenueType(revenueType) {
-    if (type(revenueType) !== 'string') {
-      utils.log.error('Unsupported type for revenueType: ' + type(revenueType) + ', expecting string');
-    } else {
-      this._revenueType = revenueType;
-    }
-
-    return this;
-  };
-  /**
-   * Set event properties for the revenue event.
-   * @public
-   * @param {object} eventProperties - Revenue event properties to set.
-   * @return {Revenue} Returns the same Revenue object, allowing you to chain multiple method calls together.
-   * @example var event_properties = {'city': 'San Francisco'};
-   * var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99).setEventProperties(event_properties);
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  Revenue.prototype.setEventProperties = function setEventProperties(eventProperties) {
-    if (type(eventProperties) !== 'object') {
-      utils.log.error('Unsupported type for eventProperties: ' + type(eventProperties) + ', expecting object');
-    } else {
-      this._properties = utils.validateProperties(eventProperties);
-    }
-
-    return this;
-  };
-  /**
-   * @private
-   */
-
-
-  Revenue.prototype._isValidRevenue = function _isValidRevenue() {
-    if (type(this._price) !== 'number') {
-      utils.log.error('Invalid revenue, need to set price field');
-      return false;
-    }
-
-    return true;
-  };
-  /**
-   * @private
-   */
-
-
-  Revenue.prototype._toJSONObject = function _toJSONObject() {
-    var obj = type(this._properties) === 'object' ? this._properties : {};
-
-    if (this._productId !== null) {
-      obj[Constants.REVENUE_PRODUCT_ID] = this._productId;
-    }
-
-    if (this._quantity !== null) {
-      obj[Constants.REVENUE_QUANTITY] = this._quantity;
-    }
-
-    if (this._price !== null) {
-      obj[Constants.REVENUE_PRICE] = this._price;
-    }
-
-    if (this._revenueType !== null) {
-      obj[Constants.REVENUE_REVENUE_TYPE] = this._revenueType;
-    }
-
-    return obj;
-  };
-
-  var uaParser = createCommonjsModule(function (module, exports) {
-  /*!
-   * UAParser.js v0.7.21
-   * Lightweight JavaScript-based User-Agent string parser
-   * https://github.com/faisalman/ua-parser-js
-   *
-   * Copyright © 2012-2019 Faisal Salman <f@faisalman.com>
-   * Licensed under MIT License
-   */
-
-  (function (window, undefined$1) {
-
-      //////////////
-      // Constants
-      /////////////
-
-
-      var LIBVERSION  = '0.7.21',
-          EMPTY       = '',
-          UNKNOWN     = '?',
-          FUNC_TYPE   = 'function',
-          OBJ_TYPE    = 'object',
-          STR_TYPE    = 'string',
-          MAJOR       = 'major', // deprecated
-          MODEL       = 'model',
-          NAME        = 'name',
-          TYPE        = 'type',
-          VENDOR      = 'vendor',
-          VERSION     = 'version',
-          ARCHITECTURE= 'architecture',
-          CONSOLE     = 'console',
-          MOBILE      = 'mobile',
-          TABLET      = 'tablet',
-          SMARTTV     = 'smarttv',
-          WEARABLE    = 'wearable',
-          EMBEDDED    = 'embedded';
-
-
-      ///////////
-      // Helper
-      //////////
-
-
-      var util = {
-          extend : function (regexes, extensions) {
-              var mergedRegexes = {};
-              for (var i in regexes) {
-                  if (extensions[i] && extensions[i].length % 2 === 0) {
-                      mergedRegexes[i] = extensions[i].concat(regexes[i]);
-                  } else {
-                      mergedRegexes[i] = regexes[i];
-                  }
-              }
-              return mergedRegexes;
-          },
-          has : function (str1, str2) {
-            if (typeof str1 === "string") {
-              return str2.toLowerCase().indexOf(str1.toLowerCase()) !== -1;
-            } else {
-              return false;
-            }
-          },
-          lowerize : function (str) {
-              return str.toLowerCase();
-          },
-          major : function (version) {
-              return typeof(version) === STR_TYPE ? version.replace(/[^\d\.]/g,'').split(".")[0] : undefined$1;
-          },
-          trim : function (str) {
-            return str.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g, '');
-          }
-      };
-
-
-      ///////////////
-      // Map helper
-      //////////////
-
-
-      var mapper = {
-
-          rgx : function (ua, arrays) {
-
-              var i = 0, j, k, p, q, matches, match;
-
-              // loop through all regexes maps
-              while (i < arrays.length && !matches) {
-
-                  var regex = arrays[i],       // even sequence (0,2,4,..)
-                      props = arrays[i + 1];   // odd sequence (1,3,5,..)
-                  j = k = 0;
-
-                  // try matching uastring with regexes
-                  while (j < regex.length && !matches) {
-
-                      matches = regex[j++].exec(ua);
-
-                      if (!!matches) {
-                          for (p = 0; p < props.length; p++) {
-                              match = matches[++k];
-                              q = props[p];
-                              // check if given property is actually array
-                              if (typeof q === OBJ_TYPE && q.length > 0) {
-                                  if (q.length == 2) {
-                                      if (typeof q[1] == FUNC_TYPE) {
-                                          // assign modified match
-                                          this[q[0]] = q[1].call(this, match);
-                                      } else {
-                                          // assign given value, ignore regex match
-                                          this[q[0]] = q[1];
-                                      }
-                                  } else if (q.length == 3) {
-                                      // check whether function or regex
-                                      if (typeof q[1] === FUNC_TYPE && !(q[1].exec && q[1].test)) {
-                                          // call function (usually string mapper)
-                                          this[q[0]] = match ? q[1].call(this, match, q[2]) : undefined$1;
-                                      } else {
-                                          // sanitize match using given regex
-                                          this[q[0]] = match ? match.replace(q[1], q[2]) : undefined$1;
-                                      }
-                                  } else if (q.length == 4) {
-                                          this[q[0]] = match ? q[3].call(this, match.replace(q[1], q[2])) : undefined$1;
-                                  }
-                              } else {
-                                  this[q] = match ? match : undefined$1;
-                              }
-                          }
-                      }
-                  }
-                  i += 2;
-              }
-          },
-
-          str : function (str, map) {
-
-              for (var i in map) {
-                  // check if array
-                  if (typeof map[i] === OBJ_TYPE && map[i].length > 0) {
-                      for (var j = 0; j < map[i].length; j++) {
-                          if (util.has(map[i][j], str)) {
-                              return (i === UNKNOWN) ? undefined$1 : i;
-                          }
-                      }
-                  } else if (util.has(map[i], str)) {
-                      return (i === UNKNOWN) ? undefined$1 : i;
-                  }
-              }
-              return str;
-          }
-      };
-
-
-      ///////////////
-      // String map
-      //////////////
-
-
-      var maps = {
-
-          browser : {
-              oldsafari : {
-                  version : {
-                      '1.0'   : '/8',
-                      '1.2'   : '/1',
-                      '1.3'   : '/3',
-                      '2.0'   : '/412',
-                      '2.0.2' : '/416',
-                      '2.0.3' : '/417',
-                      '2.0.4' : '/419',
-                      '?'     : '/'
-                  }
-              }
-          },
-
-          device : {
-              amazon : {
-                  model : {
-                      'Fire Phone' : ['SD', 'KF']
-                  }
-              },
-              sprint : {
-                  model : {
-                      'Evo Shift 4G' : '7373KT'
-                  },
-                  vendor : {
-                      'HTC'       : 'APA',
-                      'Sprint'    : 'Sprint'
-                  }
-              }
-          },
-
-          os : {
-              windows : {
-                  version : {
-                      'ME'        : '4.90',
-                      'NT 3.11'   : 'NT3.51',
-                      'NT 4.0'    : 'NT4.0',
-                      '2000'      : 'NT 5.0',
-                      'XP'        : ['NT 5.1', 'NT 5.2'],
-                      'Vista'     : 'NT 6.0',
-                      '7'         : 'NT 6.1',
-                      '8'         : 'NT 6.2',
-                      '8.1'       : 'NT 6.3',
-                      '10'        : ['NT 6.4', 'NT 10.0'],
-                      'RT'        : 'ARM'
-                  }
-              }
-          }
-      };
-
-
-      //////////////
-      // Regex map
-      /////////////
-
-
-      var regexes = {
-
-          browser : [[
-
-              // Presto based
-              /(opera\smini)\/([\w\.-]+)/i,                                       // Opera Mini
-              /(opera\s[mobiletab]+).+version\/([\w\.-]+)/i,                      // Opera Mobi/Tablet
-              /(opera).+version\/([\w\.]+)/i,                                     // Opera > 9.80
-              /(opera)[\/\s]+([\w\.]+)/i                                          // Opera < 9.80
-              ], [NAME, VERSION], [
-
-              /(opios)[\/\s]+([\w\.]+)/i                                          // Opera mini on iphone >= 8.0
-              ], [[NAME, 'Opera Mini'], VERSION], [
-
-              /\s(opr)\/([\w\.]+)/i                                               // Opera Webkit
-              ], [[NAME, 'Opera'], VERSION], [
-
-              // Mixed
-              /(kindle)\/([\w\.]+)/i,                                             // Kindle
-              /(lunascape|maxthon|netfront|jasmine|blazer)[\/\s]?([\w\.]*)/i,
-                                                                                  // Lunascape/Maxthon/Netfront/Jasmine/Blazer
-              // Trident based
-              /(avant\s|iemobile|slim)(?:browser)?[\/\s]?([\w\.]*)/i,
-                                                                                  // Avant/IEMobile/SlimBrowser
-              /(bidubrowser|baidubrowser)[\/\s]?([\w\.]+)/i,                      // Baidu Browser
-              /(?:ms|\()(ie)\s([\w\.]+)/i,                                        // Internet Explorer
-
-              // Webkit/KHTML based
-              /(rekonq)\/([\w\.]*)/i,                                             // Rekonq
-              /(chromium|flock|rockmelt|midori|epiphany|silk|skyfire|ovibrowser|bolt|iron|vivaldi|iridium|phantomjs|bowser|quark|qupzilla|falkon)\/([\w\.-]+)/i
-                                                                                  // Chromium/Flock/RockMelt/Midori/Epiphany/Silk/Skyfire/Bolt/Iron/Iridium/PhantomJS/Bowser/QupZilla/Falkon
-              ], [NAME, VERSION], [
-
-              /(konqueror)\/([\w\.]+)/i                                           // Konqueror
-              ], [[NAME, 'Konqueror'], VERSION], [
-
-              /(trident).+rv[:\s]([\w\.]+).+like\sgecko/i                         // IE11
-              ], [[NAME, 'IE'], VERSION], [
-
-              /(edge|edgios|edga|edg)\/((\d+)?[\w\.]+)/i                          // Microsoft Edge
-              ], [[NAME, 'Edge'], VERSION], [
-
-              /(yabrowser)\/([\w\.]+)/i                                           // Yandex
-              ], [[NAME, 'Yandex'], VERSION], [
-
-              /(Avast)\/([\w\.]+)/i                                               // Avast Secure Browser
-              ], [[NAME, 'Avast Secure Browser'], VERSION], [
-
-              /(AVG)\/([\w\.]+)/i                                                 // AVG Secure Browser
-              ], [[NAME, 'AVG Secure Browser'], VERSION], [
-
-              /(puffin)\/([\w\.]+)/i                                              // Puffin
-              ], [[NAME, 'Puffin'], VERSION], [
-
-              /(focus)\/([\w\.]+)/i                                               // Firefox Focus
-              ], [[NAME, 'Firefox Focus'], VERSION], [
-
-              /(opt)\/([\w\.]+)/i                                                 // Opera Touch
-              ], [[NAME, 'Opera Touch'], VERSION], [
-
-              /((?:[\s\/])uc?\s?browser|(?:juc.+)ucweb)[\/\s]?([\w\.]+)/i         // UCBrowser
-              ], [[NAME, 'UCBrowser'], VERSION], [
-
-              /(comodo_dragon)\/([\w\.]+)/i                                       // Comodo Dragon
-              ], [[NAME, /_/g, ' '], VERSION], [
-
-              /(windowswechat qbcore)\/([\w\.]+)/i                                // WeChat Desktop for Windows Built-in Browser
-              ], [[NAME, 'WeChat(Win) Desktop'], VERSION], [
-
-              /(micromessenger)\/([\w\.]+)/i                                      // WeChat
-              ], [[NAME, 'WeChat'], VERSION], [
-
-              /(brave)\/([\w\.]+)/i                                               // Brave browser
-              ], [[NAME, 'Brave'], VERSION], [
-
-              /(qqbrowserlite)\/([\w\.]+)/i                                       // QQBrowserLite
-              ], [NAME, VERSION], [
-
-              /(QQ)\/([\d\.]+)/i                                                  // QQ, aka ShouQ
-              ], [NAME, VERSION], [
-
-              /m?(qqbrowser)[\/\s]?([\w\.]+)/i                                    // QQBrowser
-              ], [NAME, VERSION], [
-
-              /(baiduboxapp)[\/\s]?([\w\.]+)/i                                    // Baidu App
-              ], [NAME, VERSION], [
-
-              /(2345Explorer)[\/\s]?([\w\.]+)/i                                   // 2345 Browser
-              ], [NAME, VERSION], [
-
-              /(MetaSr)[\/\s]?([\w\.]+)/i                                         // SouGouBrowser
-              ], [NAME], [
-
-              /(LBBROWSER)/i                                                      // LieBao Browser
-              ], [NAME], [
-
-              /xiaomi\/miuibrowser\/([\w\.]+)/i                                   // MIUI Browser
-              ], [VERSION, [NAME, 'MIUI Browser']], [
-
-              /;fbav\/([\w\.]+);/i                                                // Facebook App for iOS & Android
-              ], [VERSION, [NAME, 'Facebook']], [
-
-              /safari\s(line)\/([\w\.]+)/i,                                       // Line App for iOS
-              /android.+(line)\/([\w\.]+)\/iab/i                                  // Line App for Android
-              ], [NAME, VERSION], [
-
-              /headlesschrome(?:\/([\w\.]+)|\s)/i                                 // Chrome Headless
-              ], [VERSION, [NAME, 'Chrome Headless']], [
-
-              /\swv\).+(chrome)\/([\w\.]+)/i                                      // Chrome WebView
-              ], [[NAME, /(.+)/, '$1 WebView'], VERSION], [
-
-              /((?:oculus|samsung)browser)\/([\w\.]+)/i
-              ], [[NAME, /(.+(?:g|us))(.+)/, '$1 $2'], VERSION], [                // Oculus / Samsung Browser
-
-              /((?:android.+)crmo|crios)\/([\w\.]+)/i,                            // Chrome for Android/iOS
-              /android.+(chrome)\/([\w\.]+)\s+(?:mobile\s?safari)/i
-              ], [[NAME, 'Chrome Mobile'], VERSION], [
-
-              /android.+version\/([\w\.]+)\s+(?:mobile\s?safari|safari)*/i        // Android Browser
-              ], [VERSION, [NAME, 'Android Browser']], [
-
-              /(sailfishbrowser)\/([\w\.]+)/i                                     // Sailfish Browser
-              ], [[NAME, 'Sailfish Browser'], VERSION], [
-
-              /(chrome|omniweb|arora|[tizenoka]{5}\s?browser)\/v?([\w\.]+)/i
-                                                                                  // Chrome/OmniWeb/Arora/Tizen/Nokia
-              ], [NAME, VERSION], [
-
-              /(dolfin)\/([\w\.]+)/i                                              // Dolphin
-              ], [[NAME, 'Dolphin'], VERSION], [
-
-              /(qihu|qhbrowser|qihoobrowser|360browser)/i                         // 360
-              ], [[NAME, '360 Browser']], [
-
-              /(coast)\/([\w\.]+)/i                                               // Opera Coast
-              ], [[NAME, 'Opera Coast'], VERSION], [
-
-              /fxios\/([\w\.-]+)/i                                                // Firefox for iOS
-              ], [VERSION, [NAME, 'Firefox']], [
-
-              /version\/([\w\.]+).+?mobile\/\w+\s(safari)/i                       // Mobile Safari
-              ], [VERSION, [NAME, 'Mobile Safari']], [
-
-              /version\/([\w\.]+).+?(mobile\s?safari|safari)/i                    // Safari & Safari Mobile
-              ], [VERSION, NAME], [
-
-              /webkit.+?(gsa)\/([\w\.]+).+?(mobile\s?safari|safari)(\/[\w\.]+)/i  // Google Search Appliance on iOS
-              ], [[NAME, 'GSA'], VERSION], [
-
-              /webkit.+?(mobile\s?safari|safari)(\/[\w\.]+)/i                     // Safari < 3.0
-              ], [NAME, [VERSION, mapper.str, maps.browser.oldsafari.version]], [
-
-              /(webkit|khtml)\/([\w\.]+)/i
-              ], [NAME, VERSION], [
-
-              // Gecko based
-              /(navigator|netscape)\/([\w\.-]+)/i                                 // Netscape
-              ], [[NAME, 'Netscape'], VERSION], [
-              /(swiftfox)/i,                                                      // Swiftfox
-              /(icedragon|iceweasel|camino|chimera|fennec|maemo\sbrowser|minimo|conkeror)[\/\s]?([\w\.\+]+)/i,
-                                                                                  // IceDragon/Iceweasel/Camino/Chimera/Fennec/Maemo/Minimo/Conkeror
-              /(firefox|seamonkey|k-meleon|icecat|iceape|firebird|phoenix|palemoon|basilisk|waterfox)\/([\w\.-]+)/i,
-
-                                                                                  // Firefox/SeaMonkey/K-Meleon/IceCat/IceApe/Firebird/Phoenix
-              /(mozilla)\/([\w\.]+).+rv\:.+gecko\/\d+/i,                          // Mozilla
-
-              // Other
-              /(polaris|lynx|dillo|icab|doris|amaya|w3m|netsurf|sleipnir)[\/\s]?([\w\.]+)/i,
-                                                                                  // Polaris/Lynx/Dillo/iCab/Doris/Amaya/w3m/NetSurf/Sleipnir
-              /(links)\s\(([\w\.]+)/i,                                            // Links
-              /(gobrowser)\/?([\w\.]*)/i,                                         // GoBrowser
-              /(ice\s?browser)\/v?([\w\._]+)/i,                                   // ICE Browser
-              /(mosaic)[\/\s]([\w\.]+)/i                                          // Mosaic
-              ], [NAME, VERSION]
-          ],
-
-          cpu : [[
-
-              /(?:(amd|x(?:(?:86|64)[_-])?|wow|win)64)[;\)]/i                     // AMD64
-              ], [[ARCHITECTURE, 'amd64']], [
-
-              /(ia32(?=;))/i                                                      // IA32 (quicktime)
-              ], [[ARCHITECTURE, util.lowerize]], [
-
-              /((?:i[346]|x)86)[;\)]/i                                            // IA32
-              ], [[ARCHITECTURE, 'ia32']], [
-
-              // PocketPC mistakenly identified as PowerPC
-              /windows\s(ce|mobile);\sppc;/i
-              ], [[ARCHITECTURE, 'arm']], [
-
-              /((?:ppc|powerpc)(?:64)?)(?:\smac|;|\))/i                           // PowerPC
-              ], [[ARCHITECTURE, /ower/, '', util.lowerize]], [
-
-              /(sun4\w)[;\)]/i                                                    // SPARC
-              ], [[ARCHITECTURE, 'sparc']], [
-
-              /((?:avr32|ia64(?=;))|68k(?=\))|arm(?:64|(?=v\d+[;l]))|(?=atmel\s)avr|(?:irix|mips|sparc)(?:64)?(?=;)|pa-risc)/i
-                                                                                  // IA64, 68K, ARM/64, AVR/32, IRIX/64, MIPS/64, SPARC/64, PA-RISC
-              ], [[ARCHITECTURE, util.lowerize]]
-          ],
-
-          device : [[
-
-              /\((ipad|playbook);[\w\s\),;-]+(rim|apple)/i                        // iPad/PlayBook
-              ], [MODEL, VENDOR, [TYPE, TABLET]], [
-
-              /applecoremedia\/[\w\.]+ \((ipad)/                                  // iPad
-              ], [MODEL, [VENDOR, 'Apple'], [TYPE, TABLET]], [
-
-              /(apple\s{0,1}tv)/i                                                 // Apple TV
-              ], [[MODEL, 'Apple TV'], [VENDOR, 'Apple'], [TYPE, SMARTTV]], [
-
-              /(archos)\s(gamepad2?)/i,                                           // Archos
-              /(hp).+(touchpad)/i,                                                // HP TouchPad
-              /(hp).+(tablet)/i,                                                  // HP Tablet
-              /(kindle)\/([\w\.]+)/i,                                             // Kindle
-              /\s(nook)[\w\s]+build\/(\w+)/i,                                     // Nook
-              /(dell)\s(strea[kpr\s\d]*[\dko])/i                                  // Dell Streak
-              ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-              /(kf[A-z]+)\sbuild\/.+silk\//i                                      // Kindle Fire HD
-              ], [MODEL, [VENDOR, 'Amazon'], [TYPE, TABLET]], [
-              /(sd|kf)[0349hijorstuw]+\sbuild\/.+silk\//i                         // Fire Phone
-              ], [[MODEL, mapper.str, maps.device.amazon.model], [VENDOR, 'Amazon'], [TYPE, MOBILE]], [
-              /android.+aft([bms])\sbuild/i                                       // Fire TV
-              ], [MODEL, [VENDOR, 'Amazon'], [TYPE, SMARTTV]], [
-
-              /\((ip[honed|\s\w*]+);.+(apple)/i                                   // iPod/iPhone
-              ], [MODEL, VENDOR, [TYPE, MOBILE]], [
-              /\((ip[honed|\s\w*]+);/i                                            // iPod/iPhone
-              ], [MODEL, [VENDOR, 'Apple'], [TYPE, MOBILE]], [
-
-              /(blackberry)[\s-]?(\w+)/i,                                         // BlackBerry
-              /(blackberry|benq|palm(?=\-)|sonyericsson|acer|asus|dell|meizu|motorola|polytron)[\s_-]?([\w-]*)/i,
-                                                                                  // BenQ/Palm/Sony-Ericsson/Acer/Asus/Dell/Meizu/Motorola/Polytron
-              /(hp)\s([\w\s]+\w)/i,                                               // HP iPAQ
-              /(asus)-?(\w+)/i                                                    // Asus
-              ], [VENDOR, MODEL, [TYPE, MOBILE]], [
-              /\(bb10;\s(\w+)/i                                                   // BlackBerry 10
-              ], [MODEL, [VENDOR, 'BlackBerry'], [TYPE, MOBILE]], [
-                                                                                  // Asus Tablets
-              /android.+(transfo[prime\s]{4,10}\s\w+|eeepc|slider\s\w+|nexus 7|padfone|p00c)/i
-              ], [MODEL, [VENDOR, 'Asus'], [TYPE, TABLET]], [
-
-              /(sony)\s(tablet\s[ps])\sbuild\//i,                                  // Sony
-              /(sony)?(?:sgp.+)\sbuild\//i
-              ], [[VENDOR, 'Sony'], [MODEL, 'Xperia Tablet'], [TYPE, TABLET]], [
-              /android.+\s([c-g]\d{4}|so[-l]\w+)(?=\sbuild\/|\).+chrome\/(?![1-6]{0,1}\d\.))/i
-              ], [MODEL, [VENDOR, 'Sony'], [TYPE, MOBILE]], [
-
-              /\s(ouya)\s/i,                                                      // Ouya
-              /(nintendo)\s([wids3u]+)/i                                          // Nintendo
-              ], [VENDOR, MODEL, [TYPE, CONSOLE]], [
-
-              /android.+;\s(shield)\sbuild/i                                      // Nvidia
-              ], [MODEL, [VENDOR, 'Nvidia'], [TYPE, CONSOLE]], [
-
-              /(playstation\s[34portablevi]+)/i                                   // Playstation
-              ], [MODEL, [VENDOR, 'Sony'], [TYPE, CONSOLE]], [
-
-              /(sprint\s(\w+))/i                                                  // Sprint Phones
-              ], [[VENDOR, mapper.str, maps.device.sprint.vendor], [MODEL, mapper.str, maps.device.sprint.model], [TYPE, MOBILE]], [
-
-              /(htc)[;_\s-]+([\w\s]+(?=\)|\sbuild)|\w+)/i,                        // HTC
-              /(zte)-(\w*)/i,                                                     // ZTE
-              /(alcatel|geeksphone|nexian|panasonic|(?=;\s)sony)[_\s-]?([\w-]*)/i
-                                                                                  // Alcatel/GeeksPhone/Nexian/Panasonic/Sony
-              ], [VENDOR, [MODEL, /_/g, ' '], [TYPE, MOBILE]], [
-
-              /(nexus\s9)/i                                                       // HTC Nexus 9
-              ], [MODEL, [VENDOR, 'HTC'], [TYPE, TABLET]], [
-
-              /d\/huawei([\w\s-]+)[;\)]/i,
-              /(nexus\s6p|vog-l29|ane-lx1|eml-l29)/i                              // Huawei
-              ], [MODEL, [VENDOR, 'Huawei'], [TYPE, MOBILE]], [
-
-              /android.+(bah2?-a?[lw]\d{2})/i                                     // Huawei MediaPad
-              ], [MODEL, [VENDOR, 'Huawei'], [TYPE, TABLET]], [
-
-              /(microsoft);\s(lumia[\s\w]+)/i                                     // Microsoft Lumia
-              ], [VENDOR, MODEL, [TYPE, MOBILE]], [
-
-              /[\s\(;](xbox(?:\sone)?)[\s\);]/i                                   // Microsoft Xbox
-              ], [MODEL, [VENDOR, 'Microsoft'], [TYPE, CONSOLE]], [
-              /(kin\.[onetw]{3})/i                                                // Microsoft Kin
-              ], [[MODEL, /\./g, ' '], [VENDOR, 'Microsoft'], [TYPE, MOBILE]], [
-
-                                                                                  // Motorola
-              /\s(milestone|droid(?:[2-4x]|\s(?:bionic|x2|pro|razr))?:?(\s4g)?)[\w\s]+build\//i,
-              /mot[\s-]?(\w*)/i,
-              /(XT\d{3,4}) build\//i,
-              /(nexus\s6)/i
-              ], [MODEL, [VENDOR, 'Motorola'], [TYPE, MOBILE]], [
-              /android.+\s(mz60\d|xoom[\s2]{0,2})\sbuild\//i
-              ], [MODEL, [VENDOR, 'Motorola'], [TYPE, TABLET]], [
-
-              /hbbtv\/\d+\.\d+\.\d+\s+\([\w\s]*;\s*(\w[^;]*);([^;]*)/i            // HbbTV devices
-              ], [[VENDOR, util.trim], [MODEL, util.trim], [TYPE, SMARTTV]], [
-
-              /hbbtv.+maple;(\d+)/i
-              ], [[MODEL, /^/, 'SmartTV'], [VENDOR, 'Samsung'], [TYPE, SMARTTV]], [
-
-              /\(dtv[\);].+(aquos)/i                                              // Sharp
-              ], [MODEL, [VENDOR, 'Sharp'], [TYPE, SMARTTV]], [
-
-              /android.+((sch-i[89]0\d|shw-m380s|gt-p\d{4}|gt-n\d+|sgh-t8[56]9|nexus 10))/i,
-              /((SM-T\w+))/i
-              ], [[VENDOR, 'Samsung'], MODEL, [TYPE, TABLET]], [                  // Samsung
-              /smart-tv.+(samsung)/i
-              ], [VENDOR, [TYPE, SMARTTV], MODEL], [
-              /((s[cgp]h-\w+|gt-\w+|galaxy\snexus|sm-\w[\w\d]+))/i,
-              /(sam[sung]*)[\s-]*(\w+-?[\w-]*)/i,
-              /sec-((sgh\w+))/i
-              ], [[VENDOR, 'Samsung'], MODEL, [TYPE, MOBILE]], [
-
-              /sie-(\w*)/i                                                        // Siemens
-              ], [MODEL, [VENDOR, 'Siemens'], [TYPE, MOBILE]], [
-
-              /(maemo|nokia).*(n900|lumia\s\d+)/i,                                // Nokia
-              /(nokia)[\s_-]?([\w-]*)/i
-              ], [[VENDOR, 'Nokia'], MODEL, [TYPE, MOBILE]], [
-
-              /android[x\d\.\s;]+\s([ab][1-7]\-?[0178a]\d\d?)/i                   // Acer
-              ], [MODEL, [VENDOR, 'Acer'], [TYPE, TABLET]], [
-
-              /android.+([vl]k\-?\d{3})\s+build/i                                 // LG Tablet
-              ], [MODEL, [VENDOR, 'LG'], [TYPE, TABLET]], [
-              /android\s3\.[\s\w;-]{10}(lg?)-([06cv9]{3,4})/i                     // LG Tablet
-              ], [[VENDOR, 'LG'], MODEL, [TYPE, TABLET]], [
-              /(lg) netcast\.tv/i                                                 // LG SmartTV
-              ], [VENDOR, MODEL, [TYPE, SMARTTV]], [
-              /(nexus\s[45])/i,                                                   // LG
-              /lg[e;\s\/-]+(\w*)/i,
-              /android.+lg(\-?[\d\w]+)\s+build/i
-              ], [MODEL, [VENDOR, 'LG'], [TYPE, MOBILE]], [
-
-              /(lenovo)\s?(s(?:5000|6000)(?:[\w-]+)|tab(?:[\s\w]+))/i             // Lenovo tablets
-              ], [VENDOR, MODEL, [TYPE, TABLET]], [
-              /android.+(ideatab[a-z0-9\-\s]+)/i                                  // Lenovo
-              ], [MODEL, [VENDOR, 'Lenovo'], [TYPE, TABLET]], [
-              /(lenovo)[_\s-]?([\w-]+)/i
-              ], [VENDOR, MODEL, [TYPE, MOBILE]], [
-
-              /linux;.+((jolla));/i                                               // Jolla
-              ], [VENDOR, MODEL, [TYPE, MOBILE]], [
-
-              /((pebble))app\/[\d\.]+\s/i                                         // Pebble
-              ], [VENDOR, MODEL, [TYPE, WEARABLE]], [
-
-              /android.+;\s(oppo)\s?([\w\s]+)\sbuild/i                            // OPPO
-              ], [VENDOR, MODEL, [TYPE, MOBILE]], [
-
-              /crkey/i                                                            // Google Chromecast
-              ], [[MODEL, 'Chromecast'], [VENDOR, 'Google'], [TYPE, SMARTTV]], [
-
-              /android.+;\s(glass)\s\d/i                                          // Google Glass
-              ], [MODEL, [VENDOR, 'Google'], [TYPE, WEARABLE]], [
-
-              /android.+;\s(pixel c)[\s)]/i                                       // Google Pixel C
-              ], [MODEL, [VENDOR, 'Google'], [TYPE, TABLET]], [
-
-              /android.+;\s(pixel( [23])?( xl)?)[\s)]/i                              // Google Pixel
-              ], [MODEL, [VENDOR, 'Google'], [TYPE, MOBILE]], [
-
-              /android.+;\s(\w+)\s+build\/hm\1/i,                                 // Xiaomi Hongmi 'numeric' models
-              /android.+(hm[\s\-_]*note?[\s_]*(?:\d\w)?)\s+build/i,               // Xiaomi Hongmi
-              /android.+(mi[\s\-_]*(?:a\d|one|one[\s_]plus|note lte)?[\s_]*(?:\d?\w?)[\s_]*(?:plus)?)\s+build/i,    
-                                                                                  // Xiaomi Mi
-              /android.+(redmi[\s\-_]*(?:note)?(?:[\s_]*[\w\s]+))\s+build/i       // Redmi Phones
-              ], [[MODEL, /_/g, ' '], [VENDOR, 'Xiaomi'], [TYPE, MOBILE]], [
-              /android.+(mi[\s\-_]*(?:pad)(?:[\s_]*[\w\s]+))\s+build/i            // Mi Pad tablets
-              ],[[MODEL, /_/g, ' '], [VENDOR, 'Xiaomi'], [TYPE, TABLET]], [
-              /android.+;\s(m[1-5]\snote)\sbuild/i                                // Meizu
-              ], [MODEL, [VENDOR, 'Meizu'], [TYPE, MOBILE]], [
-              /(mz)-([\w-]{2,})/i
-              ], [[VENDOR, 'Meizu'], MODEL, [TYPE, MOBILE]], [
-
-              /android.+a000(1)\s+build/i,                                        // OnePlus
-              /android.+oneplus\s(a\d{4})[\s)]/i
-              ], [MODEL, [VENDOR, 'OnePlus'], [TYPE, MOBILE]], [
-
-              /android.+[;\/]\s*(RCT[\d\w]+)\s+build/i                            // RCA Tablets
-              ], [MODEL, [VENDOR, 'RCA'], [TYPE, TABLET]], [
-
-              /android.+[;\/\s]+(Venue[\d\s]{2,7})\s+build/i                      // Dell Venue Tablets
-              ], [MODEL, [VENDOR, 'Dell'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(Q[T|M][\d\w]+)\s+build/i                         // Verizon Tablet
-              ], [MODEL, [VENDOR, 'Verizon'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s+(Barnes[&\s]+Noble\s+|BN[RT])(V?.*)\s+build/i     // Barnes & Noble Tablet
-              ], [[VENDOR, 'Barnes & Noble'], MODEL, [TYPE, TABLET]], [
-
-              /android.+[;\/]\s+(TM\d{3}.*\b)\s+build/i                           // Barnes & Noble Tablet
-              ], [MODEL, [VENDOR, 'NuVision'], [TYPE, TABLET]], [
-
-              /android.+;\s(k88)\sbuild/i                                         // ZTE K Series Tablet
-              ], [MODEL, [VENDOR, 'ZTE'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(gen\d{3})\s+build.*49h/i                         // Swiss GEN Mobile
-              ], [MODEL, [VENDOR, 'Swiss'], [TYPE, MOBILE]], [
-
-              /android.+[;\/]\s*(zur\d{3})\s+build/i                              // Swiss ZUR Tablet
-              ], [MODEL, [VENDOR, 'Swiss'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*((Zeki)?TB.*\b)\s+build/i                         // Zeki Tablets
-              ], [MODEL, [VENDOR, 'Zeki'], [TYPE, TABLET]], [
-
-              /(android).+[;\/]\s+([YR]\d{2})\s+build/i,
-              /android.+[;\/]\s+(Dragon[\-\s]+Touch\s+|DT)(\w{5})\sbuild/i        // Dragon Touch Tablet
-              ], [[VENDOR, 'Dragon Touch'], MODEL, [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(NS-?\w{0,9})\sbuild/i                            // Insignia Tablets
-              ], [MODEL, [VENDOR, 'Insignia'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*((NX|Next)-?\w{0,9})\s+build/i                    // NextBook Tablets
-              ], [MODEL, [VENDOR, 'NextBook'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(Xtreme\_)?(V(1[045]|2[015]|30|40|60|7[05]|90))\s+build/i
-              ], [[VENDOR, 'Voice'], MODEL, [TYPE, MOBILE]], [                    // Voice Xtreme Phones
-
-              /android.+[;\/]\s*(LVTEL\-)?(V1[12])\s+build/i                     // LvTel Phones
-              ], [[VENDOR, 'LvTel'], MODEL, [TYPE, MOBILE]], [
-
-              /android.+;\s(PH-1)\s/i
-              ], [MODEL, [VENDOR, 'Essential'], [TYPE, MOBILE]], [                // Essential PH-1
-
-              /android.+[;\/]\s*(V(100MD|700NA|7011|917G).*\b)\s+build/i          // Envizen Tablets
-              ], [MODEL, [VENDOR, 'Envizen'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(Le[\s\-]+Pan)[\s\-]+(\w{1,9})\s+build/i          // Le Pan Tablets
-              ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(Trio[\s\-]*.*)\s+build/i                         // MachSpeed Tablets
-              ], [MODEL, [VENDOR, 'MachSpeed'], [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*(Trinity)[\-\s]*(T\d{3})\s+build/i                // Trinity Tablets
-              ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-              /android.+[;\/]\s*TU_(1491)\s+build/i                               // Rotor Tablets
-              ], [MODEL, [VENDOR, 'Rotor'], [TYPE, TABLET]], [
-
-              /android.+(KS(.+))\s+build/i                                        // Amazon Kindle Tablets
-              ], [MODEL, [VENDOR, 'Amazon'], [TYPE, TABLET]], [
-
-              /android.+(Gigaset)[\s\-]+(Q\w{1,9})\s+build/i                      // Gigaset Tablets
-              ], [VENDOR, MODEL, [TYPE, TABLET]], [
-
-              /\s(tablet|tab)[;\/]/i,                                             // Unidentifiable Tablet
-              /\s(mobile)(?:[;\/]|\ssafari)/i                                     // Unidentifiable Mobile
-              ], [[TYPE, util.lowerize], VENDOR, MODEL], [
-
-              /[\s\/\(](smart-?tv)[;\)]/i                                         // SmartTV
-              ], [[TYPE, SMARTTV]], [
-
-              /(android[\w\.\s\-]{0,9});.+build/i                                 // Generic Android Device
-              ], [MODEL, [VENDOR, 'Generic']]
-          ],
-
-          engine : [[
-
-              /windows.+\sedge\/([\w\.]+)/i                                       // EdgeHTML
-              ], [VERSION, [NAME, 'EdgeHTML']], [
-
-              /webkit\/537\.36.+chrome\/(?!27)([\w\.]+)/i                         // Blink
-              ], [VERSION, [NAME, 'Blink']], [
-
-              /(presto)\/([\w\.]+)/i,                                             // Presto
-              /(webkit|trident|netfront|netsurf|amaya|lynx|w3m|goanna)\/([\w\.]+)/i,     
-                                                                                  // WebKit/Trident/NetFront/NetSurf/Amaya/Lynx/w3m/Goanna
-              /(khtml|tasman|links)[\/\s]\(?([\w\.]+)/i,                          // KHTML/Tasman/Links
-              /(icab)[\/\s]([23]\.[\d\.]+)/i                                      // iCab
-              ], [NAME, VERSION], [
-
-              /rv\:([\w\.]{1,9}).+(gecko)/i                                       // Gecko
-              ], [VERSION, NAME]
-          ],
-
-          os : [[
-
-              // Windows based
-              /microsoft\s(windows)\s(vista|xp)/i                                 // Windows (iTunes)
-              ], [NAME, VERSION], [
-              /(windows)\snt\s6\.2;\s(arm)/i,                                     // Windows RT
-              /(windows\sphone(?:\sos)*)[\s\/]?([\d\.\s\w]*)/i,                   // Windows Phone
-              /(windows\smobile|windows)[\s\/]?([ntce\d\.\s]+\w)/i
-              ], [[NAME, mapper.str, maps.os.windows.name], [VERSION, mapper.str, maps.os.windows.version]], [
-              /(win(?=3|9|n)|win\s9x\s)([nt\d\.]+)/i
-              ], [[NAME, 'Windows'], [VERSION, mapper.str, maps.os.windows.version]], [
-
-              // Mobile/Embedded OS
-              /\((bb)(10);/i                                                      // BlackBerry 10
-              ], [[NAME, 'BlackBerry'], VERSION], [
-              /(blackberry)\w*\/?([\w\.]*)/i,                                     // Blackberry
-              /(tizen|kaios)[\/\s]([\w\.]+)/i,                                    // Tizen/KaiOS
-              /(android|webos|palm\sos|qnx|bada|rim\stablet\sos|meego|sailfish|contiki)[\/\s-]?([\w\.]*)/i
-                                                                                  // Android/WebOS/Palm/QNX/Bada/RIM/MeeGo/Contiki/Sailfish OS
-              ], [NAME, VERSION], [
-              /(symbian\s?os|symbos|s60(?=;))[\/\s-]?([\w\.]*)/i                  // Symbian
-              ], [[NAME, 'Symbian'], VERSION], [
-              /\((series40);/i                                                    // Series 40
-              ], [NAME], [
-              /mozilla.+\(mobile;.+gecko.+firefox/i                               // Firefox OS
-              ], [[NAME, 'Firefox OS'], VERSION], [
-
-              // Console
-              /(nintendo|playstation)\s([wids34portablevu]+)/i,                   // Nintendo/Playstation
-
-              // GNU/Linux based
-              /(mint)[\/\s\(]?(\w*)/i,                                            // Mint
-              /(mageia|vectorlinux)[;\s]/i,                                       // Mageia/VectorLinux
-              /(joli|[kxln]?ubuntu|debian|suse|opensuse|gentoo|(?=\s)arch|slackware|fedora|mandriva|centos|pclinuxos|redhat|zenwalk|linpus)[\/\s-]?(?!chrom)([\w\.-]*)/i,
-                                                                                  // Joli/Ubuntu/Debian/SUSE/Gentoo/Arch/Slackware
-                                                                                  // Fedora/Mandriva/CentOS/PCLinuxOS/RedHat/Zenwalk/Linpus
-              /(hurd|linux)\s?([\w\.]*)/i,                                        // Hurd/Linux
-              /(gnu)\s?([\w\.]*)/i                                                // GNU
-              ], [[NAME, 'Linux'], VERSION], [
-
-              /(cros)\s[\w]+\s([\w\.]+\w)/i                                       // Chromium OS
-              ], [[NAME, 'Chromium OS'], VERSION],[
-
-              // Solaris
-              /(sunos)\s?([\w\.\d]*)/i                                            // Solaris
-              ], [[NAME, 'Solaris'], VERSION], [
-
-              // BSD based
-              /\s([frentopc-]{0,4}bsd|dragonfly)\s?([\w\.]*)/i                    // FreeBSD/NetBSD/OpenBSD/PC-BSD/DragonFly
-              ], [[NAME, 'Linux'], VERSION],[
-
-              /(iphone)(?:.*os\s*([\w]*)\slike\smac|;\sopera)/i                  // iOS
-              ], [[NAME, 'iPhone'], [VERSION, /_/g, '.']], [
-
-              /(ipad)(?:.*os\s*([\w]*)\slike\smac|;\sopera)/i                    // iOS
-              ], [[NAME, 'iPad'], [VERSION, /_/g, '.']], [
-
-              /(haiku)\s(\w+)/i                                                   // Haiku
-              ], [NAME, VERSION],[
-
-              /cfnetwork\/.+darwin/i,
-              /ip[honead]{2,4}(?:.*os\s([\w]+)\slike\smac|;\sopera)/i             // iOS
-              ], [[VERSION, /_/g, '.'], [NAME, 'iOS']], [
-
-              /(mac\sos\sx)\s?([\w\s\.]*)/i,
-              /(macintosh|mac(?=_powerpc)\s)/i                                    // Mac OS
-              ], [[NAME, 'Mac'], [VERSION, /_/g, '.']], [
-
-              // Other
-              /((?:open)?solaris)[\/\s-]?([\w\.]*)/i,                             // Solaris
-              /(aix)\s((\d)(?=\.|\)|\s)[\w\.])*/i,                                // AIX
-              /(plan\s9|minix|beos|os\/2|amigaos|morphos|risc\sos|openvms|fuchsia)/i,
-                                                                                  // Plan9/Minix/BeOS/OS2/AmigaOS/MorphOS/RISCOS/OpenVMS/Fuchsia
-              /(unix)\s?([\w\.]*)/i                                               // UNIX
-              ], [NAME, VERSION]
-          ]
-      };
-
-
-      /////////////////
-      // Constructor
-      ////////////////
-      var UAParser = function (uastring, extensions) {
-
-          if (typeof uastring === 'object') {
-              extensions = uastring;
-              uastring = undefined$1;
-          }
-
-          if (!(this instanceof UAParser)) {
-              return new UAParser(uastring, extensions).getResult();
-          }
-
-          var ua = uastring || ((window && window.navigator && window.navigator.userAgent) ? window.navigator.userAgent : EMPTY);
-          var rgxmap = extensions ? util.extend(regexes, extensions) : regexes;
-
-          this.getBrowser = function () {
-              var browser = { name: undefined$1, version: undefined$1 };
-              mapper.rgx.call(browser, ua, rgxmap.browser);
-              browser.major = util.major(browser.version); // deprecated
-              return browser;
-          };
-          this.getCPU = function () {
-              var cpu = { architecture: undefined$1 };
-              mapper.rgx.call(cpu, ua, rgxmap.cpu);
-              return cpu;
-          };
-          this.getDevice = function () {
-              var device = { vendor: undefined$1, model: undefined$1, type: undefined$1 };
-              mapper.rgx.call(device, ua, rgxmap.device);
-              return device;
-          };
-          this.getEngine = function () {
-              var engine = { name: undefined$1, version: undefined$1 };
-              mapper.rgx.call(engine, ua, rgxmap.engine);
-              return engine;
-          };
-          this.getOS = function () {
-              var os = { name: undefined$1, version: undefined$1 };
-              mapper.rgx.call(os, ua, rgxmap.os);
-              return os;
-          };
-          this.getResult = function () {
-              return {
-                  ua      : this.getUA(),
-                  browser : this.getBrowser(),
-                  engine  : this.getEngine(),
-                  os      : this.getOS(),
-                  device  : this.getDevice(),
-                  cpu     : this.getCPU()
-              };
-          };
-          this.getUA = function () {
-              return ua;
-          };
-          this.setUA = function (uastring) {
-              ua = uastring;
-              return this;
-          };
-          return this;
-      };
-
-      UAParser.VERSION = LIBVERSION;
-      UAParser.BROWSER = {
-          NAME    : NAME,
-          MAJOR   : MAJOR, // deprecated
-          VERSION : VERSION
-      };
-      UAParser.CPU = {
-          ARCHITECTURE : ARCHITECTURE
-      };
-      UAParser.DEVICE = {
-          MODEL   : MODEL,
-          VENDOR  : VENDOR,
-          TYPE    : TYPE,
-          CONSOLE : CONSOLE,
-          MOBILE  : MOBILE,
-          SMARTTV : SMARTTV,
-          TABLET  : TABLET,
-          WEARABLE: WEARABLE,
-          EMBEDDED: EMBEDDED
-      };
-      UAParser.ENGINE = {
-          NAME    : NAME,
-          VERSION : VERSION
-      };
-      UAParser.OS = {
-          NAME    : NAME,
-          VERSION : VERSION
-      };
-
-      ///////////
-      // Export
-      //////////
-
-
-      // check js environment
-      {
-          // nodejs env
-          if (module.exports) {
-              exports = module.exports = UAParser;
-          }
-          exports.UAParser = UAParser;
-      }
-
-      // jQuery/Zepto specific (optional)
-      // Note:
-      //   In AMD env the global scope should be kept clean, but jQuery is an exception.
-      //   jQuery always exports to global scope, unless jQuery.noConflict(true) is used,
-      //   and we should catch that.
-      var $ = window && (window.jQuery || window.Zepto);
-      if ($ && !$.ua) {
-          var parser = new UAParser();
-          $.ua = parser.getResult();
-          $.ua.get = function () {
-              return parser.getUA();
-          };
-          $.ua.set = function (uastring) {
-              parser.setUA(uastring);
-              var result = parser.getResult();
-              for (var prop in result) {
-                  $.ua[prop] = result[prop];
-              }
-          };
-      }
-
-  })(typeof window === 'object' ? window : commonjsGlobal);
-  });
-  var uaParser_1 = uaParser.UAParser;
-
-  /**
-   * Source: [jed's gist]{@link https://gist.github.com/982883}.
-   * Returns a random v4 UUID of the form xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx,
-   * where each x is replaced with a random hexadecimal digit from 0 to f, and
-   * y is replaced with a random hexadecimal digit from 8 to b.
-   * Used to generate UUIDs for deviceIds.
-   * @private
-   */
-  var uuid = function uuid(a) {
-    return a // if the placeholder was passed, return
-    ? // a random number from 0 to 15
-    (a ^ // unless b is 8,
-    Math.random() * // in which case
-    16 >> // a random number from
-    a / 4). // 8 to 11
-    toString(16) // in hexadecimal
-    : // or otherwise a concatenated string:
-    ([1e7] + // 10000000 +
-    -1e3 + // -1000 +
-    -4e3 + // -4000 +
-    -8e3 + // -80000000 +
-    -1e11). // -100000000000,
-    replace( // replacing
-    /[018]/g, // zeroes, ones, and eights with
-    uuid // random hex digits
-    );
-  };
-
-  var version = "8.5.0";
-
-  var getLanguage = function getLanguage() {
-    return navigator && (navigator.languages && navigator.languages[0] || navigator.language || navigator.userLanguage) || '';
-  };
-
-  var language = {
-    getLanguage: getLanguage
-  };
-
-  /**
-   * Options used when initializing Amplitude
-   * @typedef {Object} Options
-   * @property {string} [apiEndpoint=`api.amplitude.com`] - Endpoint to send amplitude event requests to.
-   * @property {boolean} [batchEvents=`false`] -  If `true`, then events are batched together and uploaded only when the number of unsent events is greater than or equal to eventUploadThreshold or after eventUploadPeriodMillis milliseconds have passed since the first unsent event was logged.
-   * @property {number} [cookieExpiration=`365`] - The number of days after which the Amplitude cookie will expire. 12 months is for GDPR compliance.
-   * @property {string} [cookieName=`amplitude_id`] - *DEPRECATED*
-   * @property {string} [sameSiteCookie='None'] -  Sets the SameSite flag on the amplitude cookie. Decides cookie privacy policy.
-   * @property {boolean} [cookieForceUpgrade=`false`] - Forces pre-v6.0.0 instances to adopt post-v6.0.0 compat cookie formats.
-   * @property {boolean} [deferInitialization=`null`] -  If `true`, disables the core functionality of the sdk, including saving a cookie and all logging, until explicitly enabled. To enable tracking, please call `amplitude.getInstance().enableTracking()` *Note: This will not affect users who already have an amplitude cookie. The decision to track events is determined by whether or not a user has an amplitude analytics cookie. If the `cookieExpiration</code> is manually defined to be a short lifespan, you may need to run `amplitude.getInstance().enableTracking()` upon the cookie expiring or upon logging in.*
-   * @property {boolean} [disableCookies=`false`] -  Disable Ampllitude cookies altogether.
-   * @property {string} [deviceId=A randomly generated UUID.] -  The custom Device ID to set. *Note: This is not recommended unless you know what you are doing (e.g. you have your own system for tracking user devices).*
-   * @property {boolean} [deviceIdFromUrlParam=`false`] -  If `true`, then the SDK will parse Device ID values from the URL parameter amp_device_id if available. Device IDs defined in the configuration options during init will take priority over Device IDs from URL parameters.
-   * @property {string} [domain=The top domain of the current page's URL. ('https://amplitude.com')] -  Set a custom domain for the Amplitude cookie. To include subdomains, add a preceding period, eg: `.amplitude.com`.
-   * @property {number} [eventUploadPeriodMillis=`30000` (30 sec)] -  Amount of time in milliseconds that the SDK waits before uploading events if batchEvents is true.
-   * @property {number} [eventUploadThreshold=`30`] -  Minimum number of events to batch together per request if batchEvents is true.
-   * @property {boolean} [forceHttps=`true`] -  If `true`, the events will always be uploaded to HTTPS endpoint. Otherwise, it will use the embedding site's protocol.
-   * @property {boolean} [includeFbclid=`false`] -  If `true`, captures the fbclid URL parameter as well as the user's initial_fbclid via a setOnce operation.
-   * @property {boolean} [includeGclid=`false`] -  If `true`, captures the gclid URL parameter as well as the user's initial_gclid via a setOnce operation.
-   * @property {boolean} [includeReferrer=`false`] -  If `true`, captures the referrer and referring_domain for each session, as well as the user's initial_referrer and initial_referring_domain via a setOnce operation.
-   * @property {boolean} [includeUtm=`false`] -  If `true`, finds UTM parameters in the query string or the _utmz cookie, parses, and includes them as user properties on all events uploaded. This also captures initial UTM parameters for each session via a setOnce operation.
-   * @property {string} [language=The language determined by the browser] -  Custom language to set.
-   * @property {string} [logLevel=`WARN`] -  Level of logs to be printed in the developer console. Valid values are 'DISABLE', 'ERROR', 'WARN', 'INFO'. To learn more about the different options, see below.
-   * @property {boolean} [logAttributionCapturedEvent=`false`] - If `true`, the SDK will log an Amplitude event anytime new attribution values are captured from the user. **Note: These events count towards your event volume.** Event name being logged: [Amplitude] Attribution Captured. Event Properties that can be logged: `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, `utm_content`, `referrer`, `referring_domain`, `gclid`, `fbclid`. For UTM properties to be logged, `includeUtm` must be set to `true`. For the `referrer` and `referring_domain` properties to be logged, `includeReferrer` must be set to `true`. For the `gclid` property to be logged, `includeGclid` must be set to `true`. For the `fbclid` property to be logged, `includeFbclid` must be set to `true`.
-   * @property {boolean} [optOut=`false`] -  Whether or not to disable tracking for the current user.
-   * @property {function} [onError=`() => {}`] - Function to call on error.
-   * @property {function} [onExitPage=`() => {}`] - Function called when the user exits the browser. Useful logging on page exit.
-   * @property {string} [platform=`Web`] -  Platform device is running on. Defaults to `Web` (browser, including mobile browsers).
-   * @property {number} [savedMaxCount=`1000`] -  Maximum number of events to save in localStorage. If more events are logged while offline, then old events are removed.
-   * @property {boolean} [saveEvents=`true`] -  If `true`, saves events to localStorage and removes them upon successful upload. *Note: Without saving events, events may be lost if the user navigates to another page before the events are uploaded.*
-   * @property {boolean} [saveParamsReferrerOncePerSession=`true`] -  If `true`, then includeGclid, includeFbclid, includeReferrer, and includeUtm will only track their respective properties once per session. New values that come in during the middle of the user's session will be ignored. Set to false to always capture new values.
-   * @property {boolean} [secureCookie=`false`] -  If `true`, the amplitude cookie will be set with the Secure flag.
-   * @property {number} [sessionTimeout=`30*60*1000` (30 min)] -  The time between logged events before a new session starts in milliseconds.
-   * @property {string[]} [storage=`''`] - Sets storage strategy.  Options are 'cookies', 'localStorage', 'sessionStorage', or `none`. Will override `disableCookies` option
-   * @property {Object} [trackingOptions=`{ city: true, country: true, carrier: true, device_manufacturer: true, device_model: true, dma: true, ip_address: true, language: true, os_name: true, os_version: true, platform: true, region: true, version_name: true}`] - Type of data associated with a user.
-   * @property {string} [transport=`http`] - Network transport mechanism used to send events. Options are 'http' and 'beacon'.
-   * @property {boolean} [unsetParamsReferrerOnNewSession=`false`] -  If `false`, the existing `referrer` and `utm_parameter` values will be carried through each new session. If set to `true`, the `referrer` and `utm_parameter` user properties, which include `referrer`, `utm_source`, `utm_medium`, `utm_campaign`, `utm_term`, and `utm_content`, will be set to `null` upon instantiating a new session. Note: This only works if `includeReferrer` or `includeUtm` is set to `true`.
-   * @property {string} [unsentKey=`amplitude_unsent`] - localStorage key that stores unsent events.
-   * @property {string} [unsentIdentifyKey=`amplitude_unsent_identify`] - localStorage key that stores unsent identifies.
-   * @property {number} [uploadBatchSize=`100`] -  The maximum number of events to send to the server per request.
-   * @property {Object} [headers=`{ 'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8' }`] - Headers attached to an event(s) upload network request. Custom header properties are merged with this object.
-   */
-
-  var DEFAULT_OPTIONS = {
-    apiEndpoint: 'api.amplitude.com',
-    batchEvents: false,
-    cookieExpiration: 365,
-    // 12 months is for GDPR compliance
-    cookieName: 'amplitude_id',
-    // this is a deprecated option
-    sameSiteCookie: 'Lax',
-    // cookie privacy policy
-    cookieForceUpgrade: false,
-    deferInitialization: false,
-    disableCookies: false,
-    // this is a deprecated option
-    deviceIdFromUrlParam: false,
-    domain: '',
-    eventUploadPeriodMillis: 30 * 1000,
-    // 30s
-    eventUploadThreshold: 30,
-    forceHttps: true,
-    includeFbclid: false,
-    includeGclid: false,
-    includeReferrer: false,
-    includeUtm: false,
-    language: language.getLanguage(),
-    logLevel: 'WARN',
-    logAttributionCapturedEvent: false,
-    optOut: false,
-    onError: function onError() {},
-    onExitPage: function onExitPage() {},
-    platform: 'Web',
-    savedMaxCount: 1000,
-    saveEvents: true,
-    saveParamsReferrerOncePerSession: true,
-    secureCookie: false,
-    sessionTimeout: 30 * 60 * 1000,
-    storage: Constants.STORAGE_DEFAULT,
-    trackingOptions: {
-      city: true,
-      country: true,
-      carrier: true,
-      device_manufacturer: true,
-      device_model: true,
-      dma: true,
-      ip_address: true,
-      language: true,
-      os_name: true,
-      os_version: true,
-      platform: true,
-      region: true,
-      version_name: true
-    },
-    transport: Constants.TRANSPORT_HTTP,
-    unsetParamsReferrerOnNewSession: false,
-    unsentKey: 'amplitude_unsent',
-    unsentIdentifyKey: 'amplitude_unsent_identify',
-    uploadBatchSize: 100,
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-    }
-  };
-
-  /**
-   * AmplitudeClient SDK API - instance constructor.
-   * The Amplitude class handles creation of client instances, all you need to do is call amplitude.getInstance()
-   * @constructor AmplitudeClient
-   * @public
-   * @example var amplitudeClient = new AmplitudeClient();
-   */
-
-  var AmplitudeClient = function AmplitudeClient(instanceName) {
-    if (!isBrowserEnv()) {
-      utils.log.warn('amplitude-js will not work in a non-browser environment. If you are planning to add Amplitude to a node environment, please use @amplitude/node');
-    }
-
-    this._instanceName = utils.isEmptyString(instanceName) ? Constants.DEFAULT_INSTANCE : instanceName.toLowerCase();
-    this._unsentEvents = [];
-    this._unsentIdentifys = [];
-    this._ua = new uaParser(navigator.userAgent).getResult();
-    this.options = _objectSpread({}, DEFAULT_OPTIONS, {
-      trackingOptions: _objectSpread({}, DEFAULT_OPTIONS.trackingOptions)
-    });
-    this.cookieStorage = new cookieStorage().getStorage();
-    this._q = []; // queue for proxied functions before script load
-
-    this._sending = false;
-    this._updateScheduled = false;
-    this._onInit = []; // event meta data
-
-    this._eventId = 0;
-    this._identifyId = 0;
-    this._lastEventTime = null;
-    this._newSession = false; // sequence used for by frontend for prioritizing event send retries
-
-    this._sequenceNumber = 0;
-    this._sessionId = null;
-    this._isInitialized = false;
-    this._userAgent = navigator && navigator.userAgent || null;
-  };
-
-  AmplitudeClient.prototype.Identify = Identify;
-  AmplitudeClient.prototype.Revenue = Revenue;
-  /**
-   * Initializes the Amplitude Javascript SDK with your apiKey and any optional configurations.
-   * This is required before any other methods can be called.
-   * @public
-   * @param {string} apiKey - The API key for your app.
-   * @param {string} opt_userId - (optional) An identifier for this user.
-   * @param {object} opt_config - (optional) Configuration options.
-   * See [options.js](https://amplitude.github.io/Amplitude-JavaScript/Options) for a list of options and default values.
-   * @param {function} opt_callback - (optional) Provide a callback function to run after initialization is complete.
-   * @example amplitudeClient.init('API_KEY', 'USER_ID', {includeReferrer: true, includeUtm: true}, function() { alert('init complete'); });
-   */
-
-  AmplitudeClient.prototype.init = function init(apiKey, opt_userId, opt_config, opt_callback) {
-    var _this = this;
-
-    if (type(apiKey) !== 'string' || utils.isEmptyString(apiKey)) {
-      utils.log.error('Invalid apiKey. Please re-initialize with a valid apiKey');
-      return;
-    }
-
-    try {
-      _parseConfig(this.options, opt_config);
-
-      if (isBrowserEnv() && window.Prototype !== undefined && Array.prototype.toJSON) {
-        prototypeJsFix();
-        utils.log.warn('Prototype.js injected Array.prototype.toJSON. Deleting Array.prototype.toJSON to prevent double-stringify');
-      }
-
-      if (this.options.cookieName !== DEFAULT_OPTIONS.cookieName) {
-        utils.log.warn('The cookieName option is deprecated. We will be ignoring it for newer cookies');
-      }
-
-      this.options.apiKey = apiKey;
-      this._storageSuffix = '_' + apiKey + (this._instanceName === Constants.DEFAULT_INSTANCE ? '' : '_' + this._instanceName);
-      this._storageSuffixV5 = apiKey.slice(0, 6);
-      this._oldCookiename = this.options.cookieName + this._storageSuffix;
-      this._unsentKey = this.options.unsentKey + this._storageSuffix;
-      this._unsentIdentifyKey = this.options.unsentIdentifyKey + this._storageSuffix;
-      this._cookieName = Constants.COOKIE_PREFIX + '_' + this._storageSuffixV5;
-      this.cookieStorage.options({
-        expirationDays: this.options.cookieExpiration,
-        domain: this.options.domain,
-        secure: this.options.secureCookie,
-        sameSite: this.options.sameSiteCookie
+        cursor.continue();
       });
-      this._metadataStorage = new MetadataStorage({
-        storageKey: this._cookieName,
-        disableCookies: this.options.disableCookies,
-        expirationDays: this.options.cookieExpiration,
-        domain: this.options.domain,
-        secure: this.options.secureCookie,
-        sameSite: this.options.sameSiteCookie,
-        storage: this.options.storage
-      });
-      var hasOldCookie = !!this.cookieStorage.get(this._oldCookiename);
-      var hasNewCookie = !!this._metadataStorage.load();
-      this._useOldCookie = !hasNewCookie && hasOldCookie && !this.options.cookieForceUpgrade;
-      var hasCookie = hasNewCookie || hasOldCookie;
-      this.options.domain = this.cookieStorage.options().domain;
-
-      if (this.options.deferInitialization && !hasCookie) {
-        this._deferInitialization(apiKey, opt_userId, opt_config, opt_callback);
-
-        return;
-      }
-
-      if (type(this.options.logLevel) === 'string') {
-        utils.setLogLevel(this.options.logLevel);
-      }
-
-      var trackingOptions = _generateApiPropertiesTrackingConfig(this);
-
-      this._apiPropertiesTrackingOptions = Object.keys(trackingOptions).length > 0 ? {
-        tracking_options: trackingOptions
-      } : {};
-
-      if (this.options.cookieForceUpgrade && hasOldCookie) {
-        if (!hasNewCookie) {
-          _upgradeCookieData(this);
-        }
-
-        this.cookieStorage.remove(this._oldCookiename);
-      }
-
-      _loadCookieData(this);
-
-      this._pendingReadStorage = true;
-
-      var initFromStorage = function initFromStorage(storedDeviceId) {
-        if (opt_config && opt_config.deviceId && !utils.validateDeviceId(opt_config.deviceId)) {
-          utils.log.error("Invalid device ID rejected. Randomly generated UUID will be used instead of \"".concat(opt_config.deviceId, "\""));
-          delete opt_config.deviceId;
-        }
-
-        _this.options.deviceId = _this._getInitialDeviceId(opt_config && opt_config.deviceId, storedDeviceId);
-        _this.options.userId = type(opt_userId) === 'string' && !utils.isEmptyString(opt_userId) && opt_userId || type(opt_userId) === 'number' && opt_userId.toString() || _this.options.userId || null;
-        var now = new Date().getTime();
-
-        if (!_this._sessionId || !_this._lastEventTime || now - _this._lastEventTime > _this.options.sessionTimeout) {
-          if (_this.options.unsetParamsReferrerOnNewSession) {
-            _this._unsetUTMParams();
-          }
-
-          _this._newSession = true;
-          _this._sessionId = now; // only capture UTM params and referrer if new session
-
-          if (_this.options.saveParamsReferrerOncePerSession) {
-            _this._trackParamsAndReferrer();
-          }
-        }
-
-        if (!_this.options.saveParamsReferrerOncePerSession) {
-          _this._trackParamsAndReferrer();
-        } // load unsent events and identifies before any attempt to log new ones
-
-
-        if (_this.options.saveEvents) {
-          _validateUnsentEventQueue(_this._unsentEvents);
-
-          _validateUnsentEventQueue(_this._unsentIdentifys);
-        }
-
-        _this._lastEventTime = now;
-
-        _saveCookieData(_this);
-
-        _this._pendingReadStorage = false;
-
-        _this._sendEventsIfReady(); // try sending unsent events
-
-
-        for (var i = 0; i < _this._onInit.length; i++) {
-          _this._onInit[i](_this);
-        }
-
-        _this._onInit = [];
-        _this._isInitialized = true;
-      };
-
-      if (this.options.saveEvents) {
-        this._unsentEvents = this._loadSavedUnsentEvents(this.options.unsentKey).map(function (event) {
-          return {
-            event: event
-          };
-        }).concat(this._unsentEvents);
-        this._unsentIdentifys = this._loadSavedUnsentEvents(this.options.unsentIdentifyKey).map(function (event) {
-          return {
-            event: event
-          };
-        }).concat(this._unsentIdentifys);
-      }
-
-      initFromStorage();
-      this.runQueuedFunctions();
-
-      if (type(opt_callback) === 'function') {
-        opt_callback(this);
-      }
-
-      var onExitPage = this.options.onExitPage;
-
-      if (type(onExitPage) === 'function') {
-        if (!this.pageHandlersAdded) {
-          this.pageHandlersAdded = true;
-
-          var handleVisibilityChange = function handleVisibilityChange() {
-            var prevTransport = _this.options.transport;
-
-            _this.setTransport(Constants.TRANSPORT_BEACON);
-
-            onExitPage();
-
-            _this.setTransport(prevTransport);
-          }; // Monitoring just page exits because that is the most requested feature for now
-          // "If you're specifically trying to detect page unload events, the pagehide event is the best option."
-          // https://developer.mozilla.org/en-US/docs/Web/API/Window/pagehide_event
-
-
-          window.addEventListener('pagehide', function () {
-            handleVisibilityChange();
-          }, false);
-        }
-      }
-    } catch (err) {
-      utils.log.error(err);
-
-      if (type(opt_config.onError) === 'function') {
-        opt_config.onError(err);
-      }
-    }
-  };
-
-  AmplitudeClient.prototype.deleteLowerLevelDomainCookies = function () {
-    var host = getHost();
-    var cookieHost = this.options.domain && this.options.domain[0] === '.' ? this.options.domain.slice(1) : this.options.domain;
-
-    if (!cookieHost) {
-      return;
-    }
-
-    if (host !== cookieHost) {
-      if (new RegExp(cookieHost + '$').test(host)) {
-        var hostParts = host.split('.');
-        var cookieHostParts = cookieHost.split('.');
-
-        for (var i = hostParts.length; i > cookieHostParts.length; --i) {
-          var deleteDomain = hostParts.slice(hostParts.length - i).join('.');
-          baseCookie.set(this._cookieName, null, {
-            domain: '.' + deleteDomain
-          });
-        }
-
-        baseCookie.set(this._cookieName, null, {});
-      }
-    }
-  };
-
-  AmplitudeClient.prototype._getInitialDeviceId = function (configDeviceId, storedDeviceId) {
-    if (configDeviceId) {
-      return configDeviceId;
-    }
-
-    if (this.options.deviceIdFromUrlParam) {
-      var deviceIdFromUrlParam = this._getDeviceIdFromUrlParam(this._getUrlParams());
-
-      if (deviceIdFromUrlParam) {
-        return deviceIdFromUrlParam;
-      }
-    }
-
-    if (this.options.deviceId) {
-      return this.options.deviceId;
-    }
-
-    if (storedDeviceId) {
-      return storedDeviceId;
-    }
-
-    return base64Id();
-  }; // validate properties for unsent events
-
-
-  var _validateUnsentEventQueue = function _validateUnsentEventQueue(queue) {
-    for (var i = 0; i < queue.length; i++) {
-      var userProperties = queue[i].event.user_properties;
-      var eventProperties = queue[i].event.event_properties;
-      var groups = queue[i].event.groups;
-      queue[i].event.user_properties = utils.validateProperties(userProperties);
-      queue[i].event.event_properties = utils.validateProperties(eventProperties);
-      queue[i].event.groups = utils.validateGroups(groups);
-    }
-  };
-  /**
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._trackParamsAndReferrer = function _trackParamsAndReferrer() {
-    var utmProperties;
-    var referrerProperties;
-    var gclidProperties;
-    var fbclidProperties;
-
-    if (this.options.includeUtm) {
-      utmProperties = this._initUtmData();
-    }
-
-    if (this.options.includeReferrer) {
-      referrerProperties = this._saveReferrer(this._getReferrer());
-    }
-
-    if (this.options.includeGclid) {
-      gclidProperties = this._saveGclid(this._getUrlParams());
-    }
-
-    if (this.options.includeFbclid) {
-      fbclidProperties = this._saveFbclid(this._getUrlParams());
-    }
-
-    if (this.options.logAttributionCapturedEvent) {
-      var attributionProperties = _objectSpread({}, utmProperties, referrerProperties, gclidProperties, fbclidProperties);
-
-      if (Object.keys(attributionProperties).length > 0) {
-        this.logEvent(Constants.ATTRIBUTION_EVENT, attributionProperties);
-      }
-    }
-  };
-  /**
-   * Parse and validate user specified config values and overwrite existing option value
-   * DEFAULT_OPTIONS provides list of all config keys that are modifiable, as well as expected types for values
-   * @private
-   */
-
-
-  var _parseConfig = function _parseConfig(options, config) {
-    if (type(config) !== 'object') {
-      return;
-    } // Add exception in headers
-
-
-    var freeFormObjectKeys = new Set(['headers']); // validates config value is defined, is the correct type, and some additional value sanity checks
-
-    var parseValidateAndLoad = function parseValidateAndLoad(key) {
-      if (!Object.prototype.hasOwnProperty.call(options, key)) {
-        return; // skip bogus config values
-      }
-
-      var inputValue = config[key];
-      var expectedType = type(options[key]);
-
-      if (key === 'transport' && !utils.validateTransport(inputValue)) {
-        return;
-      } else if (!utils.validateInput(inputValue, key + ' option', expectedType)) {
-        return;
-      }
-
-      if (expectedType === 'boolean') {
-        options[key] = !!inputValue;
-      } else if (expectedType === 'string' && !utils.isEmptyString(inputValue) || expectedType === 'number' && inputValue > 0 || expectedType === 'function') {
-        options[key] = inputValue;
-      } else if (expectedType === 'object') {
-        _parseConfig(options[key], inputValue);
-      }
-    };
-
-    for (var key in config) {
-      if (freeFormObjectKeys.has(key)) {
-        options[key] = _objectSpread({}, options[key], config[key]);
-      } else if (Object.prototype.hasOwnProperty.call(config, key)) {
-        parseValidateAndLoad(key);
-      }
-    }
-  };
-  /**
-   * Run functions queued up by proxy loading snippet
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.runQueuedFunctions = function () {
-    var queue = this._q;
-    this._q = [];
-
-    for (var i = 0; i < queue.length; i++) {
-      var fn = this[queue[i][0]];
-
-      if (type(fn) === 'function') {
-        fn.apply(this, queue[i].slice(1));
-      }
-    }
-  };
-  /**
-   * Check that the apiKey is set before calling a function. Logs a warning message if not set.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._apiKeySet = function _apiKeySet(methodName) {
-    if (utils.isEmptyString(this.options.apiKey)) {
-      utils.log.error('Invalid apiKey. Please set a valid apiKey with init() before calling ' + methodName);
-      return false;
-    }
-
-    return true;
-  };
-  /**
-   * Load saved events from localStorage. JSON deserializes event array. Handles case where string is corrupted.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._loadSavedUnsentEvents = function _loadSavedUnsentEvents(unsentKey) {
-    var savedUnsentEventsString = this._getFromStorage(ampLocalStorage, unsentKey);
-
-    var unsentEvents = this._parseSavedUnsentEventsString(savedUnsentEventsString, unsentKey);
-
-    this._setInStorage(ampLocalStorage, unsentKey, JSON.stringify(unsentEvents));
-
-    return unsentEvents;
-  };
-  /**
-   * Load saved events from localStorage. JSON deserializes event array. Handles case where string is corrupted.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._parseSavedUnsentEventsString = function _parseSavedUnsentEventsString(savedUnsentEventsString, unsentKey) {
-    if (utils.isEmptyString(savedUnsentEventsString)) {
-      return []; // new app, does not have any saved events
-    }
-
-    if (type(savedUnsentEventsString) === 'string') {
-      try {
-        var events = JSON.parse(savedUnsentEventsString);
-
-        if (type(events) === 'array') {
-          // handle case where JSON dumping of unsent events is corrupted
-          return events;
-        }
-      } catch (e) {}
-      /* eslint-disable-line no-empty */
-
-    }
-
-    utils.log.error('Unable to load ' + unsentKey + ' events. Restart with a new empty queue.');
-    return [];
-  };
-  /**
-   * Returns true if a new session was created during initialization, otherwise false.
-   * @public
-   * @return {boolean} Whether a new session was created during initialization.
-   */
-
-
-  AmplitudeClient.prototype.isNewSession = function isNewSession() {
-    return this._newSession;
-  };
-  /**
-   * Add callbacks to call after init. Useful for users who load Amplitude through a snippet.
-   * @public
-   */
-
-
-  AmplitudeClient.prototype.onInit = function (callback) {
-    if (this._isInitialized) {
-      callback(this);
-    } else {
-      this._onInit.push(callback);
-    }
-  };
-  /**
-   * Returns the id of the current session.
-   * @public
-   * @return {number} Id of the current session.
-   */
-
-
-  AmplitudeClient.prototype.getSessionId = function getSessionId() {
-    return this._sessionId;
-  };
-  /**
-   * Increments the eventId and returns it.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.nextEventId = function nextEventId() {
-    this._eventId++;
-    return this._eventId;
-  };
-  /**
-   * Increments the identifyId and returns it.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.nextIdentifyId = function nextIdentifyId() {
-    this._identifyId++;
-    return this._identifyId;
-  };
-  /**
-   * Increments the sequenceNumber and returns it.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.nextSequenceNumber = function nextSequenceNumber() {
-    this._sequenceNumber++;
-    return this._sequenceNumber;
-  };
-  /**
-   * Returns the total count of unsent events and identifys
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._unsentCount = function _unsentCount() {
-    return this._unsentEvents.length + this._unsentIdentifys.length;
-  };
-  /**
-   * Send events if ready. Returns true if events are sent.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._sendEventsIfReady = function _sendEventsIfReady() {
-    if (this._unsentCount() === 0) {
-      return false;
-    } // if batching disabled, send any unsent events immediately
-
-
-    if (!this.options.batchEvents) {
-      this.sendEvents();
-      return true;
-    } // if batching enabled, check if min threshold met for batch size
-
-
-    if (this._unsentCount() >= this.options.eventUploadThreshold) {
-      this.sendEvents();
-      return true;
-    } // if beacon transport is activated, send events immediately
-    // because there is no way to retry them later
-
-
-    if (this.options.transport === Constants.TRANSPORT_BEACON) {
-      this.sendEvents();
-      return true;
-    } // otherwise schedule an upload after 30s
-
-
-    if (!this._updateScheduled) {
-      // make sure we only schedule 1 upload
-      this._updateScheduled = true;
-      setTimeout(function () {
-        this._updateScheduled = false;
-        this.sendEvents();
-      }.bind(this), this.options.eventUploadPeriodMillis);
-    }
-
-    return false; // an upload was scheduled, no events were uploaded
-  };
-  /**
-   * Clears any stored events and metadata. Storage is then re-created on next event sending.
-   * @constructor AmplitudeClient
-   * @public
-   * @return {boolean} True if metadata was cleared, false if none existed
-   */
-
-
-  AmplitudeClient.prototype.clearStorage = function clearStorage() {
-    return this._metadataStorage.clear();
-  };
-  /**
-   * Helper function to fetch values from storage
-   * Storage argument allows for localStoraoge and sessionStoraoge
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._getFromStorage = function _getFromStorage(storage, key) {
-    return storage.getItem(key + this._storageSuffix);
-  };
-  /**
-   * Helper function to set values in storage
-   * Storage argument allows for localStoraoge and sessionStoraoge
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._setInStorage = function _setInStorage(storage, key, value) {
-    storage.setItem(key + this._storageSuffix, value);
-  };
-  /**
-   * Fetches deviceId, userId, event meta data from amplitude cookie
-   * @private
-   */
-
-
-  var _loadCookieData = function _loadCookieData(scope) {
-    if (!scope._useOldCookie) {
-      var props = scope._metadataStorage.load();
-
-      if (type(props) === 'object') {
-        _loadCookieDataProps(scope, props);
-      }
-
-      return;
-    }
-
-    var cookieData = scope.cookieStorage.get(scope._oldCookiename);
-
-    if (type(cookieData) === 'object') {
-      _loadCookieDataProps(scope, cookieData);
-
-      return;
-    }
-  };
-
-  var _upgradeCookieData = function _upgradeCookieData(scope) {
-    var cookieData = scope.cookieStorage.get(scope._oldCookiename);
-
-    if (type(cookieData) === 'object') {
-      _loadCookieDataProps(scope, cookieData);
-
-      _saveCookieData(scope);
-    }
-  };
-
-  var _loadCookieDataProps = function _loadCookieDataProps(scope, cookieData) {
-    if (cookieData.deviceId) {
-      scope.options.deviceId = cookieData.deviceId;
-    }
-
-    if (cookieData.userId) {
-      scope.options.userId = cookieData.userId;
-    }
-
-    if (cookieData.optOut !== null && cookieData.optOut !== undefined) {
-      // Do not clobber config opt out value if cookieData has optOut as false
-      if (cookieData.optOut !== false) {
-        scope.options.optOut = cookieData.optOut;
-      }
-    }
-
-    if (cookieData.sessionId) {
-      scope._sessionId = parseInt(cookieData.sessionId, 10);
-    }
-
-    if (cookieData.lastEventTime) {
-      scope._lastEventTime = parseInt(cookieData.lastEventTime, 10);
-    }
-
-    if (cookieData.eventId) {
-      scope._eventId = parseInt(cookieData.eventId, 10);
-    }
-
-    if (cookieData.identifyId) {
-      scope._identifyId = parseInt(cookieData.identifyId, 10);
-    }
-
-    if (cookieData.sequenceNumber) {
-      scope._sequenceNumber = parseInt(cookieData.sequenceNumber, 10);
-    }
-  };
-  /**
-   * Saves deviceId, userId, event meta data to amplitude cookie
-   * @private
-   */
-
-
-  var _saveCookieData = function _saveCookieData(scope) {
-    var cookieData = {
-      deviceId: scope.options.deviceId,
-      userId: scope.options.userId,
-      optOut: scope.options.optOut,
-      sessionId: scope._sessionId,
-      lastEventTime: scope._lastEventTime,
-      eventId: scope._eventId,
-      identifyId: scope._identifyId,
-      sequenceNumber: scope._sequenceNumber
-    };
-
-    if (scope._useOldCookie) {
-      scope.cookieStorage.set(scope.options.cookieName + scope._storageSuffix, cookieData);
-    } else {
-      scope._metadataStorage.save(cookieData);
-    }
-  };
-  /**
-   * Parse the utm properties out of cookies and query for adding to user properties.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._initUtmData = function _initUtmData(queryParams, cookieParams) {
-    queryParams = queryParams || this._getUrlParams();
-    cookieParams = cookieParams || this.cookieStorage.get('__utmz');
-    var utmProperties = getUtmData(cookieParams, queryParams);
-
-    _sendParamsReferrerUserProperties(this, utmProperties);
-
-    return utmProperties;
-  };
-  /**
-   * Unset the utm params from the Amplitude instance and update the identify.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._unsetUTMParams = function _unsetUTMParams() {
-    var identify = new Identify();
-    identify.unset(Constants.REFERRER);
-    identify.unset(Constants.UTM_SOURCE);
-    identify.unset(Constants.UTM_MEDIUM);
-    identify.unset(Constants.UTM_CAMPAIGN);
-    identify.unset(Constants.UTM_TERM);
-    identify.unset(Constants.UTM_CONTENT);
-    this.identify(identify);
-  };
-  /**
-   * The calling function should determine when it is appropriate to send these user properties. This function
-   * will no longer contain any session storage checking logic.
-   * @private
-   */
-
-
-  var _sendParamsReferrerUserProperties = function _sendParamsReferrerUserProperties(scope, userProperties) {
-    if (type(userProperties) !== 'object' || Object.keys(userProperties).length === 0) {
-      return;
-    } // setOnce the initial user properties
-
-
-    var identify = new Identify();
-
-    for (var key in userProperties) {
-      if (Object.prototype.hasOwnProperty.call(userProperties, key)) {
-        identify.setOnce('initial_' + key, userProperties[key]);
-        identify.set(key, userProperties[key]);
-      }
-    }
-
-    scope.identify(identify);
-  };
-  /**
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._getReferrer = function _getReferrer() {
-    return document.referrer;
-  };
-  /**
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._getUrlParams = function _getUrlParams() {
-    return location.search;
-  };
-  /**
-   * Try to fetch Google Gclid from url params.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._saveGclid = function _saveGclid(urlParams) {
-    var gclid = utils.getQueryParam('gclid', urlParams);
-
-    if (utils.isEmptyString(gclid)) {
-      return;
-    }
-
-    var gclidProperties = {
-      gclid: gclid
-    };
-
-    _sendParamsReferrerUserProperties(this, gclidProperties);
-
-    return gclidProperties;
-  };
-  /**
-   * Try to fetch Facebook Fbclid from url params.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._saveFbclid = function _saveFbclid(urlParams) {
-    var fbclid = utils.getQueryParam('fbclid', urlParams);
-
-    if (utils.isEmptyString(fbclid)) {
-      return;
-    }
-
-    var fbclidProperties = {
-      fbclid: fbclid
-    };
-
-    _sendParamsReferrerUserProperties(this, fbclidProperties);
-
-    return fbclidProperties;
-  };
-  /**
-   * Try to fetch Amplitude device id from url params.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._getDeviceIdFromUrlParam = function _getDeviceIdFromUrlParam(urlParams) {
-    return utils.getQueryParam(Constants.AMP_DEVICE_ID_PARAM, urlParams);
-  };
-  /**
-   * Parse the domain from referrer info
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._getReferringDomain = function _getReferringDomain(referrer) {
-    if (utils.isEmptyString(referrer)) {
-      return null;
-    }
-
-    var parts = referrer.split('/');
-
-    if (parts.length >= 3) {
-      return parts[2];
-    }
-
-    return null;
-  };
-  /**
-   * Fetch the referrer information, parse the domain and send.
-   * Since user properties are propagated on the server, only send once per session, don't need to send with every event
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._saveReferrer = function _saveReferrer(referrer) {
-    if (utils.isEmptyString(referrer)) {
-      return;
-    }
-
-    var referrerInfo = {
-      referrer: referrer,
-      referring_domain: this._getReferringDomain(referrer)
-    };
-
-    _sendParamsReferrerUserProperties(this, referrerInfo);
-
-    return referrerInfo;
-  };
-  /**
-   * Saves unsent events and identifies to localStorage. JSON stringifies event queues before saving.
-   * Note: this is called automatically every time events are logged, unless you explicitly set option saveEvents to false.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.saveEvents = function saveEvents() {
-    try {
-      var serializedUnsentEvents = JSON.stringify(this._unsentEvents.map(function (_ref) {
-        var event = _ref.event;
-        return event;
-      }));
-
-      this._setInStorage(ampLocalStorage, this.options.unsentKey, serializedUnsentEvents);
-    } catch (e) {}
-    /* eslint-disable-line no-empty */
-
-
-    try {
-      var serializedIdentifys = JSON.stringify(this._unsentIdentifys.map(function (unsentIdentify) {
-        return unsentIdentify.event;
-      }));
-
-      this._setInStorage(ampLocalStorage, this.options.unsentIdentifyKey, serializedIdentifys);
-    } catch (e) {}
-    /* eslint-disable-line no-empty */
-
-  };
-  /**
-   * Sets a customer domain for the amplitude cookie. Useful if you want to support cross-subdomain tracking.
-   * @public
-   * @param {string} domain to set.
-   * @example amplitudeClient.setDomain('.amplitude.com');
-   */
-
-
-  AmplitudeClient.prototype.setDomain = function setDomain(domain) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setDomain'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!utils.validateInput(domain, 'domain', 'string')) {
-      return;
-    }
-
-    try {
-      this.cookieStorage.options({
-        expirationDays: this.options.cookieExpiration,
-        secure: this.options.secureCookie,
-        domain: domain,
-        sameSite: this.options.sameSiteCookie
-      });
-      this.options.domain = this.cookieStorage.options().domain;
-
-      _loadCookieData(this);
-
-      _saveCookieData(this);
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-  /**
-   * Sets an identifier for the current user.
-   * @public
-   * @param {string} userId - identifier to set. Can be null.
-   * @example amplitudeClient.setUserId('joe@gmail.com');
-   */
-
-
-  AmplitudeClient.prototype.setUserId = function setUserId(userId) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setUserId'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    try {
-      this.options.userId = userId !== undefined && userId !== null && '' + userId || null;
-
-      _saveCookieData(this);
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-  /**
-   * Add user to a group or groups. You need to specify a groupType and groupName(s).
-   *
-   * For example you can group people by their organization.
-   * In that case, groupType is "orgId" and groupName would be the actual ID(s).
-   * groupName can be a string or an array of strings to indicate a user in multiple gruups.
-   * You can also call setGroup multiple times with different groupTypes to track multiple types of groups (up to 5 per app).
-   *
-   * Note: this will also set groupType: groupName as a user property.
-   * See the [advanced topics article](https://developers.amplitude.com/docs/setting-user-groups) for more information.
-   * @public
-   * @param {string} groupType - the group type (ex: orgId)
-   * @param {string|list} groupName - the name of the group (ex: 15), or a list of names of the groups
-   * @example amplitudeClient.setGroup('orgId', 15); // this adds the current user to orgId 15.
-   */
-
-
-  AmplitudeClient.prototype.setGroup = function (groupType, groupName) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setGroup'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('setGroup()') || !utils.validateInput(groupType, 'groupType', 'string') || utils.isEmptyString(groupType)) {
-      return;
-    }
-
-    var groups = {};
-    groups[groupType] = groupName;
-    var identify = new Identify().set(groupType, groupName);
-
-    this._logEvent(Constants.IDENTIFY_EVENT, null, null, identify.userPropertiesOperations, groups, null, null, null);
-  };
-  /**
-   * Sets whether to opt current user out of tracking.
-   * @public
-   * @param {boolean} enable - if true then no events will be logged or sent.
-   * @example: amplitude.setOptOut(true);
-   */
-
-
-  AmplitudeClient.prototype.setOptOut = function setOptOut(enable) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setOptOut'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!utils.validateInput(enable, 'enable', 'boolean')) {
-      return;
-    }
-
-    try {
-      this.options.optOut = enable;
-
-      _saveCookieData(this);
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-  /**
-   * Set a custom Session ID for the current session.
-   * Note: This is not recommended unless you know what you are doing because the Session ID of a session is utilized for all session metrics in Amplitude.
-   * The Session ID to set for the current session must be in milliseconds since epoch (Unix Timestamp).
-   * @public
-   * @param {int} sessionId to set.
-   * @example amplitudeClient.setSessionId(1622158968000);
-   */
-
-
-  AmplitudeClient.prototype.setSessionId = function setSessionId(sessionId) {
-    if (!utils.validateInput(sessionId, 'sessionId', 'number')) {
-      return;
-    }
-
-    try {
-      this._sessionId = sessionId;
-
-      _saveCookieData(this);
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-
-  AmplitudeClient.prototype.resetSessionId = function resetSessionId() {
-    this.setSessionId(new Date().getTime());
-  };
-  /**
-   * Regenerates a new random deviceId for current user. Note: this is not recommended unless you know what you
-   * are doing. This can be used in conjunction with `setUserId(null)` to anonymize users after they log out.
-   * With a null userId and a completely new deviceId, the current user would appear as a brand new user in dashboard.
-   * This uses src/uuid.js to regenerate the deviceId.
-   * @public
-   */
-
-
-  AmplitudeClient.prototype.regenerateDeviceId = function regenerateDeviceId() {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['regenerateDeviceId'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    this.setDeviceId(base64Id());
-  };
-  /**
-   * Sets a custom deviceId for current user. **Values may not have `.` inside them**
-   * Note: this is not recommended unless you know what you are doing (like if you have your own system for managing deviceIds).
-   * Make sure the deviceId you set is sufficiently unique
-   * (we recommend something like a UUID - see src/uuid.js for an example of how to generate) to prevent conflicts with other devices in our system.
-   * @public
-   * @param {string} deviceId - custom deviceId for current user.
-   * @example amplitudeClient.setDeviceId('45f0954f-eb79-4463-ac8a-233a6f45a8f0');
-   */
-
-
-  AmplitudeClient.prototype.setDeviceId = function setDeviceId(deviceId) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setDeviceId'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!utils.validateDeviceId(deviceId)) {
-      return;
-    }
-
-    try {
-      if (!utils.isEmptyString(deviceId)) {
-        this.options.deviceId = '' + deviceId;
-
-        _saveCookieData(this);
-      }
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-  /**
-   * Sets the network transport type for events. Typically used to set to 'beacon'
-   * on an end-of-lifecycle event handler such as `onpagehide` or `onvisibilitychange`
-   * @public
-   * @param {string} transport - transport mechanism to use for events. Must be one of `http` or `beacon`.
-   * @example amplitudeClient.setDeviceId('45f0954f-eb79-4463-ac8a-233a6f45a8f0');
-   */
-
-
-  AmplitudeClient.prototype.setTransport = function setTransport(transport) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setTransport'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!utils.validateTransport(transport)) {
-      return;
-    }
-
-    this.options.transport = transport;
-  };
-  /**
-   * Sets user properties for the current user.
-   * @public
-   * @param {object} - object with string keys and values for the user properties to set.
-   * @param {boolean} - DEPRECATED opt_replace: in earlier versions of the JS SDK the user properties object was kept in
-   * memory and replace = true would replace the object in memory. Now the properties are no longer stored in memory, so replace is deprecated.
-   * @example amplitudeClient.setUserProperties({'gender': 'female', 'sign_up_complete': true})
-   */
-
-
-  AmplitudeClient.prototype.setUserProperties = function setUserProperties(userProperties) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setUserProperties'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('setUserProperties()') || !utils.validateInput(userProperties, 'userProperties', 'object')) {
-      return;
-    } // sanitize the userProperties dict before converting into identify
-
-
-    var sanitized = utils.truncate(utils.validateProperties(userProperties));
-
-    if (Object.keys(sanitized).length === 0) {
-      return;
-    } // convert userProperties into an identify call
-
-
-    var identify = new Identify();
-
-    for (var property in sanitized) {
-      if (Object.prototype.hasOwnProperty.call(sanitized, property)) {
-        identify.set(property, sanitized[property]);
-      }
-    }
-
-    this.identify(identify);
-  };
-  /**
-   * Clear all of the user properties for the current user. Note: clearing user properties is irreversible!
-   * @public
-   * @example amplitudeClient.clearUserProperties();
-   */
-
-
-  AmplitudeClient.prototype.clearUserProperties = function clearUserProperties() {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['clearUserProperties'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('clearUserProperties()')) {
-      return;
-    }
-
-    var identify = new Identify();
-    identify.clearAll();
-    this.identify(identify);
-  };
-  /**
-   * Applies the proxied functions on the proxied object to an instance of the real object.
-   * Used to convert proxied Identify and Revenue objects.
-   * @private
-   */
-
-
-  var _convertProxyObjectToRealObject = function _convertProxyObjectToRealObject(instance, proxy) {
-    for (var i = 0; i < proxy._q.length; i++) {
-      var fn = instance[proxy._q[i][0]];
-
-      if (type(fn) === 'function') {
-        fn.apply(instance, proxy._q[i].slice(1));
-      }
-    }
-
-    return instance;
-  };
-  /**
-   * Send an identify call containing user property operations to Amplitude servers.
-   * See the [Identify](https://amplitude.github.io/Amplitude-JavaScript/Identify/)
-   * reference page for more information on the Identify API and user property operations.
-   * @param {Identify} identify_obj - the Identify object containing the user property operations to send.
-   * @param {Amplitude~eventCallback} opt_callback - (optional) callback function to run when the identify event has been sent.
-   * Note: the server response code and response body from the identify event upload are passed to the callback function.
-   * @param {Amplitude~eventCallback} opt_error_callback - (optional) a callback function to run after the event logging
-   * fails. The failure can be from the request being malformed or from a network failure
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @example
-   * var identify = new amplitude.Identify().set('colors', ['rose', 'gold']).add('karma', 1).setOnce('sign_up_date', '2016-03-31');
-   * amplitude.identify(identify);
-   */
-
-
-  AmplitudeClient.prototype.identify = function (identify_obj, opt_callback, opt_error_callback) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['identify'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('identify()')) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'API key is not set'
-      });
-
-      return;
-    } // if identify input is a proxied object created by the async loading snippet, convert it into an identify object
-
-
-    if (type(identify_obj) === 'object' && Object.prototype.hasOwnProperty.call(identify_obj, '_q')) {
-      identify_obj = _convertProxyObjectToRealObject(new Identify(), identify_obj);
-    }
-
-    if (identify_obj instanceof Identify) {
-      // only send if there are operations
-      if (Object.keys(identify_obj.userPropertiesOperations).length > 0) {
-        return this._logEvent(Constants.IDENTIFY_EVENT, null, null, identify_obj.userPropertiesOperations, null, null, null, opt_callback, opt_error_callback);
-      } else {
-        _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-          reason: 'No user property operations'
-        });
-      }
-    } else {
-      utils.log.error('Invalid identify input type. Expected Identify object but saw ' + type(identify_obj));
-
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Invalid identify input type'
-      });
-    }
-  };
-
-  AmplitudeClient.prototype.groupIdentify = function (group_type, group_name, identify_obj, opt_callback, opt_error_callback) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['groupIdentify'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('groupIdentify()')) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'API key is not set'
-      });
-
-      return;
-    }
-
-    if (!utils.validateInput(group_type, 'group_type', 'string') || utils.isEmptyString(group_type)) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Invalid group type'
-      });
-
-      return;
-    }
-
-    if (group_name === null || group_name === undefined) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Invalid group name'
-      });
-
-      return;
-    } // if identify input is a proxied object created by the async loading snippet, convert it into an identify object
-
-
-    if (type(identify_obj) === 'object' && Object.prototype.hasOwnProperty.call(identify_obj, '_q')) {
-      identify_obj = _convertProxyObjectToRealObject(new Identify(), identify_obj);
-    }
-
-    if (identify_obj instanceof Identify) {
-      // only send if there are operations
-      if (Object.keys(identify_obj.userPropertiesOperations).length > 0) {
-        return this._logEvent(Constants.GROUP_IDENTIFY_EVENT, null, null, null, _defineProperty({}, group_type, group_name), identify_obj.userPropertiesOperations, null, opt_callback, opt_error_callback);
-      } else {
-        _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-          reason: 'No group property operations'
-        });
-      }
-    } else {
-      utils.log.error('Invalid identify input type. Expected Identify object but saw ' + type(identify_obj));
-
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Invalid identify input type'
-      });
-    }
-  };
-  /**
-   * Set a versionName for your application.
-   * @public
-   * @param {string} versionName - The version to set for your application.
-   * @example amplitudeClient.setVersionName('1.12.3');
-   */
-
-
-  AmplitudeClient.prototype.setVersionName = function setVersionName(versionName) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['setVersionName'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!utils.validateInput(versionName, 'versionName', 'string')) {
-      return;
-    }
-
-    this.options.versionName = versionName;
-  };
-  /**
-   * Private logEvent method. Keeps apiProperties from being publicly exposed.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._logEvent = function _logEvent(eventType, eventProperties, apiProperties, userProperties, groups, groupProperties, timestamp, callback, errorCallback) {
-    _loadCookieData(this); // reload cookie before each log event to sync event meta-data between windows and tabs
-
-
-    if (!eventType) {
-      _logErrorsWithCallbacks(callback, errorCallback, 0, 'No request sent', {
-        reason: 'Missing eventType'
-      });
-
-      return;
-    }
-
-    if (this.options.optOut) {
-      _logErrorsWithCallbacks(callback, errorCallback, 0, 'No request sent', {
-        reason: 'optOut is set to true'
-      });
-
-      return;
-    }
-
-    try {
-      var eventId;
-
-      if (eventType === Constants.IDENTIFY_EVENT || eventType === Constants.GROUP_IDENTIFY_EVENT) {
-        eventId = this.nextIdentifyId();
-      } else {
-        eventId = this.nextEventId();
-      }
-
-      var sequenceNumber = this.nextSequenceNumber();
-      var eventTime = type(timestamp) === 'number' ? timestamp : new Date().getTime();
-
-      if (!this._sessionId || !this._lastEventTime || eventTime - this._lastEventTime > this.options.sessionTimeout) {
-        this._sessionId = eventTime;
-      }
-
-      this._lastEventTime = eventTime;
-
-      _saveCookieData(this);
-
-      var osName = this._ua.browser.name;
-      var osVersion = this._ua.browser.major;
-      var deviceModel = this._ua.os.name;
-      userProperties = userProperties || {};
-
-      var trackingOptions = _objectSpread({}, this._apiPropertiesTrackingOptions);
-
-      apiProperties = _objectSpread({}, apiProperties || {}, trackingOptions);
-      eventProperties = eventProperties || {};
-      groups = groups || {};
-      groupProperties = groupProperties || {};
-      var event = {
-        device_id: this.options.deviceId,
-        user_id: this.options.userId,
-        timestamp: eventTime,
-        event_id: eventId,
-        session_id: this._sessionId || -1,
-        event_type: eventType,
-        version_name: this.options.versionName || null,
-        platform: _shouldTrackField(this, 'platform') ? this.options.platform : null,
-        os_name: _shouldTrackField(this, 'os_name') ? osName || null : null,
-        os_version: _shouldTrackField(this, 'os_version') ? osVersion || null : null,
-        device_model: _shouldTrackField(this, 'device_model') ? deviceModel || null : null,
-        language: _shouldTrackField(this, 'language') ? this.options.language : null,
-        api_properties: apiProperties,
-        event_properties: utils.truncate(utils.validateProperties(eventProperties)),
-        user_properties: utils.truncate(utils.validateProperties(userProperties)),
-        uuid: uuid(),
-        library: {
-          name: 'amplitude-js',
-          version: version
-        },
-        sequence_number: sequenceNumber,
-        // for ordering events and identifys
-        groups: utils.truncate(utils.validateGroups(groups)),
-        group_properties: utils.truncate(utils.validateProperties(groupProperties)),
-        user_agent: this._userAgent
-      };
-
-      if (eventType === Constants.IDENTIFY_EVENT || eventType === Constants.GROUP_IDENTIFY_EVENT) {
-        this._unsentIdentifys.push({
-          event: event,
-          callback: callback,
-          errorCallback: errorCallback
-        });
-
-        this._limitEventsQueued(this._unsentIdentifys);
-      } else {
-        this._unsentEvents.push({
-          event: event,
-          callback: callback,
-          errorCallback: errorCallback
-        });
-
-        this._limitEventsQueued(this._unsentEvents);
-      }
-
-      if (this.options.saveEvents) {
-        this.saveEvents();
-      }
-
-      this._sendEventsIfReady();
-
-      return eventId;
-    } catch (e) {
-      utils.log.error(e);
-    }
-  };
-
-  var _shouldTrackField = function _shouldTrackField(scope, field) {
-    return !!scope.options.trackingOptions[field];
-  };
-
-  var _generateApiPropertiesTrackingConfig = function _generateApiPropertiesTrackingConfig(scope) {
-    // to limit size of config payload, only send fields that have been disabled
-    var fields = ['city', 'country', 'dma', 'ip_address', 'region'];
-    var config = {};
-
-    for (var i = 0; i < fields.length; i++) {
-      var field = fields[i];
-
-      if (!_shouldTrackField(scope, field)) {
-        config[field] = false;
-      }
-    }
-
-    return config;
-  };
-  /**
-   * Remove old events from the beginning of the array if too many have accumulated. Default limit is 1000 events.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._limitEventsQueued = function _limitEventsQueued(queue) {
-    if (queue.length > this.options.savedMaxCount) {
-      var deletedEvents = queue.splice(0, queue.length - this.options.savedMaxCount);
-      deletedEvents.forEach(function (event) {
-        _logErrorsWithCallbacks(event.callback, event.errorCallback, 0, 'No request sent', {
-          reason: 'Event dropped because options.savedMaxCount exceeded. User may be offline or have a content blocker'
-        });
-      });
-    }
-  };
-  /**
-   * This is the callback for logEvent and identify calls. It gets called after the event/identify is uploaded,
-   * and the server response code and response body from the upload request are passed to the callback function.
-   * @callback Amplitude~eventCallback
-   * @param {number} responseCode - Server response code for the event / identify upload request.
-   * @param {string} responseBody - Server response body for the event / identify upload request.
-   * @param {object} details - (optional) Additional information associated with sending event.
-   */
-
-  /**
-   * Log an event with eventType and eventProperties
-   * @public
-   * @param {string} eventType - name of event
-   * @param {object} eventProperties - (optional) an object with string keys and values for the event properties.
-   * @param {Amplitude~eventCallback} opt_callback - (optional) a callback function to run after the event is logged.
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @param {Amplitude~eventCallback} opt_error_callback - (optional) a callback function to run after the event logging
-   * fails. The failure can be from the request being malformed or from a network failure
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @example amplitudeClient.logEvent('Clicked Homepage Button', {'finished_flow': false, 'clicks': 15});
-   */
-
-
-  AmplitudeClient.prototype.logEvent = function logEvent(eventType, eventProperties, opt_callback, opt_error_callback) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['logEvent'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    return this.logEventWithTimestamp(eventType, eventProperties, null, opt_callback, opt_error_callback);
-  };
-  /**
-   * Log an event with eventType and eventProperties and a custom timestamp
-   * @public
-   * @param {string} eventType - name of event
-   * @param {object} eventProperties - (optional) an object with string keys and values for the event properties.
-   * @param {number} timestamp - (optional) the custom timestamp as milliseconds since epoch.
-   * @param {Amplitude~eventCallback} opt_callback - (optional) a callback function to run after the event is logged.
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @param {Amplitude~eventCallback} opt_error_callback - (optional) a callback function to run after the event logging
-   * fails. The failure can be from the request being malformed or from a network failure
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @example amplitudeClient.logEvent('Clicked Homepage Button', {'finished_flow': false, 'clicks': 15});
-   */
-
-
-  AmplitudeClient.prototype.logEventWithTimestamp = function logEvent(eventType, eventProperties, timestamp, opt_callback, opt_error_callback) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['logEventWithTimestamp'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('logEvent()')) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'API key not set'
-      });
-
-      return -1;
-    }
-
-    if (!utils.validateInput(eventType, 'eventType', 'string')) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Invalid type for eventType'
-      });
-
-      return -1;
-    }
-
-    if (utils.isEmptyString(eventType)) {
-      _logErrorsWithCallbacks(opt_callback, opt_error_callback, 0, 'No request sent', {
-        reason: 'Missing eventType'
-      });
-
-      return -1;
-    }
-
-    return this._logEvent(eventType, eventProperties, null, null, null, null, timestamp, opt_callback, opt_error_callback);
-  };
-  /**
-   * Log an event with eventType, eventProperties, and groups. Use this to set event-level groups.
-   * Note: the group(s) set only apply for the specific event type being logged and does not persist on the user
-   * (unless you explicitly set it with setGroup).
-   *
-   * See the [advanced topics article](https://developers.amplitude.com/docs/setting-user-groups) for more information.
-   * about groups and Count by Distinct on the Amplitude platform.
-   * @public
-   * @param {string} eventType - name of event
-   * @param {object} eventProperties - (optional) an object with string keys and values for the event properties.
-   * @param {object} groups - (optional) an object with string groupType: groupName values for the event being logged.
-   * groupName can be a string or an array of strings.
-   * @param {Amplitude~eventCallback} opt_callback - (optional) a callback function to run after the event is logged.
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @param {Amplitude~eventCallback} opt_error_callback - (optional) a callback function to run after the event logging
-   * fails. The failure can be from the request being malformed or from a network failure
-   * Note: the server response code and response body from the event upload are passed to the callback function.
-   * @example amplitudeClient.logEventWithGroups('Clicked Button', null, {'orgId': 24});
-   */
-
-
-  AmplitudeClient.prototype.logEventWithGroups = function (eventType, eventProperties, groups, opt_callback, opt_error_callback) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['logEventWithGroups'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('logEventWithGroups()')) {
-      _logErrorsWithCallbacks(event.callback, event.errorCallback, 0, 'No request sent', {
-        reason: 'API key not set'
-      });
-
-      return -1;
-    }
-
-    if (!utils.validateInput(eventType, 'eventType', 'string')) {
-      _logErrorsWithCallbacks(event.callback, event.errorCallback, 0, 'No request sent', {
-        reason: 'Invalid type for eventType'
-      });
-
-      return -1;
-    }
-
-    return this._logEvent(eventType, eventProperties, null, null, groups, null, null, opt_callback, opt_error_callback);
-  };
-  /**
-   * Test that n is a number or a numeric value.
-   * @private
-   */
-
-
-  var _isNumber = function _isNumber(n) {
-    return !isNaN(parseFloat(n)) && isFinite(n);
-  };
-  /**
-   * Handles errors that are sent to both callbacks
-   * @private
-   */
-
-
-  var _logErrorsWithCallbacks = function _logErrorsWithCallbacks(opt_callback, opt_error_callback, status, response, details) {
-    if (type(opt_callback) === 'function') {
-      opt_callback(status, response, details);
-    }
-
-    if (type(opt_error_callback) === 'function') {
-      opt_error_callback(status, response, details);
-    }
-  };
-  /**
-   * Log revenue with Revenue interface. The new revenue interface allows for more revenue fields like
-   * revenueType and event properties.
-   *
-   * See the [Revenue](https://amplitude.github.io/Amplitude-JavaScript/Revenue/)
-   * reference page for more information on the Revenue interface and logging revenue.
-   * @public
-   * @param {Revenue} revenue_obj - the revenue object containing the revenue data being logged.
-   * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99);
-   * amplitude.logRevenueV2(revenue);
-   */
-
-
-  AmplitudeClient.prototype.logRevenueV2 = function logRevenueV2(revenue_obj) {
-    if (this._shouldDeferCall()) {
-      return this._q.push(['logRevenueV2'].concat(Array.prototype.slice.call(arguments, 0)));
-    }
-
-    if (!this._apiKeySet('logRevenueV2()')) {
-      return;
-    } // if revenue input is a proxied object created by the async loading snippet, convert it into an revenue object
-
-
-    if (type(revenue_obj) === 'object' && Object.prototype.hasOwnProperty.call(revenue_obj, '_q')) {
-      revenue_obj = _convertProxyObjectToRealObject(new Revenue(), revenue_obj);
-    }
-
-    if (revenue_obj instanceof Revenue) {
-      // only send if revenue is valid
-      if (revenue_obj && revenue_obj._isValidRevenue()) {
-        return this.logEvent(Constants.REVENUE_EVENT, revenue_obj._toJSONObject());
-      }
-    } else {
-      utils.log.error('Invalid revenue input type. Expected Revenue object but saw ' + type(revenue_obj));
-    }
-  };
-
-  {
-    /**
-     * Log revenue event with a price, quantity, and product identifier. DEPRECATED - use logRevenueV2
-     * @public
-     * @deprecated
-     * @param {number} price - price of revenue event
-     * @param {number} quantity - (optional) quantity of products in revenue event. If no quantity specified default to 1.
-     * @param {string} product - (optional) product identifier
-     * @example amplitudeClient.logRevenue(3.99, 1, 'product_1234');
-     */
-    AmplitudeClient.prototype.logRevenue = function logRevenue(price, quantity, product) {
-      if (this._shouldDeferCall()) {
-        return this._q.push(['logRevenue'].concat(Array.prototype.slice.call(arguments, 0)));
-      } // Test that the parameters are of the right type.
-
-
-      if (!this._apiKeySet('logRevenue()') || !_isNumber(price) || quantity !== undefined && !_isNumber(quantity)) {
-        // utils.log('Price and quantity arguments to logRevenue must be numbers');
-        return -1;
-      }
-
-      return this._logEvent(Constants.REVENUE_EVENT, {}, {
-        productId: product,
-        special: 'revenue_amount',
-        quantity: quantity || 1,
-        price: price
-      }, null, null, null, null, null);
-    };
-  }
-  /**
-   * Calls error callback on unsent events
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._logErrorsOnEvents = function _logErrorsOnEvents(maxEventId, maxIdentifyId, status, response) {
-    var queues = ['_unsentEvents', '_unsentIdentifys'];
-
-    for (var j = 0; j < queues.length; j++) {
-      var queue = queues[j];
-      var maxId = queue === '_unsentEvents' ? maxEventId : maxIdentifyId;
-
-      for (var i = 0; i < this[queue].length || 0; i++) {
-        var unsentEvent = this[queue][i];
-
-        if (unsentEvent.event.event_id <= maxId) {
-          if (unsentEvent.errorCallback) {
-            unsentEvent.errorCallback(status, response);
-          }
-        }
-      }
-    }
-  };
-  /**
-   * Remove events in storage with event ids up to and including maxEventId.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.removeEvents = function removeEvents(maxEventId, maxIdentifyId, status, response) {
-    _removeEvents(this, '_unsentEvents', maxEventId, status, response);
-
-    _removeEvents(this, '_unsentIdentifys', maxIdentifyId, status, response);
-  };
-  /**
-   * Helper function to remove events up to maxId from a single queue.
-   * Does a true filter in case events get out of order or old events are removed.
-   * @private
-   */
-
-
-  var _removeEvents = function _removeEvents(scope, eventQueue, maxId, status, response) {
-    if (maxId < 0) {
-      return;
-    }
-
-    var filteredEvents = [];
-
-    for (var i = 0; i < scope[eventQueue].length || 0; i++) {
-      var unsentEvent = scope[eventQueue][i];
-
-      if (unsentEvent.event.event_id > maxId) {
-        filteredEvents.push(unsentEvent);
-      } else {
-        if (unsentEvent.callback) {
-          unsentEvent.callback(status, response);
-        }
-      }
-    }
-
-    scope[eventQueue] = filteredEvents;
-  };
-  /**
-   * Send unsent events. Note: this is called automatically after events are logged if option batchEvents is false.
-   * If batchEvents is true, then events are only sent when batch criterias are met.
-   * @private
-   */
-
-
-  AmplitudeClient.prototype.sendEvents = function sendEvents() {
-    if (!this._apiKeySet('sendEvents()')) {
-      this.removeEvents(Infinity, Infinity, 0, 'No request sent', {
-        reason: 'API key not set'
-      });
-      return;
-    }
-
-    if (this.options.optOut) {
-      this.removeEvents(Infinity, Infinity, 0, 'No request sent', {
-        reason: 'Opt out is set to true'
-      });
-      return;
-    } // How is it possible to get into this state?
-
-
-    if (this._unsentCount() === 0) {
-      return;
-    } // We only make one request at a time. sendEvents will be invoked again once
-    // the last request completes.
-    // beacon data is sent synchronously, so don't pause for it
-
-
-    if (this.options.transport !== Constants.TRANSPORT_BEACON) {
-      if (this._sending) {
-        return;
-      }
-
-      this._sending = true;
-    }
-
-    var protocol = this.options.forceHttps ? 'https' : 'https:' === window.location.protocol ? 'https' : 'http';
-    var url = protocol + '://' + this.options.apiEndpoint; // fetch events to send
-
-    var numEvents = Math.min(this._unsentCount(), this.options.uploadBatchSize);
-
-    var mergedEvents = this._mergeEventsAndIdentifys(numEvents);
-
-    var maxEventId = mergedEvents.maxEventId;
-    var maxIdentifyId = mergedEvents.maxIdentifyId;
-    var events = JSON.stringify(mergedEvents.eventsToSend.map(function (_ref2) {
-      var event = _ref2.event;
-      return event;
-    }));
-    var uploadTime = new Date().getTime();
-    var data = {
-      client: this.options.apiKey,
-      e: events,
-      v: Constants.API_VERSION,
-      upload_time: uploadTime,
-      checksum: md5(Constants.API_VERSION + this.options.apiKey + events + uploadTime)
-    };
-
-    if (this.options.transport === Constants.TRANSPORT_BEACON) {
-      var success = navigator.sendBeacon(url, new URLSearchParams(data));
-
-      if (success) {
-        this.removeEvents(maxEventId, maxIdentifyId, 200, 'success');
-
-        if (this.options.saveEvents) {
-          this.saveEvents();
-        }
-      } else {
-        this._logErrorsOnEvents(maxEventId, maxIdentifyId, 0, '');
-      }
-
-      return;
-    }
-
-    var scope = this;
-    new Request(url, data, this.options.headers).send(function (status, response) {
-      scope._sending = false;
-
-      try {
-        if (status === 200 && response === 'success') {
-          scope.removeEvents(maxEventId, maxIdentifyId, status, response); // Update the event cache after the removal of sent events.
-
-          if (scope.options.saveEvents) {
-            scope.saveEvents();
-          } // Send more events if any queued during previous send.
-
-
-          scope._sendEventsIfReady(); // handle payload too large
-
-        } else {
-          scope._logErrorsOnEvents(maxEventId, maxIdentifyId, status, response);
-
-          if (status === 413) {
-            // utils.log('request too large');
-            // Can't even get this one massive event through. Drop it, even if it is an identify.
-            if (scope.options.uploadBatchSize === 1) {
-              scope.removeEvents(maxEventId, maxIdentifyId, status, response);
-            } // The server complained about the length of the request. Backoff and try again.
-
-
-            scope.options.uploadBatchSize = Math.ceil(numEvents / 2);
-            scope.sendEvents();
-          }
-        } // else {
-        //  all the events are still queued, and will be retried when the next
-        //  event is sent In the interest of debugging, it would be nice to have
-        //  something like an event emitter for a better debugging experince
-        //  here.
-        // }
-
-      } catch (e) {// utils.log.error('failed upload');
-      }
     });
   };
-  /**
-   * Merge unsent events and identifys together in sequential order based on their sequence number, for uploading.
-   * Identifys given higher priority than Events. Also earlier sequence given priority
-   * @private
-   */
+});
 
+function openDb(name, version, upgradeCallback) {
+  var p = promisifyRequestCall(indexedDB, 'open', [name, version]);
+  var request = p.request;
 
-  AmplitudeClient.prototype._mergeEventsAndIdentifys = function _mergeEventsAndIdentifys(numEvents) {
-    // coalesce events from both queues
-    var eventsToSend = [];
-    var eventIndex = 0;
-    var maxEventId = -1;
-    var identifyIndex = 0;
-    var maxIdentifyId = -1;
-
-    while (eventsToSend.length < numEvents) {
-      var unsentEvent = void 0;
-      var noIdentifys = identifyIndex >= this._unsentIdentifys.length;
-      var noEvents = eventIndex >= this._unsentEvents.length; // case 0: no events or identifys left
-      // note this should not happen, this means we have less events and identifys than expected
-
-      if (noEvents && noIdentifys) {
-        utils.log.error('Merging Events and Identifys, less events and identifys than expected');
-        break;
-      } // case 1: no identifys - grab from events
-      else if (noIdentifys) {
-          unsentEvent = this._unsentEvents[eventIndex++];
-          maxEventId = unsentEvent.event.event_id; // case 2: no events - grab from identifys
-        } else if (noEvents) {
-          unsentEvent = this._unsentIdentifys[identifyIndex++];
-          maxIdentifyId = unsentEvent.event.event_id; // case 3: need to compare sequence numbers
-        } else {
-          // events logged before v2.5.0 won't have a sequence number, put those first
-          if (!('sequence_number' in this._unsentEvents[eventIndex].event) || this._unsentEvents[eventIndex].event.sequence_number < this._unsentIdentifys[identifyIndex].event.sequence_number) {
-            unsentEvent = this._unsentEvents[eventIndex++];
-            maxEventId = unsentEvent.event.event_id;
-          } else {
-            unsentEvent = this._unsentIdentifys[identifyIndex++];
-            maxIdentifyId = unsentEvent.event.event_id;
-          }
-        }
-
-      eventsToSend.push(unsentEvent);
-    }
-
-    return {
-      eventsToSend: eventsToSend,
-      maxEventId: maxEventId,
-      maxIdentifyId: maxIdentifyId
-    };
-  };
-
-  {
-    /**
-     * Set global user properties. Note this is deprecated, and we recommend using setUserProperties
-     * @public
-     * @deprecated
-     */
-    AmplitudeClient.prototype.setGlobalUserProperties = function setGlobalUserProperties(userProperties) {
-      this.setUserProperties(userProperties);
-    };
-  }
-  /**
-   * Get the current version of Amplitude's Javascript SDK.
-   * @public
-   * @returns {number} version number
-   * @example var amplitudeVersion = amplitude.__VERSION__;
-   */
-
-
-  AmplitudeClient.prototype.__VERSION__ = version;
-  /**
-   * Determines whether or not to push call to this._q or invoke it
-   * @private
-   */
-
-  AmplitudeClient.prototype._shouldDeferCall = function _shouldDeferCall() {
-    return this._pendingReadStorage || this._initializationDeferred;
-  };
-  /**
-   * Defers Initialization by putting all functions into storage until users
-   * have accepted terms for tracking
-   * @private
-   */
-
-
-  AmplitudeClient.prototype._deferInitialization = function _deferInitialization() {
-    this._initializationDeferred = true;
-
-    this._q.push(['init'].concat(Array.prototype.slice.call(arguments, 0)));
-  };
-  /**
-   * Enable tracking via logging events and dropping a cookie
-   * Intended to be used with the deferInitialization configuration flag
-   * This will drop a cookie and reset initialization deferred
-   * @public
-   */
-
-
-  AmplitudeClient.prototype.enableTracking = function enableTracking() {
-    // This will call init (which drops the cookie) and will run any pending tasks
-    this._initializationDeferred = false;
-
-    _saveCookieData(this);
-
-    this.runQueuedFunctions();
-  };
-
-  /**
-   * Deprecated legacy API of the Amplitude JS SDK - instance manager.
-   *
-   * Wraps around the current [AmplitudeClient](https://amplitude.github.io/Amplitude-JavaScript/) which provides more features
-   * Function calls directly on amplitude have been deprecated. Please call methods on the default shared instance: amplitude.getInstance() instead.
-   *
-   * See the [3.0.0 changelog](https://github.com/amplitude/Amplitude-JavaScript/blob/ed405afb5f06d5cf5b72539a5d09179abcf7e1fe/README.md#300-update-and-logging-events-to-multiple-amplitude-apps) for more information about this change.
-   * @constructor Amplitude
-   * @public
-   * @deprecated
-   * @example var amplitude = new Amplitude();
-   */
-
-  var Amplitude = function Amplitude() {
-    this.options = _objectSpread({}, DEFAULT_OPTIONS);
-    this._q = [];
-    this._instances = {}; // mapping of instance names to instances
-  };
-
-  Amplitude.prototype.Identify = Identify;
-  Amplitude.prototype.Revenue = Revenue;
-
-  Amplitude.prototype.getInstance = function getInstance(instance) {
-    instance = utils.isEmptyString(instance) ? Constants.DEFAULT_INSTANCE : instance.toLowerCase();
-    var client = this._instances[instance];
-
-    if (client === undefined) {
-      client = new AmplitudeClient(instance);
-      this._instances[instance] = client;
-    }
-
-    return client;
-  };
-
-  {
-    /**
-     * Run functions queued up by proxy loading snippet
-     * @private
-     */
-    Amplitude.prototype.runQueuedFunctions = function () {
-      // run queued up old versions of functions
-      for (var i = 0; i < this._q.length; i++) {
-        var fn = this[this._q[i][0]];
-
-        if (type(fn) === 'function') {
-          fn.apply(this, this._q[i].slice(1));
-        }
-      }
-
-      this._q = []; // clear function queue after running
-      // run queued up functions on instances
-
-      for (var instance in this._instances) {
-        if (Object.prototype.hasOwnProperty.call(this._instances, instance)) {
-          this._instances[instance].runQueuedFunctions();
-        }
+  if (request) {
+    request.onupgradeneeded = function(event) {
+      if (upgradeCallback) {
+        upgradeCallback(new UpgradeDB(request.result, event.oldVersion, request.transaction));
       }
     };
   }
 
-  {
-    /**
-     * Initializes the Amplitude Javascript SDK with your apiKey and any optional configurations.
-     * This is required before any other methods can be called.
-     * @public
-     * @param {string} apiKey - The API key for your app.
-     * @param {string} opt_userId - (optional) An identifier for this user.
-     * @param {object} opt_config - (optional) Configuration options.
-     * See [options.js](https://github.com/amplitude/Amplitude-JavaScript/blob/master/src/options.js#L14) for list of options and default values.
-     * @param {function} opt_callback - (optional) Provide a callback function to run after initialization is complete.
-     * @deprecated Please use amplitude.getInstance().init(apiKey, opt_userId, opt_config, opt_callback);
-     * @example amplitude.init('API_KEY', 'USER_ID', {includeReferrer: true, includeUtm: true}, function() { alert('init complete'); });
-     */
-    Amplitude.prototype.init = function init(apiKey, opt_userId, opt_config, opt_callback) {
-      this.getInstance().init(apiKey, opt_userId, opt_config, function (instance) {
-        // make options such as deviceId available for callback functions
-        this.options = instance.options;
+  return p.then(function(db) {
+    return new DB(db);
+  });
+}
 
-        if (type(opt_callback) === 'function') {
-          opt_callback(instance);
-        }
-      }.bind(this));
-    };
-    /**
-     * Returns true if a new session was created during initialization, otherwise false.
-     * @public
-     * @return {boolean} Whether a new session was created during initialization.
-     * @deprecated Please use amplitude.getInstance().isNewSession();
-     */
-
-
-    Amplitude.prototype.isNewSession = function isNewSession() {
-      return this.getInstance().isNewSession();
-    };
-    /**
-     * Returns the id of the current session.
-     * @public
-     * @return {number} Id of the current session.
-     * @deprecated Please use amplitude.getInstance().getSessionId();
-     */
-
-
-    Amplitude.prototype.getSessionId = function getSessionId() {
-      return this.getInstance().getSessionId();
-    };
-    /**
-     * Increments the eventId and returns it.
-     * @private
-     */
-
-
-    Amplitude.prototype.nextEventId = function nextEventId() {
-      return this.getInstance().nextEventId();
-    };
-    /**
-     * Increments the identifyId and returns it.
-     * @private
-     */
-
-
-    Amplitude.prototype.nextIdentifyId = function nextIdentifyId() {
-      return this.getInstance().nextIdentifyId();
-    };
-    /**
-     * Increments the sequenceNumber and returns it.
-     * @private
-     */
-
-
-    Amplitude.prototype.nextSequenceNumber = function nextSequenceNumber() {
-      return this.getInstance().nextSequenceNumber();
-    };
-    /**
-     * Saves unsent events and identifies to localStorage. JSON stringifies event queues before saving.
-     * Note: this is called automatically every time events are logged, unless you explicitly set option saveEvents to false.
-     * @private
-     */
-
-
-    Amplitude.prototype.saveEvents = function saveEvents() {
-      this.getInstance().saveEvents();
-    };
-    /**
-     * Sets a customer domain for the amplitude cookie. Useful if you want to support cross-subdomain tracking.
-     * @public
-     * @param {string} domain to set.
-     * @deprecated Please use amplitude.getInstance().setDomain(domain);
-     * @example amplitude.setDomain('.amplitude.com');
-     */
-
-
-    Amplitude.prototype.setDomain = function setDomain(domain) {
-      this.getInstance().setDomain(domain);
-    };
-    /**
-     * Sets an identifier for the current user.
-     * @public
-     * @param {string} userId - identifier to set. Can be null.
-     * @deprecated Please use amplitude.getInstance().setUserId(userId);
-     * @example amplitude.setUserId('joe@gmail.com');
-     */
-
-
-    Amplitude.prototype.setUserId = function setUserId(userId) {
-      this.getInstance().setUserId(userId);
-    };
-    /**
-     * Add user to a group or groups. You need to specify a groupType and groupName(s).
-     * For example you can group people by their organization.
-     * In that case groupType is "orgId" and groupName would be the actual ID(s).
-     * groupName can be a string or an array of strings to indicate a user in multiple gruups.
-     * You can also call setGroup multiple times with different groupTypes to track multiple types of groups (up to 5 per app).
-     * Note: this will also set groupType: groupName as a user property.
-     * See the [advanced topics article](https://developers.amplitude.com/docs/setting-user-groups) for more information.
-     * @public
-     * @param {string} groupType - the group type (ex: orgId)
-     * @param {string|list} groupName - the name of the group (ex: 15), or a list of names of the groups
-     * @deprecated Please use amplitude.getInstance().setGroup(groupType, groupName);
-     * @example amplitude.setGroup('orgId', 15); // this adds the current user to orgId 15.
-     */
-
-
-    Amplitude.prototype.setGroup = function (groupType, groupName) {
-      this.getInstance().setGroup(groupType, groupName);
-    };
-    /**
-     * Sets whether to opt current user out of tracking.
-     * @public
-     * @param {boolean} enable - if true then no events will be logged or sent.
-     * @deprecated Please use amplitude.getInstance().setOptOut(enable);
-     * @example: amplitude.setOptOut(true);
-     */
-
-
-    Amplitude.prototype.setOptOut = function setOptOut(enable) {
-      this.getInstance().setOptOut(enable);
-    };
-    /**
-     * Regenerates a new random deviceId for current user. Note: this is not recommended unless you know what you
-     * are doing. This can be used in conjunction with `setUserId(null)` to anonymize users after they log out.
-     * With a null userId and a completely new deviceId, the current user would appear as a brand new user in dashboard.
-     * This uses src/uuid.js to regenerate the deviceId.
-     * @public
-     * @deprecated Please use amplitude.getInstance().regenerateDeviceId();
-     */
-
-
-    Amplitude.prototype.regenerateDeviceId = function regenerateDeviceId() {
-      this.getInstance().regenerateDeviceId();
-    };
-    /**
-     * Sets a custom deviceId for current user. Note: this is not recommended unless you know what you are doing
-     * (like if you have your own system for managing deviceIds).
-     *
-     * Make sure the deviceId you set is sufficiently unique
-     * (we recommend something like a UUID - see src/uuid.js for an example of how to generate) to prevent conflicts with other devices in our system.
-     * @public
-     * @param {string} deviceId - custom deviceId for current user.
-     * @deprecated Please use amplitude.getInstance().setDeviceId(deviceId);
-     * @example amplitude.setDeviceId('45f0954f-eb79-4463-ac8a-233a6f45a8f0');
-     */
-
-
-    Amplitude.prototype.setDeviceId = function setDeviceId(deviceId) {
-      this.getInstance().setDeviceId(deviceId);
-    };
-    /**
-     * Sets user properties for the current user.
-     * @public
-     * @param {object} userProperties - object with string keys and values for the user properties to set.
-     * @param {boolean} opt_replace - Deprecated. In earlier versions of the JS SDK the user properties object was kept in
-     * memory and replace = true would replace the object in memory. Now the properties are no longer stored in memory, so replace is deprecated.
-     * @deprecated Please use amplitude.getInstance().setUserProperties(userProperties);
-     * @example amplitude.setUserProperties({'gender': 'female', 'sign_up_complete': true})
-     */
-
-
-    Amplitude.prototype.setUserProperties = function setUserProperties(userProperties) {
-      this.getInstance().setUserProperties(userProperties);
-    };
-    /**
-     * Clear all of the user properties for the current user. Note: clearing user properties is irreversible!
-     * @public
-     * @deprecated Please use amplitude.getInstance().clearUserProperties();
-     * @example amplitude.clearUserProperties();
-     */
-
-
-    Amplitude.prototype.clearUserProperties = function clearUserProperties() {
-      this.getInstance().clearUserProperties();
-    };
-    /**
-     * Send an identify call containing user property operations to Amplitude servers.
-     * See the [Identify](https://amplitude.github.io/Amplitude-JavaScript/Identify/)
-     * reference page for more information on the Identify API and user property operations.
-     * @param {Identify} identify_obj - the Identify object containing the user property operations to send.
-     * @param {Amplitude~eventCallback} opt_callback - (optional) callback function to run when the identify event has been sent.
-     * Note: the server response code and response body from the identify event upload are passed to the callback function.
-     * @deprecated Please use amplitude.getInstance().identify(identify);
-     * @example
-     * var identify = new amplitude.Identify().set('colors', ['rose', 'gold']).add('karma', 1).setOnce('sign_up_date', '2016-03-31');
-     * amplitude.identify(identify);
-     */
-
-
-    Amplitude.prototype.identify = function (identify_obj, opt_callback) {
-      this.getInstance().identify(identify_obj, opt_callback);
-    };
-    /**
-     * Set a versionName for your application.
-     * @public
-     * @param {string} versionName - The version to set for your application.
-     * @deprecated Please use amplitude.getInstance().setVersionName(versionName);
-     * @example amplitude.setVersionName('1.12.3');
-     */
-
-
-    Amplitude.prototype.setVersionName = function setVersionName(versionName) {
-      this.getInstance().setVersionName(versionName);
-    };
-    /**
-     * This is the callback for logEvent and identify calls. It gets called after the event/identify is uploaded,
-     * and the server response code and response body from the upload request are passed to the callback function.
-     * @callback Amplitude~eventCallback
-     * @param {number} responseCode - Server response code for the event / identify upload request.
-     * @param {string} responseBody - Server response body for the event / identify upload request.
-     */
-
-    /**
-     * Log an event with eventType and eventProperties
-     * @public
-     * @param {string} eventType - name of event
-     * @param {object} eventProperties - (optional) an object with string keys and values for the event properties.
-     * @param {Amplitude~eventCallback} opt_callback - (optional) a callback function to run after the event is logged.
-     * Note: the server response code and response body from the event upload are passed to the callback function.
-     * @deprecated Please use amplitude.getInstance().logEvent(eventType, eventProperties, opt_callback);
-     * @example amplitude.logEvent('Clicked Homepage Button', {'finished_flow': false, 'clicks': 15});
-     */
-
-
-    Amplitude.prototype.logEvent = function logEvent(eventType, eventProperties, opt_callback) {
-      return this.getInstance().logEvent(eventType, eventProperties, opt_callback);
-    };
-    /**
-     * Log an event with eventType, eventProperties, and groups. Use this to set event-level groups.
-     *
-     * Note: the group(s) set only apply for the specific event type being logged and does not persist on the user
-     * (unless you explicitly set it with setGroup).
-     *
-     * See the [advanced topics article](https://developers.amplitude.com/docs/setting-user-groups) for more information.
-     * about groups and Count by Distinct on the Amplitude platform.
-     * @public
-     * @param {string} eventType - name of event
-     * @param {object} eventProperties - (optional) an object with string keys and values for the event properties.
-     * @param {object} groups - (optional) an object with string groupType: groupName values for the event being logged.
-     * groupName can be a string or an array of strings.
-     * @param {Amplitude~eventCallback} opt_callback - (optional) a callback function to run after the event is logged.
-     * Note: the server response code and response body from the event upload are passed to the callback function.
-     * @deprecated Please use amplitude.getInstance().logEventWithGroups(eventType, eventProperties, groups, opt_callback);
-     * @example amplitude.logEventWithGroups('Clicked Button', null, {'orgId': 24});
-     */
-
-
-    Amplitude.prototype.logEventWithGroups = function (eventType, eventProperties, groups, opt_callback) {
-      return this.getInstance().logEventWithGroups(eventType, eventProperties, groups, opt_callback);
-    };
-    /**
-     * Log revenue with Revenue interface. The new revenue interface allows for more revenue fields like
-     * revenueType and event properties.
-     *
-     * See the [Revenue](https://amplitude.github.io/Amplitude-JavaScript/Revenue/)
-     * reference page for more information on the Revenue interface and logging revenue.
-     * @public
-     * @param {Revenue} revenue_obj - the revenue object containing the revenue data being logged.
-     * @deprecated Please use amplitude.getInstance().logRevenueV2(revenue_obj);
-     * @example var revenue = new amplitude.Revenue().setProductId('productIdentifier').setPrice(10.99);
-     * amplitude.logRevenueV2(revenue);
-     */
-
-
-    Amplitude.prototype.logRevenueV2 = function logRevenueV2(revenue_obj) {
-      return this.getInstance().logRevenueV2(revenue_obj);
-    };
-    /**
-     * Log revenue event with a price, quantity, and product identifier.
-     * @public
-     * @param {number} price - price of revenue event
-     * @param {number} quantity - (optional) quantity of products in revenue event. If no quantity specified default to 1.
-     * @param {string} product - (optional) product identifier
-     * @deprecated Please use amplitude.getInstance().logRevenueV2(revenue_obj);
-     * @example amplitude.logRevenue(3.99, 1, 'product_1234');
-     */
-
-
-    Amplitude.prototype.logRevenue = function logRevenue(price, quantity, product) {
-      return this.getInstance().logRevenue(price, quantity, product);
-    };
-    /**
-     * Remove events in storage with event ids up to and including maxEventId.
-     * @private
-     */
-
-
-    Amplitude.prototype.removeEvents = function removeEvents(maxEventId, maxIdentifyId) {
-      this.getInstance().removeEvents(maxEventId, maxIdentifyId);
-    };
-    /**
-     * Send unsent events. Note: this is called automatically after events are logged if option batchEvents is false.
-     * If batchEvents is true, then events are only sent when batch criterias are met.
-     * @private
-     * @param {Amplitude~eventCallback} callback - (optional) callback to run after events are sent.
-     * Note the server response code and response body are passed to the callback as input arguments.
-     */
-
-
-    Amplitude.prototype.sendEvents = function sendEvents(callback) {
-      this.getInstance().sendEvents(callback);
-    };
-    /**
-     * Set global user properties.
-     * @public
-     * @deprecated Please use amplitudeClient.setUserProperties
-     */
-
-
-    Amplitude.prototype.setGlobalUserProperties = function setGlobalUserProperties(userProperties) {
-      this.getInstance().setUserProperties(userProperties);
-    };
-  }
-  /**
-   * Get the current version of Amplitude's Javascript SDK.
-   * @public
-   * @returns {number} version number
-   * @example var amplitudeVersion = amplitude.__VERSION__;
-   */
-
-
-  Amplitude.prototype.__VERSION__ = version;
-
-  // Entry point
-  var old = window.amplitude || {};
-  var newInstance = new Amplitude();
-  newInstance._q = old._q || [];
-  /**
-   * Instantiates Amplitude object and runs all queued function logged by stubbed methods provided by snippets
-   * Event queue allows async loading of SDK to not blocking client's app
-   */
-
-  for (var instance in old._iq) {
-    // migrate each instance's queue
-    if (Object.prototype.hasOwnProperty.call(old._iq, instance)) {
-      newInstance.getInstance(instance)._q = old._iq[instance]._q || [];
-    }
-  } // If SDK is enabled as snippet, process the events queued by stubbed function
-
-
-  {
-    newInstance.runQueuedFunctions();
-  } // export the instance
-
-  return newInstance;
-
-}));
+function deleteDb(name) {
+  return promisifyRequestCall(indexedDB, 'deleteDatabase', [name]);
+}
 
 
 /***/ })
